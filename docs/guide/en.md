@@ -225,6 +225,8 @@ Tap **Menu** at the top right of any screen.
 - **New scenario.** Starts again from a blank form.
 - **Logged in as** and **Sign out** are in the same menu. Signing out keeps your saved copy on the device.
 
+On the results screen, **Save on this device** keeps the scenario in this browser, and **Save on device and cloud** also sends it to the cloud in one tap. The **Saved on this device** list marks the scenario you just saved (**JUST SAVED**) and shows a status line under each one: green means the device and cloud copies match, orange means the device copy is newer than the cloud one, and grey means it is only on this device. Under orange or grey, tap **Sync to cloud** to update the cloud copy (you enter your passphrase first if the cloud is locked). The status reflects saves made from this phone.
+
 The line "rates verified" at the bottom shows when the built-in tax numbers were last checked.
 
 # Quebec and Canadian tax rules used
