@@ -1118,7 +1118,8 @@ details.resultnote:has(#deficitReportBanner:empty):has(#mcReportBanner:empty){di
 
             <div class="btn-group step-nav">
                 <button type="button" class="secondary" onclick="editProfile()">← Edit inputs</button>
-                <button type="button" class="save-btn" onclick="saveProfileAndResults()">💾 Save plan</button>
+                <button type="button" class="save-btn" onclick="saveProfileAndResults()">💾 Save on this device</button>
+                <button type="button" class="save-btn" onclick="saveToBoth()">☁ Save on device and cloud</button>
             </div>
         </div>
 
@@ -3219,6 +3220,18 @@ The numbers in that example are placeholders from a prior year — replace every
         putAllProfiles(all);
         showSaveBadge('Profile & results saved!');
         updateSaveStatus();
+    }
+
+    // Saves on this device, then pushes the same scenario to the cloud (asks for the passphrase first if locked).
+    function saveToBoth() {
+        saveProfileAndResults();
+        const cur = getAllProfiles()[justSavedId];
+        if (!cur || !window.awrSyncPlan) { showSaveBadge('Saved on this device. Cloud saving is not available here'); return; }
+        window.awrSyncPlan(cur).then(function (r) {
+            if (r === 'ok') showSaveBadge('Saved on this device and in the cloud');
+            else if (r === 'fail') showSaveBadge('Saved on this device. Could not reach the cloud, try Sync to cloud later');
+            /* locked: the passphrase panel opened; the device copy is already saved */
+        });
     }
 
     // After a calculation the results on screen are new, so refresh the ones stored with the profile.
@@ -6823,7 +6836,7 @@ The numbers in that example are placeholders from a prior year — replace every
         ["Joint Profile \\(You \\+ Spouse\\)", "Profil conjoint (vous + conjoint(e))"], ["Individual Profile", "Profil individuel"],
         ["Unnamed scenario (\\d+)", "Scénario sans nom $1"], ["No saved profiles archived yet\\.", "Aucun profil enregistré pour l’instant."],
         ["\\| Saved: ", "| Enregistré : "], ["\\| Net spend: ", "| Dépenses nettes : "], ["\\| Retire age: ", "| Âge de retraite : "],
-        ["✓ Saved by you", "✓ Enregistré par vous"], ["^Sync to cloud$", "Synchroniser avec le nuage"], ["Synced to the cloud", "Synchronisé avec le nuage"], ["Could not sync\\. Check your connection and try again", "Synchronisation impossible. Vérifiez votre connexion et réessayez"], ["^JUST SAVED$", "ENREGISTRÉ À L’INSTANT"], ["^LATEST SAVE$", "DERNIER ENREGISTREMENT"], ["☁ Same on this device and in the cloud", "☁ Identique sur cet appareil et dans le nuage"], ["⚠ Newer on this device than in the cloud", "⚠ Plus récent sur cet appareil que dans le nuage"], ["Device only, not in the cloud yet", "Cet appareil seulement, pas encore dans le nuage"], ["Auto-saved draft", "Brouillon enregistré automatiquement"],
+        ["✓ Saved by you", "✓ Enregistré par vous"], ["^💾 Save on this device$", "💾 Enregistrer sur cet appareil"], ["^☁ Save on device and cloud$", "☁ Enregistrer sur l’appareil et dans le nuage"], ["Saved on this device and in the cloud", "Enregistré sur cet appareil et dans le nuage"], ["Saved on this device\\. Cloud saving is not available here", "Enregistré sur cet appareil. Le nuage n’est pas disponible ici"], ["Saved on this device\\. Could not reach the cloud, try Sync to cloud later", "Enregistré sur cet appareil. Nuage inaccessible, essayez Synchroniser plus tard"], ["^Sync to cloud$", "Synchroniser avec le nuage"], ["Synced to the cloud", "Synchronisé avec le nuage"], ["Could not sync\\. Check your connection and try again", "Synchronisation impossible. Vérifiez votre connexion et réessayez"], ["^JUST SAVED$", "ENREGISTRÉ À L’INSTANT"], ["^LATEST SAVE$", "DERNIER ENREGISTREMENT"], ["☁ Same on this device and in the cloud", "☁ Identique sur cet appareil et dans le nuage"], ["⚠ Newer on this device than in the cloud", "⚠ Plus récent sur cet appareil que dans le nuage"], ["Device only, not in the cloud yet", "Cet appareil seulement, pas encore dans le nuage"], ["Auto-saved draft", "Brouillon enregistré automatiquement"],
         ["^Save name$", "Enregistrer le nom"], ["^Cancel$", "Annuler"], ["Yes, delete permanently", "Oui, supprimer définitivement"], ["^Keep it$", "Conserver"],
         ["^Load$", "Charger"], ["^Rename$", "Renommer"], ["^Delete$", "Supprimer"],
         ["(\\d+)% success \\((\\d+) trials\\) · median ending", "$1 % de réussite ($2 essais) · valeur finale médiane"],
