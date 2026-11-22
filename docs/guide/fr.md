@@ -163,6 +163,8 @@ Touchez une année dans **Quoi faire chaque année**. Elle s’ouvre en une list
 
 1. **Total à retirer cette année** (barre bleu foncé) : dépenses + impôts + ce qui est déplacé vers un autre compte.
 2. **Un bloc par compte**, par exemple REER / FERR ou épargne non enregistrée. Chacun indique quoi retirer et à quoi sert cet argent : frais courants, impôt et **Sert aux événements de vie**, qui énumère chaque événement sous le nom que vous lui avez donné à l’écran Événements de vie (récurrent ou ponctuel) avec le montant que ce compte couvre. Quand plusieurs comptes paient des événements la même année, le montant de chaque compte est réparti entre les événements en proportion de leur coût.
+
+   Lorsqu’une partie du retrait d’un compte est transférée vers un autre compte (par exemple le CELI), le bloc d’origine affiche une ligne bleue **Transféré vers …** et le bloc qui reçoit affiche une ligne verte **Transfert reçu de …**, pour voir d’où vient l’argent.
 3. **La note jaune** dit qui s’occupe de l’impôt. « L’institution retient X $ ... Vous recevrez donc Y $ en main » signifie que l’institution retient un acompte sur votre impôt. « Il n’y a aucune retenue à la source : mettez cet argent de côté » signifie que vous devez garder l’argent pour la facture d’impôt.
 4. **Reste après croissance.** Début d’année, moins le retrait, plus la croissance du marché, égale ce qui reste. Le reste est souvent plus élevé que début moins retrait, car vos placements ont crû.
 5. **Non touchés cette année** liste les comptes que le plan laisse en paix, souvent votre CELI.
@@ -225,6 +227,8 @@ Touchez **Menu** en haut à droite de n’importe quel écran.
 - **Connecté en tant que** et **Se déconnecter** sont dans le même menu. Se déconnecter conserve votre copie enregistrée sur l’appareil.
 
 Sur l’écran des résultats, **Enregistrer sur cet appareil** garde le scénario dans ce navigateur, et **Enregistrer sur l’appareil et dans le nuage** l’envoie aussi dans le nuage d’un seul geste. La liste des scénarios enregistrés sur cet appareil marque celui que vous venez d’enregistrer (**ENREGISTRÉ À L’INSTANT**) et affiche une ligne d’état sous chacun : vert, les copies de l’appareil et du nuage sont identiques; orange, la copie de l’appareil est plus récente; gris, le scénario n’est que sur cet appareil. Sous l’orange ou le gris, touchez **Synchroniser avec le nuage** pour mettre à jour la copie du nuage (vous entrez d’abord votre phrase secrète si le nuage est verrouillé). L’état reflète les enregistrements faits depuis ce téléphone.
+
+Si vous enregistrez alors que vous travaillez déjà dans un scénario enregistré, une fenêtre demande quoi faire : **Remplacer** le scénario enregistré par ce qui est à l’écran, **Enregistrer comme nouveau scénario** sous un nom que vous saisissez, ou **Annuler**. Le même choix apparaît avec **Enregistrer ce plan** dans le panneau du nuage.
 
 La ligne « taux vérifiés » au bas indique la date de la dernière vérification des chiffres fiscaux intégrés.
 
