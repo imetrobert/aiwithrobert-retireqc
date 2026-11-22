@@ -80,6 +80,9 @@
       lang: 'English'
     }
   };
+  // This is the English address: each new browser visit starts in English unless the address says ?lang=fr
+  // (the French address sends people that way). The EN/FR toggle then holds for the rest of the visit.
+  try { var qL0 = new URLSearchParams(location.search).get('lang'); if (qL0 === 'fr' || qL0 === 'en') localStorage.setItem('qcrp_lang', qL0); else if (!sessionStorage.getItem('qcrp_lang_seen')) localStorage.setItem('qcrp_lang', 'en'); sessionStorage.setItem('qcrp_lang_seen', '1'); } catch (e) { }
   function lang() { try { return (CFG.fr && CFG.langKey && localStorage.getItem(CFG.langKey) === 'fr') ? 'fr' : 'en'; } catch (e) { return 'en'; } }
   function t(k) { return (T[lang()] && T[lang()][k]) || T.en[k] || k; }
 
