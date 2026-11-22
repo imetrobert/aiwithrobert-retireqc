@@ -22,6 +22,7 @@ Line numbers: `docs/code-map.md` (generated). The first ~25 lines of `index.html
 - `account.js` = sign-in gate, "Welcome <email>" banner, the rows it adds to the planner menu `#toolMenu` (Logged in as, My plans, Documentation, Sign out), saved plans. Touch it only for those.
   Its documentation link is `CFG.docs` (now `guide.pdf`, the user guide in the repo root; blank = link hidden). App id `retire-qc`; the other planner has its own copy.
 - `statements.js` (+ `vendor/pdfjs/`) = reads a government statement PDF on the device and fills QPP fields after Preview/Apply (recipe 11 in docs/common-edits.md). No network calls. Test: `python3 scripts/test_statements.py`. Only FAKE sample PDFs in `tests/fixtures/` (public repo).
+- Expense list: optional list on Step 2 that fills and locks the spending fields (common-edits recipe on the expense list). Test: `python3 scripts/test_expenses.py`.
 - Tax check: `python3 scripts/test_tax.py` compares the tax engine and yearly plan with an independent calculation (own copy of the 2026 numbers at the top of the script). Update that copy whenever the tax numbers change (common-edits recipe on the tax check).
 - Test the gate: `python3 scripts/test_account.py` (stubbed server, needs `pip install playwright`). CI runs it.
 - Saved plans table: `migration/planner_profiles.sql` (run once via the Supabase AI prompt in the README).
