@@ -45,3 +45,16 @@ checked on 84 cases).
 ## 8. Something broke after an edit
 Run `python3 scripts/check_planner.py`: it names a syntax error or duplicate id. Otherwise
 `git log -p -3 -- index.html` and revert the last change.
+
+## 9. Add a minor feature (a button, a line in the results, a new note)
+1. Say what the user sees and where. Find the nearest similar thing in `docs/code-map.md` and copy its pattern.
+2. Work only in `index.html`. New field: recipe 3 (it must be saved by `getProfileData` and loaded by `populateForm`
+   so saved plans include it automatically). New result line: add it in `renderResultsUi`.
+3. Do not call the network, add libraries, or rename ids/`qcrp_*` keys.
+4. Run `python3 scripts/check_planner.py`, then press "Show my plan" and confirm money in = money out.
+5. Quebec only: add the French text (recipe 2). Update `APP_VERSION`.
+
+## 10. Change the sign-in screen, welcome banner or saved plans
+Edit `account.js` only (texts are in `T`, English and French). Keep: encryption before upload, no secret keys,
+no innerHTML. Run `python3 scripts/test_account.py`. Set `CFG.docs` to the documentation page address to show the link.
+The same change usually belongs in the other planner's `account.js` too.

@@ -7,15 +7,22 @@ Line numbers: `docs/code-map.md` (generated). The first ~25 lines of `index.html
 `grep -n name index.html` or Read with offset and limit.
 
 ## Rules (non-negotiable)
-- Privacy: no network calls that send user data, no analytics, no third-party scripts. The checks fail
-  on `fetch`, `XMLHttpRequest`, `sendBeacon`, `WebSocket`. Saving to an account must be a deliberate,
-  reviewed change, with browser-side encryption, never plain figures on a server.
+- Privacy: `index.html` makes NO network calls (checks fail on `fetch`, `XMLHttpRequest`, `sendBeacon`,
+  `WebSocket`). Sign-in and saved plans live ONLY in `account.js`, which encrypts every plan in the
+  browser before upload. Never send plain figures anywhere. Never put a secret key in either file.
 - Never put a real person's figures, names or defaults into the file. This repo is public.
 - Do not rename element ids (the JS reads them) or localStorage keys `qcrp_*` (users' saved data).
 - Tax numbers are for Quebec/federal 2026. Never invent a rate: check the official table, then edit
   `getDefaultTaxRules()` and set `verifiedDate`.
 - Free tier only. Pages from `main`; domain in `CNAME`.
 - French: every English string you change needs a French entry. Add it to `Object.assign(EXACT, {...})` (exact text to French) or `P.push([...])` (pattern to French) near the end of the script. Test with `window.QCRP_I18N.toggle()` in the browser console.
+
+## Two files, two jobs
+- `index.html` = the planner (forms, tax, results). Almost every minor feature goes here.
+- `account.js` = sign-in gate, "Welcome <email>" banner, "My plans" saved plans. Touch it only for those.
+  Its documentation link is `CFG.docs` (blank = link hidden). App id `retire-qc`; the other planner has its own copy.
+- Test the gate: `python3 scripts/test_account.py` (stubbed server, needs `pip install playwright`). CI runs it.
+- Saved plans table: `migration/planner_profiles.sql` (run once via the Supabase AI prompt in the README).
 
 ## Where things are (grep the name)
 - Tax rules: `getDefaultTaxRules`, `getTaxRules`, `validateTaxRulesShape`; engine `calculateTax`;

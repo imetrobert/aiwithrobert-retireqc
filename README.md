@@ -22,3 +22,9 @@ Supabase login plus `has_app_access('retire-qc')`, saved profiles encrypted in t
 - `index.html` the whole app. `CLAUDE.md` the map for editing. `docs/common-edits.md` recipes.
 - `docs/code-map.md` generated line numbers. `scripts/check_planner.py`, `scripts/code_map.py`.
 - `.github/workflows/checks.yml` weekly and on change: runs both scripts.
+
+## Accounts and saved plans
+Access is by invitation (access.imetrobert.com, app id `retire-qc`). Signed-in users see "Welcome <email> to your retirement
+planner" and a "My plans" button; each saved plan is encrypted in the browser with the user's own passphrase
+(unrecoverable if forgotten). One-time setup: run `migration/planner_profiles.sql` via the Supabase AI assistant
+(the file lives in the Quebec repo, `aiwithrobert-retireqc`).
