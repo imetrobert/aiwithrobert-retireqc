@@ -56,5 +56,5 @@ Run `python3 scripts/check_planner.py`: it names a syntax error or duplicate id.
 
 ## 10. Change the sign-in screen, welcome banner or saved plans
 Edit `account.js` only (texts are in `T`, English and French). Keep: encryption before upload, no secret keys,
-no innerHTML. Run `python3 scripts/test_account.py`. Set `CFG.docs` to the documentation page address to show the link.
+no innerHTML. Run `python3 scripts/test_account.py`. The guide is `guide.pdf` in the repo root (replace the file to update it; `CFG.docs` points at it).
 The same change usually belongs in the other planner's `account.js` too.
