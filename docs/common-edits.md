@@ -125,3 +125,9 @@ The guide is written in Markdown: `docs/guide/en.md` and `fr.md`. Find the chapt
 
 ## Keeping the copied code in step
 `account.js` is a copy in the Quebec, Ontario and personal repos, and `statements.js` is shared by Quebec and personal. `python3 scripts/check_drift.py` (in the Checks workflow) fetches the siblings and fails if `statements.js` differs from the personal copy or if `account.js` has different functions. A red run means: make the same change in the other repos.
+
+## Plain-language helpers (results summary, account help, example tags, return presets)
+- Results top: `planSummaryHtml()` (the "Your plan in a few lines" box, called from `renderResultsUi`), the hero `todayNote` (today's-dollars line) and the "growth" label on year cards. Folds are named "What if? Test your plan" and "Technical details and assumptions".
+- Step 2 cards: `ACCT_HELP` (one sentence under each account name, matched on the card title) and `cardSummary()` (collapsed line: balance, "· not adding", "· example" until the person edits the field; `markAllTouched()` runs after a plan is loaded).
+- Step 3 return presets: `applyReturnPreset(pre, post)` and the three buttons in `#retPresets` (Cautious 4/3, Balanced 6/4.5, Optimistic 7.5/5.5); `updateReturnPresets()` highlights the matching one.
+- French: every new sentence has an `EXACT` entry or a `P.push` fragment near the end of the script (search the English text). Test with `QCRP_I18N.toggle()`.

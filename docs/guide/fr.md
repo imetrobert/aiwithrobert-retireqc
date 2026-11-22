@@ -301,3 +301,7 @@ eyebrow: AVIS
 | Montants de PSV, récupération, âge de début | canada.ca/fr/services/prestations/pensionspubliques |
 | Fonds immobilisés du Québec | retraitequebec.gouv.qc.ca |
 | Fonds immobilisés fédéraux | osfi-bsif.gc.ca |
+
+## Lire vos résultats
+
+En haut des résultats, **Votre plan en quelques lignes** indique en mots simples quand votre argent commence, combien de temps il dure et votre revenu annuel, en dollars d’aujourd’hui. Ouvrez **Et si? Testez votre plan** pour essayer des changements, et **Détails techniques et hypothèses** pour le détail des chiffres. À l’étape 2, chaque compte a une explication d’une ligne; les montants marqués « exemple » sont des valeurs de départ à remplacer par les vôtres. À l’étape 3, les boutons Prudent, Équilibré et Optimiste remplissent des rendements d’exemple que vous pouvez modifier.
