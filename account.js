@@ -22,6 +22,8 @@
     name: 'Quebec Retirement Planner',
     storageKey: 'awr_retireqc_auth',
     lsPrefix: 'qcrp',       // the planner's own localStorage prefix
+    profileKey: 'qcrp_profile_v1',    // the planner's current-plan key
+    profilesKey: 'qcrp_profiles_v1',  // the planner's saved-plans list key
     langKey: 'qcrp_lang',       // where the planner keeps EN/FR ('' = English only)
     docs: 'guide.pdf',                    // address of the documentation page; the link shows only when this is set
     fr: true
@@ -309,7 +311,7 @@
     if (typeof populateForm !== 'function') return;
     V.planId = p.id || null;
     populateForm(p);
-    try { localStorage.setItem(CFG.lsPrefix + '_profile_v1', JSON.stringify(p)); } catch (e) {}
+    try { localStorage.setItem(CFG.profileKey, JSON.stringify(p)); } catch (e) {}
     if (typeof showSaveBadge === 'function') showSaveBadge(t('opened'));
     if (typeof showStep === 'function') showStep(1);
   }
@@ -317,7 +319,7 @@
     closePanel();
     function finish(clearDevice) {
       clear(); S.sess = null; V = { pass: null, rows: null, salt: null, haveRows: null, planId: null }; keyCache = {};
-      if (clearDevice) { try { localStorage.removeItem(CFG.lsPrefix + '_profile_v1'); localStorage.removeItem(CFG.lsPrefix + '_profiles_v1'); } catch (e) {} }
+      if (clearDevice) { try { localStorage.removeItem(CFG.profileKey); localStorage.removeItem(CFG.profilesKey); } catch (e) {} }
       location.reload();
     }
     var panel = el('div', { id: 'awr-panel' }, [el('div', { class: 'awr-card' }, [el('h2', {}, [t('soTitle')]), el('p', {}, [t('soText')]),
