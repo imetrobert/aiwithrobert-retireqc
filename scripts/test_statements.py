@@ -71,15 +71,18 @@ with sync_playwright() as pw:
     page.click('#stmtApply')
     check(val('qppMonthlyAmt') == '468', 'FR: Apply fills 468')
 
-    # 5. spouse: blocked in single mode, works in couple mode
-    fresh(); upload('fake-qpp-en.pdf'); page.wait_for_selector('#stmtApply')
+    # 5. who the statement is for: no chooser in single mode; in couple mode it appears after a file is loaded
+    fresh(); check(not page.query_selector('#stmtWho'), 'Owner: no chooser before a file is loaded')
+    upload('fake-qpp-en.pdf'); page.wait_for_selector('#stmtApply')
+    check(not page.query_selector('#stmtWho'), 'Owner: single mode never shows the you/spouse chooser')
+    fresh(); page.select_option('#calcMode', 'couple')
+    check(not page.query_selector('#stmtWho'), 'Owner: couple mode still hides the chooser until a file is loaded')
+    upload('fake-qpp-en.pdf'); page.wait_for_selector('#stmtApply')
+    check(page.locator('input[name=stmtWho]').count() == 2 and page.is_checked('input[name=stmtWho][value=me]'), 'Owner: couple mode shows two choices after a file is loaded, on-screen person selected')
     page.check('input[name=stmtWho][value=spouse]')
-    check('couple' in out_text().lower() and not page.query_selector('#stmtApply'), 'Spouse: asks for couple mode first, no Apply button')
-    page.select_option('#calcMode', 'couple')
-    page.wait_for_selector('#stmtApply')
     page.click('#stmtApply')
-    check(val('spouseQppMonthlyAmt') == '468', 'Spouse: couple mode fills the spouse field')
-    check(val('qppMonthlyAmt') != '468' or True, 'Spouse: (own field untouched check is informational)')
+    check(page.evaluate("HH.spouse && String(HH.spouse.qppMonthlyAmt)") == '468', 'Owner: spouse choice fills the spouse form')
+    check(val('qppMonthlyAmt') != '468', 'Owner: the open form is left alone')
 
     # 6. other document: not recognised, but the pick-the-number list works
     fresh(); before = val('qppMonthlyAmt'); upload('fake-other-document.pdf'); page.wait_for_selector('.stmtPickBtn')
@@ -108,8 +111,7 @@ with sync_playwright() as pw:
     page.click('#stmtApplyPub')
     check(val('ownPensionAnnual') == '18900' and val('ownPensionStartAge') == '61', 'Public sector: Apply fills pension per year 18900 and start age 61')
     check(val('pensionType') in ('db', 'both'), 'Public sector: pension type switched to a DB option')
-    page.check('input[name=stmtWho][value=spouse]')
-    check('Spouse pension' in out_text() and not page.query_selector('#stmtApplyPub'), 'Public sector: spouse statement is not applied (message)')
+    check(not page.query_selector('#stmtWho'), 'Public sector: no you/spouse chooser in single mode')
     fresh(); upload('fake-qpp-en.pdf'); page.wait_for_selector('#stmtApply')
     check(not page.query_selector('#stmtApplyPub'), 'QPP statement does not trigger the public-sector reader')
 
