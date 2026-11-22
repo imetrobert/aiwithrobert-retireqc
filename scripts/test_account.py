@@ -13,6 +13,7 @@ html = open(os.path.join(ROOT, 'index.html'), encoding='utf-8').read()
 js = open(os.path.join(ROOT, 'account.js'), encoding='utf-8').read()
 APP = re.search(r"app: '([^']+)'", js).group(1)
 PREFIX = re.search(r"lsPrefix: '([^']+)'", js).group(1)
+PROFILEKEY = re.search(r"profileKey: '([^']+)'", js).group(1)
 FR = "fr: true" in js
 SB = 'https://ipnajvgwtjrlecbqfwrh.supabase.co'
 USERS = {'tester@example.com': ('pw-ok', True), 'other@example.com': ('pw-ok', False)}
@@ -87,7 +88,8 @@ with sync_playwright() as pw:
     page.click('#menuBtn'); page.wait_for_selector('#awr-who')
     first = page.evaluate("document.querySelector('#toolMenu').firstElementChild.id")
     check(first == 'awr-who' and 'tester@example.com' in page.inner_text('#awr-who'), 'menu first row says logged in as the email')
-    check(page.get_attribute('#awr-mi-docs', 'href') == 'guide.pdf', 'menu has a documentation link')
+    DOCS = re.search(r"docs: '([^']*)'", js).group(1)
+    if DOCS: check(page.get_attribute('#awr-mi-docs', 'href') == DOCS, 'menu has a documentation link')
     page.click('#menuBtn')
     # save a plan
     page.fill('#currentAge', '61')
@@ -121,7 +123,7 @@ with sync_playwright() as pw:
     # sign out and clear device plans
     page.click('#awr-pill'); page.click('text=/^Sign out$|^Se déconnecter$/'); page.click('text=/clear device plans|effacer les plans/')
     page.wait_for_selector('#awr-gate')
-    check(page.evaluate("localStorage.getItem('%s_profile_v1')" % PREFIX) is None, 'device plans cleared on sign-out')
+    check(page.evaluate("localStorage.getItem('%s')" % PROFILEKEY) is None, 'device plans cleared on sign-out')
     check(page.is_hidden('#currentAge'), 'planner hidden again after sign-out')
     # delete path through a second login
     page.fill('#awr-email', 'tester@example.com'); page.fill('#awr-pw', 'pw-ok'); page.click('#awr-gate button[type=submit]'); page.wait_for_selector('#awr-pill')
@@ -135,8 +137,8 @@ with sync_playwright() as pw:
         check('Connecté en tant que tester@example.com' in page.inner_text('#awr-who'), 'menu first row is in French')
         page.evaluate("localStorage.removeItem('awr_x')")
         ctx2 = br.new_context(); p2 = ctx2.new_page(); ctx2.route(SB + '/**', handler)
-        p2.add_init_script("localStorage.setItem('qcrp_lang','fr')"); p2.goto(URL); p2.wait_for_selector('#awr-gate')
-        check('Connexion' in p2.inner_text('#awr-gate'), 'sign-in screen follows the French setting')
+        p2.goto(URL + '?lang=fr'); p2.wait_for_selector('#awr-gate')
+        check('Connexion' in p2.inner_text('#awr-gate'), 'address ending in ?lang=fr opens the French sign-in screen')
     # planner runs
     res = page.evaluate("(function(){try{ if(typeof getProfileData!=='function') return 'no getProfileData'; var p=getProfileData(); return typeof p.currentAge; }catch(e){return String(e)}})()")
     check(res == 'number', 'planner form data readable (' + str(res) + ')')
