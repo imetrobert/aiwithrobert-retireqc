@@ -73,6 +73,13 @@ with sync_playwright() as pw:
     page.on('pageerror', lambda e: errors.append(str(e)))
     ctx.route(SB + '/**', handler)
     page.goto(URL); page.wait_for_selector('#awr-gate')
+    from urllib.parse import unquote
+    href = page.get_attribute('#awr-gate .awr-req a', 'href') or ''
+    check(href.startswith('mailto:robert@imetrobert.com?subject='), 'request access: link opens an email to robert@imetrobert.com')
+    check('Access request: ' in unquote(href) and 'retireqc.aiwithrobert.com' in unquote(href) and 'My name:' in unquote(href) and 'My email address:' in unquote(href), 'request access: subject and body name the app and URL and ask for name and email')
+    pfr = ctx.new_page(); pfr.goto(URL + '?lang=fr'); pfr.wait_for_selector('#awr-gate')
+    hfr = unquote(pfr.get_attribute('#awr-gate .awr-req a', 'href') or '')
+    check('Besoin d' in pfr.inner_text('#awr-gate') and 'Demande d' in hfr, 'request access: French wording on the French sign-in screen'); pfr.close()
     check(page.is_hidden('#currentAge'), 'planner hidden before sign-in')
     check(page.locator('#awr-pill').count() == 0, 'no account button before sign-in')
     page.fill('#awr-email', 'tester@example.com'); page.fill('#awr-pw', 'wrong'); page.click('#awr-gate button[type=submit]')
