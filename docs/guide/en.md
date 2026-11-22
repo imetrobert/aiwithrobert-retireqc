@@ -302,3 +302,7 @@ eyebrow: NOTICE
 | OAS (PSV) amounts, clawback, start age | canada.ca/en/services/benefits/public-pensions |
 | Quebec locked-in funds | retraitequebec.gouv.qc.ca |
 | Federal locked-in funds | osfi-bsif.gc.ca |
+
+## Reading your results
+
+At the top of the results, **Your plan in a few lines** says in plain words when your money starts, how long it lasts and what your yearly income is, in today's dollars. Open **What if? Test your plan** to try changes, and **Technical details and assumptions** for the detail behind the numbers. On Step 2, each account has a one-line explanation; amounts marked "example" are placeholders to replace with your own. On Step 3, the Cautious, Balanced and Optimistic buttons fill in example returns that you can change.
