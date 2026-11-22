@@ -184,7 +184,6 @@ Sous la question sur les dépenses à l’étape 2, touchez le lien pour ouvrir 
 - Ajoutez une ligne par dépense **récurrente** : un nom, un montant (affiché avec un $) et la fréquence de facturation : **mensuelle, hebdomadaire ou annuelle**. Entrez le montant tel que facturé. **Mettre toutes les lignes à** change toutes les lignes d’un coup.
 - Les dépenses ponctuelles ou propres à une année n’ont pas leur place ici : ajoutez-les comme événements de vie.
 - Les montants sont en dollars d’aujourd’hui et majorés de l’inflation chaque année.
-- **Afficher mon objectif de dépenses (étape 2) par** choisit si le total, et votre case de dépenses, s’affichent par semaine, par mois ou par année.
 - Touchez **Enregistrer pour ce scénario** (la barre reste visible au bas; **Annuler** abandonne vos changements). Votre case de dépenses se remplit et devient grise. Pour la changer, touchez **Modifier la liste de dépenses**, ou **Ne plus utiliser la liste** pour saisir un chiffre vous-même.
 
 ## Si quelqu’un partage vos dépenses
