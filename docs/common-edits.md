@@ -119,3 +119,6 @@ The guide is written in Markdown: `docs/guide/en.md` and `fr.md`. Find the chapt
 - A button was renamed: search the .md files for the old name and replace it everywhere.
 - Screens look different: Actions, **Guide screenshots**, Run workflow (it retakes the pictures and commits them, then the guide rebuilds).
 - Add a feature: add a short chapter (or a paragraph in the closest chapter) in plain words, then one line in the contents happens by itself.
+
+## Keeping the copied code in step
+`account.js` is a copy in the Quebec, Ontario and personal repos, and `statements.js` is shared by Quebec and personal. `python3 scripts/check_drift.py` (in the Checks workflow) fetches the siblings and fails if `statements.js` differs from the personal copy or if `account.js` has different functions. A red run means: make the same change in the other repos.
