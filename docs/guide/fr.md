@@ -183,7 +183,7 @@ Sous la question sur les dépenses à l’étape 2, touchez le lien pour ouvrir 
 - Les dépenses ponctuelles ou propres à une année n’ont pas leur place ici : ajoutez-les comme événements de vie.
 - Les montants sont en dollars d’aujourd’hui et majorés de l’inflation chaque année.
 - **Afficher mon objectif de dépenses (étape 2) par** choisit si le total, et votre case de dépenses, s’affichent par semaine, par mois ou par année.
-- Touchez **Utiliser cette liste**. Votre case de dépenses se remplit et devient grise. Pour la changer, touchez **Modifier la liste de dépenses**, ou **Ne plus utiliser la liste** pour saisir un chiffre vous-même.
+- Touchez **Enregistrer pour ce scénario** (la barre reste visible au bas; **Annuler** abandonne vos changements). Votre case de dépenses se remplit et devient grise. Pour la changer, touchez **Modifier la liste de dépenses**, ou **Ne plus utiliser la liste** pour saisir un chiffre vous-même.
 
 ## Si quelqu’un partage vos dépenses
 Si vous vivez avec un(e) conjoint(e) ou d’autres personnes, chaque ligne a deux cases liées, **Vous** et **Conjoint(e) / autres**. Tapez votre pourcentage et l’autre case montre le reste. Vide = vous payez 100 %. Seule votre part entre dans votre plan. **Ma part de toutes les dépenses** avec **Appliquer à toutes les lignes** règle toutes les lignes d’un coup.
@@ -205,7 +205,7 @@ Choisissez **Moi et mon ou ma conjoint(e)** au haut de l’étape 1. Vous rempli
 # Événements de vie
 eyebrow: MENU
 side: events.png
-Ouvrez **Événements de vie** depuis le Menu pour des dépenses ponctuelles (une auto, un toit, un mariage) ou des suppléments annuels. Le plan les finance à partir de vos comptes, avec les impôts que cela entraîne.
+Ouvrez **Événements de vie** depuis le Menu pour des dépenses ponctuelles (une auto, un toit, un mariage) ou des suppléments annuels. Le plan les finance à partir de vos comptes, avec les impôts que cela entraîne. Quand vous avez terminé, touchez **Enregistrer pour ce scénario** au bas pour garder vos changements, ou **Annuler** pour tout remettre comme avant.
 
 - Si vous partagez ces dépenses, chaque événement a les mêmes cases liées **Vous** et **Conjoint(e) / autres**. Seule votre part compte dans votre plan.
 - En mode couple, **Recommander un partage optimisé de ces événements** propose un pourcentage pour tous les événements du formulaire ouvert.
