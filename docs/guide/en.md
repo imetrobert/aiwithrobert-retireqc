@@ -185,7 +185,6 @@ Under the spending question in Step 2, tap the link to open **Your expenses** (i
 - Add one row per **recurring** expense: a name, an amount (shown with a $), and how often you are billed: **Monthly, Weekly or Yearly**. Enter the amount as you are billed. **Set all rows to** changes every row at once.
 - One-time or specific-year costs do not belong here. Add them as life events.
 - Amounts are in today's money and are raised for inflation each year.
-- **Show my spending goal (Step 2) per** chooses whether the total, and your spending box, are shown per week, month or year.
 - Tap **Save for this scenario** (the bar is always visible at the bottom; **Cancel** drops your changes). Your spending box fills in and turns grey. To change it, tap **Edit expense list**, or **Stop using the list** to type a number yourself.
 
 ## If someone else shares your expenses
