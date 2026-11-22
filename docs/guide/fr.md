@@ -162,7 +162,7 @@ side: yearcard.png
 Touchez une année dans **Quoi faire chaque année**. Elle s’ouvre en une liste **À faire cette année**, dans l’ordre où vous agiriez.
 
 1. **Total à retirer cette année** (barre bleu foncé) : dépenses + impôts + ce qui est déplacé vers un autre compte.
-2. **Un bloc par compte**, par exemple REER / FERR ou épargne non enregistrée. Chacun indique quoi retirer et à quoi sert cet argent.
+2. **Un bloc par compte**, par exemple REER / FERR ou épargne non enregistrée. Chacun indique quoi retirer et à quoi sert cet argent : frais courants, impôt et **Sert aux événements de vie**, qui énumère chaque événement sous le nom que vous lui avez donné à l’écran Événements de vie (récurrent ou ponctuel) avec le montant que ce compte couvre. Quand plusieurs comptes paient des événements la même année, le montant de chaque compte est réparti entre les événements en proportion de leur coût.
 3. **La note jaune** dit qui s’occupe de l’impôt. « L’institution retient X $ ... Vous recevrez donc Y $ en main » signifie que l’institution retient un acompte sur votre impôt. « Il n’y a aucune retenue à la source : mettez cet argent de côté » signifie que vous devez garder l’argent pour la facture d’impôt.
 4. **Reste après croissance.** Début d’année, moins le retrait, plus la croissance du marché, égale ce qui reste. Le reste est souvent plus élevé que début moins retrait, car vos placements ont crû.
 5. **Non touchés cette année** liste les comptes que le plan laisse en paix, souvent votre CELI.

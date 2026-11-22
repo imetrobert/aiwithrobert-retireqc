@@ -163,7 +163,7 @@ side: yearcard.png
 Tap any year in **What to do each year**. It opens into a **Do this** list, in the order you would act.
 
 1. **Total to take out this year** (dark blue bar): spending + taxes + anything moved to another account.
-2. **One block per account**, for example RRSP/RRIF or Non-registered. Each shows what to withdraw and what that money pays for.
+2. **One block per account**, for example RRSP/RRIF or Non-registered. Each shows what to withdraw and what that money pays for: living costs, tax, and **Goes to life events**, which lists each event by the name you gave it on the Life events screen (recurring or one-time) with the amount that account covers. When several accounts pay for events in the same year, each account's amount is shared across the events in proportion to their cost.
 3. **The yellow note** says who handles the tax. "Bank holds back $X at source, so you receive $Y in pocket" means the institution withholds a down payment on your tax. "There is no withholding tax, so put this money aside" means you must keep money for the tax bill.
 4. **Left after growth.** Start of year, minus withdrawn, plus market growth, equals what is left. The leftover is often higher than start minus withdrawal because your investments grew.
 5. **Not touched this year** lists accounts the plan leaves alone, usually your TFSA.
