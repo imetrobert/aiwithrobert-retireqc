@@ -84,6 +84,11 @@ with sync_playwright() as pw:
     page.wait_for_selector('#awr-pill')
     check(page.is_visible('#currentAge'), 'planner visible after sign-in')
     check('tester@example.com' in page.inner_text('#awr-welcome'), 'welcome banner shows the signed-in email')
+    page.click('#menuBtn'); page.wait_for_selector('#awr-who')
+    first = page.evaluate("document.querySelector('#toolMenu').firstElementChild.id")
+    check(first == 'awr-who' and 'tester@example.com' in page.inner_text('#awr-who'), 'menu first row says logged in as the email')
+    check(page.get_attribute('#awr-mi-docs', 'href') == 'guide.pdf', 'menu has a documentation link')
+    page.click('#menuBtn')
     # save a plan
     page.fill('#currentAge', '61')
     page.click('#awr-pill'); page.wait_for_selector('#awr-p1')
@@ -125,6 +130,9 @@ with sync_playwright() as pw:
     page.wait_for_function("!document.querySelector('#awr-panel .awr-row')")
     check(len(rows) == 0, 'delete removes the row')
     if FR:
+        page.evaluate("localStorage.setItem('qcrp_lang','fr')"); page.reload(); page.wait_for_selector('#awr-pill')
+        page.click('#menuBtn'); page.wait_for_timeout(500)
+        check('Connecté en tant que tester@example.com' in page.inner_text('#awr-who'), 'menu first row is in French')
         page.evaluate("localStorage.removeItem('awr_x')")
         ctx2 = br.new_context(); p2 = ctx2.new_page(); ctx2.route(SB + '/**', handler)
         p2.add_init_script("localStorage.setItem('qcrp_lang','fr')"); p2.goto(URL); p2.wait_for_selector('#awr-gate')

@@ -48,6 +48,7 @@
       noCrypto: 'This browser cannot encrypt here. Open the page over https in a current browser.', saveFail: 'Could not save. Check your connection and try again.',
       soTitle: 'Sign out', soText: 'Do you also want to remove plans stored on this device?', soKeep: 'Sign out, keep device plans', soClear: 'Sign out and clear device plans', cancel: 'Cancel',
       welcome: 'Welcome {email} to your retirement planner', docsLink: 'Read the documentation',
+      loggedIn: 'Logged in as {email}', docsMenu: 'Documentation', docsSub: 'User guide (PDF)', plansSub: 'Saved to your account, encrypted',
       lang: 'Français'
     },
     fr: {
@@ -67,6 +68,7 @@
       noCrypto: 'Ce navigateur ne peut pas chiffrer ici. Ouvrez la page en https dans un navigateur récent.', saveFail: 'Enregistrement impossible. Vérifiez votre connexion et réessayez.',
       soTitle: 'Se déconnecter', soText: 'Voulez-vous aussi supprimer les plans conservés sur cet appareil ?', soKeep: 'Se déconnecter, garder les plans de l’appareil', soClear: 'Se déconnecter et effacer les plans de l’appareil', cancel: 'Annuler',
       welcome: 'Bienvenue {email} dans votre planificateur de retraite', docsLink: 'Lire la documentation',
+      loggedIn: 'Connecté en tant que {email}', docsMenu: 'Documentation', docsSub: 'Guide de l’utilisateur (PDF)', plansSub: 'Enregistrés dans votre compte, chiffrés',
       lang: 'English'
     }
   };
@@ -333,8 +335,31 @@
     kids.push(el('button', { type: 'button', 'aria-label': t('close'), onclick: function () { document.getElementById('awr-welcome').remove(); } }, ['×']));
     document.body.insertBefore(el('div', { id: 'awr-welcome' }, kids), document.body.firstChild);
   }
+  /* The planner's own menu (#toolMenu): first row says who is logged in, plus My plans, Documentation, Sign out. */
+  function refreshMenu() {
+    var m = document.getElementById('toolMenu'); if (!m) return;
+    var em = (S.sess && S.sess.email) || '';
+    var who = document.getElementById('awr-who');
+    if (!who) { who = el('div', { id: 'awr-who', class: 'menu-note', style: 'font-weight:600;word-break:break-all' }); m.insertBefore(who, m.firstChild); }
+    who.textContent = t('loggedIn').replace('{email}', em);
+    function mk(tag, id, ico, label, sub, attrs) {
+      var a = attrs || {}; a.id = id; a.class = 'menu-item';
+      return el(tag, a, [el('span', { class: 'mi-ico' }, [ico]), el('span', {}, [label, el('small', {}, [sub])])]);
+    }
+    ['awr-mi-plans', 'awr-mi-docs', 'awr-mi-out'].forEach(function (i) { var o = document.getElementById(i); if (o) o.remove(); });
+    m.appendChild(mk('button', 'awr-mi-plans', '☁', t('myPlans'), t('plansSub'), { type: 'button', onclick: function () { if (typeof closeMenu === 'function') closeMenu(); openPanel(); } }));
+    if (CFG.docs) m.appendChild(mk('a', 'awr-mi-docs', '📖', t('docsMenu'), t('docsSub'), { href: CFG.docs, target: '_blank', rel: 'noopener', style: 'text-decoration:none;color:inherit' }));
+    m.appendChild(mk('button', 'awr-mi-out', '⎋', t('signOut'), (S.sess && S.sess.email) || '', { type: 'button', onclick: function () { if (typeof closeMenu === 'function') closeMenu(); signOutDialog(); } }));
+  }
+  function hookMenu() {
+    ['menuBtn', 'langBtn'].forEach(function (id) {
+      var b = document.getElementById(id);
+      if (b) b.addEventListener('click', function () { setTimeout(refreshMenu, 0); setTimeout(refreshMenu, 300); });
+    });
+    refreshMenu();
+  }
   function unlocked() {
-    removeLock(); welcome();
+    removeLock(); welcome(); hookMenu();
     if (!document.getElementById('awr-pill')) document.body.appendChild(el('button', { id: 'awr-pill', type: 'button', onclick: openPanel }, ['☁ ' + t('myPlans')]));
   }
 
