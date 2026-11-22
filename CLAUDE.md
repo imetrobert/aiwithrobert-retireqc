@@ -27,6 +27,7 @@ Line numbers: `docs/code-map.md` (generated). The first ~25 lines of `index.html
 - Spousal rollover (household mode, on by default): `hhRollover` passes the first-dying spouse's savings to the survivor tax-free (`p.hhSurv`, `p.hhRollover`); recipe 14 in `docs/common-edits.md`.
 - Expense list: optional list on Step 2 that fills and locks the spending fields (common-edits recipe on the expense list). Test: `python3 scripts/test_expenses.py`.
 - Tax check: `python3 scripts/test_tax.py` compares the tax engine and yearly plan with an independent calculation (own copy of the 2026 numbers at the top of the script). Update that copy whenever the tax numbers change (common-edits recipe on the tax check).
+- Language start: the English address always opens in English (a new browser visit resets `qcrp_lang` to en); only `?lang=fr` (sent by retraiteqc.aiwithrobert.com) opens French. Logic sits at the top of `account.js` and in the i18n block of `index.html`; the browser language is ignored.
 - Test the gate: `python3 scripts/test_account.py` (stubbed server, needs `pip install playwright`). CI runs it.
 - Saved plans table: `migration/planner_profiles.sql` (run once via the Supabase AI prompt in the README).
 
