@@ -228,6 +228,8 @@ Tap **Menu** at the top right of any screen.
 
 On the results screen, **Save on this device** keeps the scenario in this browser, and **Save on device and cloud** also sends it to the cloud in one tap. The **Saved on this device** list marks the scenario you just saved (**JUST SAVED**) and shows a status line under each one: green means the device and cloud copies match, orange means the device copy is newer than the cloud one, and grey means it is only on this device. Under orange or grey, tap **Sync to cloud** to update the cloud copy (you enter your passphrase first if the cloud is locked). The status reflects saves made from this phone.
 
+**Remember the passphrase on this device (optional).** On the passphrase screen, tick **Remember the passphrase on this device** and this phone will not ask for it again. Leave it unticked (the default) on any phone or computer you share. Tapping **Lock** or **Sign out** erases the remembered passphrase, and a wrong remembered passphrase is erased automatically. Anyone who can use your unlocked, signed-in browser could open your cloud scenarios while it is remembered.
+
 If you save while you are already working in a scenario you saved earlier, a box asks what to do: **Overwrite** the saved scenario with what is on screen, **Save as a new scenario** under a name you type, or **Cancel**. The same choice appears when you use **Save this plan** in the cloud panel.
 
 The line "rates verified" at the bottom shows when the built-in tax numbers were last checked.
