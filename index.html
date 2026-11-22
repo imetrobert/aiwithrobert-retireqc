@@ -6944,6 +6944,7 @@ The numbers in that example are placeholders from a prior year — replace every
     P.push(["^LIRA$","CRI"]);
     P.push.apply(P, [["Left after growth", "Reste après croissance"], ["^Start of year$", "Début de l’année"], ["^\\+ Moved in$", "+ Déplacé vers ce compte"], ["^− Withdrawn$", "− Retiré"], ["− Unlocked into the new (?:RRSP / RRIF|REER / FERR)", "− Débloqué vers le nouveau REER / FERR"], ["^([+−]) Market (growth|loss) \\(([\\d.,\\-]+)% for the year\\)$", "$1 Rendement du marché ($3 % pour l’année)"], ["= Left in this account", "= Reste dans ce compte"]]);
     P.push.apply(P, [["Total held back at source", "Total retenu à la source"], ["Only from (.*)\\. It counts toward the tax above when you file\\.", "Seulement de $1. Compte pour l’impôt ci-dessus à la déclaration."]]);
+    P.push(["(Non touchés cette année : [^<]*)\\bTFSA\\b", "$1CELI"]);   // account name inside the "not touched" line
     var FRAGS = P.map(function (x) { return [new RegExp(x[0].replace(/'/g, "['’]"), 'g'), x[1]]; });
     FRAGS.sort(function (p, q) { return q[0].source.length - p[0].source.length; }); // long, specific patterns first
 
