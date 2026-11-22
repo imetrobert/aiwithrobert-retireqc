@@ -164,6 +164,8 @@ Tap any year in **What to do each year**. It opens into a **Do this** list, in t
 
 1. **Total to take out this year** (dark blue bar): spending + taxes + anything moved to another account.
 2. **One block per account**, for example RRSP/RRIF or Non-registered. Each shows what to withdraw and what that money pays for: living costs, tax, and **Goes to life events**, which lists each event by the name you gave it on the Life events screen (recurring or one-time) with the amount that account covers. When several accounts pay for events in the same year, each account's amount is shared across the events in proportion to their cost.
+
+   When part of an account's withdrawal is moved into another account (for example into the TFSA), the source block shows a blue **Moved into …** line and the receiving block shows a green **Transfer in from …** line, so you can see where the money came from.
 3. **The yellow note** says who handles the tax. "Bank holds back $X at source, so you receive $Y in pocket" means the institution withholds a down payment on your tax. "There is no withholding tax, so put this money aside" means you must keep money for the tax bill.
 4. **Left after growth.** Start of year, minus withdrawn, plus market growth, equals what is left. The leftover is often higher than start minus withdrawal because your investments grew.
 5. **Not touched this year** lists accounts the plan leaves alone, usually your TFSA.
@@ -226,6 +228,8 @@ Tap **Menu** at the top right of any screen.
 - **Logged in as** and **Sign out** are in the same menu. Signing out keeps your saved copy on the device.
 
 On the results screen, **Save on this device** keeps the scenario in this browser, and **Save on device and cloud** also sends it to the cloud in one tap. The **Saved on this device** list marks the scenario you just saved (**JUST SAVED**) and shows a status line under each one: green means the device and cloud copies match, orange means the device copy is newer than the cloud one, and grey means it is only on this device. Under orange or grey, tap **Sync to cloud** to update the cloud copy (you enter your passphrase first if the cloud is locked). The status reflects saves made from this phone.
+
+If you save while you are already working in a scenario you saved earlier, a box asks what to do: **Overwrite** the saved scenario with what is on screen, **Save as a new scenario** under a name you type, or **Cancel**. The same choice appears when you use **Save this plan** in the cloud panel.
 
 The line "rates verified" at the bottom shows when the built-in tax numbers were last checked.
 
