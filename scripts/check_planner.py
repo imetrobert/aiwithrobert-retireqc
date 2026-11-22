@@ -58,3 +58,19 @@ if problems:
         print('-', p)
     sys.exit(1)
 print(f'OK: {len(scripts)} script(s) parse, {len(ids)} ids, no duplicates, no network calls.')
+
+# --- account.js: the only file allowed to talk to a server ---
+import os
+if os.path.exists('account.js'):
+    a = open('account.js', encoding='utf-8').read()
+    import subprocess
+    if subprocess.run(['node', '--check', 'account.js']).returncode:
+        sys.exit('account.js has a syntax error')
+    hosts = set(re.findall(r'https?://[^\s\'"`)]+', a))
+    bad = [h for h in hosts if 'ipnajvgwtjrlecbqfwrh.supabase.co' not in h and 'example' not in h and not h.startswith('https://') or 'sb_secret' in h]
+    if 'sb_secret' in a:
+        sys.exit('account.js contains a secret key. Only the publishable key (sb_publishable_...) may appear.')
+    if 'innerHTML' in a:
+        sys.exit('account.js uses innerHTML. Build elements with el() so account data cannot inject markup.')
+    print('OK: account.js parses, no secret key, no innerHTML.')
+
