@@ -21,6 +21,7 @@ Line numbers: `docs/code-map.md` (generated). The first ~25 lines of `index.html
 - `index.html` = the planner (forms, tax, results). Almost every minor feature goes here.
 - `account.js` = sign-in gate, "Welcome <email>" banner, the rows it adds to the planner menu `#toolMenu` (Logged in as, My plans, Documentation, Sign out), saved plans. Touch it only for those.
   Its documentation link is `CFG.docs` (now `guide.pdf`, the user guide in the repo root; blank = link hidden). App id `retire-qc`; the other planner has its own copy.
+- `statements.js` (+ `vendor/pdfjs/`) = reads a government statement PDF on the device and fills QPP fields after Preview/Apply (recipe 11 in docs/common-edits.md). No network calls. Test: `python3 scripts/test_statements.py`. Only FAKE sample PDFs in `tests/fixtures/` (public repo).
 - Test the gate: `python3 scripts/test_account.py` (stubbed server, needs `pip install playwright`). CI runs it.
 - Saved plans table: `migration/planner_profiles.sql` (run once via the Supabase AI prompt in the README).
 
