@@ -1,0 +1,26 @@
+name: Guide screenshots
+# Manual: retakes the phone screenshots used in the guide from the current planner, commits them, then Build guide runs.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  shots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install
+        run: |
+          pip install playwright
+          python3 -m playwright install --with-deps chromium
+      - name: Take screenshots
+        run: python3 scripts/make_guide_shots.py
+      - name: Commit screenshots if they changed
+        run: |
+          if [ -n "$(git status --porcelain docs/guide/img)" ]; then
+            git config user.name "github-actions"
+            git config user.email "actions@users.noreply.github.com"
+            git add docs/guide/img
+            git commit -m "Retake guide screenshots"
+            git push
+          fi
