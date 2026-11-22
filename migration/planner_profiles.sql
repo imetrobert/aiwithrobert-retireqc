@@ -30,7 +30,7 @@ create policy planner_profiles_delete on public.planner_profiles for delete to a
   using (user_id = auth.uid() and public.has_app_access(app));
 
 -- Data API grants (explicit; nothing for anon/public)
-revoke all on public.planner_profiles from anon, public;
+revoke all on public.planner_profiles from authenticated, anon, public;   -- default privileges also give authenticated TRUNCATE etc.; remove them first
 grant select, insert, update, delete on public.planner_profiles to authenticated;
 
 create or replace function public.planner_profiles_touch() returns trigger
