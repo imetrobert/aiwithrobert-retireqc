@@ -103,3 +103,6 @@ Step 1 asks "Are you filling this out for you, or for you and a spouse?". Choosi
 ## Menu and saved copies (wording)
 - Planner menu rows are in `#toolMenu` in `index.html` (Life events, Expenses, Saved on this device, ...); the account rows (My plans (cloud), Documentation, Sign out) are added by `account.js` (`refreshMenu`). There is no floating account button any more: My plans opens from the menu only.
 - "Saved on this device" = scenarios in this browser's localStorage (`showProfileManager`); "My plans (cloud)" = encrypted copies in the user's account. Keep these two names distinct everywhere.
+
+## Update the user guide (guide.pdf)
+The guide is the original PDF (`docs/guide-base.pdf`, never changes) plus a "What is new" section. To document a new feature: edit the text in `scripts/build_guide_update.py` (`en()` and `fr()`), run `python3 scripts/build_guide_update.py`, open `guide.pdf` and check the last pages, commit `guide.pdf` and the script. If the original pages themselves are wrong, the new section takes priority (it says so at the top).
