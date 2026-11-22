@@ -54,7 +54,7 @@
       noCrypto: 'This browser cannot encrypt here. Open the page over https in a current browser.', saveFail: 'Could not save. Check your connection and try again.',
       soTitle: 'Sign out', soText: 'Your Saved on this device copies and the plan in the form can stay on this phone, or be removed. Plans in My plans (cloud) are never affected.', soSure: 'Tap again to delete the device copies', soKeep: 'Sign out, keep device plans', soClear: 'Sign out and clear device plans', cancel: 'Cancel',
       welcome: 'Welcome {email} to your retirement planner', docsLink: 'Read the documentation',
-      loggedIn: 'Logged in as {email}', docsMenu: 'Documentation', docsSub: 'User guide (PDF)', plansSub: 'Open your scenarios on any device with your passphrase',
+      loggedIn: 'Logged in as {email}', docsMenu: 'Documentation', docsSub: 'User guide (PDF)', plansSub: 'Save and open your scenarios on any device with your passphrase',
       lang: 'Français'
     },
     fr: {
@@ -76,7 +76,7 @@
       noCrypto: 'Ce navigateur ne peut pas chiffrer ici. Ouvrez la page en https dans un navigateur récent.', saveFail: 'Enregistrement impossible. Vérifiez votre connexion et réessayez.',
       soTitle: 'Se déconnecter', soText: 'Vos copies Enregistrées sur cet appareil et le plan du formulaire peuvent rester sur ce téléphone, ou être supprimés. Les plans de Mes plans (nuage) ne sont jamais touchés.', soSure: 'Touchez encore pour supprimer les copies de l’appareil', soKeep: 'Se déconnecter, garder les plans de l’appareil', soClear: 'Se déconnecter et effacer les plans de l’appareil', cancel: 'Annuler',
       welcome: 'Bienvenue {email} dans votre planificateur de retraite', docsLink: 'Lire la documentation',
-      loggedIn: 'Connecté en tant que {email}', docsMenu: 'Documentation', docsSub: 'Guide de l’utilisateur (PDF)', plansSub: 'Ouvrez vos scénarios sur tout appareil avec votre phrase secrète',
+      loggedIn: 'Connecté en tant que {email}', docsMenu: 'Documentation', docsSub: 'Guide de l’utilisateur (PDF)', plansSub: 'Enregistrez et ouvrez vos scénarios sur tout appareil avec votre phrase secrète',
       lang: 'English'
     }
   };
