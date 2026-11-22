@@ -224,6 +224,8 @@ Touchez **Menu** en haut à droite de n’importe quel écran.
 - **Nouveau scénario.** Repart d’un formulaire vide.
 - **Connecté en tant que** et **Se déconnecter** sont dans le même menu. Se déconnecter conserve votre copie enregistrée sur l’appareil.
 
+Sur l’écran des résultats, **Enregistrer sur cet appareil** garde le scénario dans ce navigateur, et **Enregistrer sur l’appareil et dans le nuage** l’envoie aussi dans le nuage d’un seul geste. La liste des scénarios enregistrés sur cet appareil marque celui que vous venez d’enregistrer (**ENREGISTRÉ À L’INSTANT**) et affiche une ligne d’état sous chacun : vert, les copies de l’appareil et du nuage sont identiques; orange, la copie de l’appareil est plus récente; gris, le scénario n’est que sur cet appareil. Sous l’orange ou le gris, touchez **Synchroniser avec le nuage** pour mettre à jour la copie du nuage (vous entrez d’abord votre phrase secrète si le nuage est verrouillé). L’état reflète les enregistrements faits depuis ce téléphone.
+
 La ligne « taux vérifiés » au bas indique la date de la dernière vérification des chiffres fiscaux intégrés.
 
 # Règles fiscales du Québec et du Canada utilisées
