@@ -75,7 +75,7 @@ with sync_playwright() as pw:
     page.goto(URL); page.wait_for_selector('#awr-gate')
     from urllib.parse import unquote
     href = page.get_attribute('#awr-gate .awr-req a', 'href') or ''
-    check(href.startswith('mailto:robert@imetrobert.com?subject='), 'request access: link opens an email to robert@imetrobert.com')
+    check(href.startswith('mailto:robert@aiwithrobert.com?subject='), 'request access: link opens an email to robert@aiwithrobert.com')
     check('Access request: ' in unquote(href) and 'retireqc.aiwithrobert.com' in unquote(href) and 'My name:' in unquote(href) and 'My email address:' in unquote(href), 'request access: subject and body name the app and URL and ask for name and email')
     pfr = ctx.new_page(); pfr.goto(URL + '?lang=fr'); pfr.wait_for_selector('#awr-gate')
     hfr = unquote(pfr.get_attribute('#awr-gate .awr-req a', 'href') or '')
