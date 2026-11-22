@@ -580,6 +580,7 @@ details.resultnote:has(#deficitReportBanner:empty):has(#mcReportBanner:empty){di
                 <span class="note-text">Used to independently track when your spouse becomes eligible for their own QPP/OAS/RREGOP — no longer assumed to match your age track.</span>
             </div>
 
+            <details class="fold" id="stmtShortcut"><summary id="stmtSum">Read a government statement (Retraite Québec)</summary><div class="fold-body" id="stmtBody"></div></details>
             <details class="fold" id="aiShortcut"><summary>Optional shortcut: fill this in with an AI chat</summary><div class="fold-body"><p style="margin:0 0 0.4rem;font-size:0.85rem;color:var(--medium-gray)">You can skip this. The screens that follow work on their own. If you try it, the chat takes roughly 5 to 15 minutes depending on the assistant and how many statements you share.</p>
 <div class="ai-card" id="aiPersonalizeCard">
                 <span class="ai-badge">✨ Optional · about 5 to 15 minutes</span>
@@ -6389,6 +6390,7 @@ try{ if(window.syncPensionType) window.syncPensionType(); }catch(e){}
   sync();
 })();
 </script>
+<script src="statements.js" defer></script>
 <script src="account.js" defer></script>
 </body>
 </html>
