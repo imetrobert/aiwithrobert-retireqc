@@ -42,8 +42,8 @@
       wrong: 'That email or password is not right.', noaccess: 'This account does not have access to this planner. Ask Robert to grant it.',
       offline: 'Cannot reach the sign-in service. Check your connection and try again.', revoked: 'Your session ended. Please sign in again.',
       error: 'Something went wrong. Please try again in a moment.', checking: 'Checking your access…', loadFail: 'Could not load sign-in. Check your connection and reload.',
-      myPlans: 'My plans (cloud)', close: 'Close', signedInAs: 'Signed in as',
-      saveH: 'Save this plan to my account', saveHelp: 'Your plan is encrypted on this device before it is saved to your account, so you can open it on any device. (The menu item Saved on this device keeps copies in this browser only.) Only your passphrase can open it, and it cannot be recovered if forgotten.',
+      myPlans: 'My plans (cloud)', menuCloud: 'Save in the cloud', close: 'Close', signedInAs: 'Signed in as',
+      saveH: 'Save this plan to my account', saveHelp: 'Your plan is encrypted on this device before it is saved to your account, so you can open it on any device. (Save on this device keeps copies in this browser only.) Only your passphrase can open it, and it cannot be recovered if forgotten.',
       first: 'First time: choose a passphrase of at least 10 characters (a few words works well). You will need it on every device.',
       pass: 'Passphrase', pass2: 'Repeat the passphrase', unlock: 'Unlock my plans', saveBtn: 'Save this plan', lock: 'Lock',
       listH: 'My saved plans', none: 'No plans saved yet.', open: 'Open in the form', del: 'Delete', unnamed: 'Unnamed plan', savedOn: 'Saved',
@@ -53,7 +53,7 @@
       noCrypto: 'This browser cannot encrypt here. Open the page over https in a current browser.', saveFail: 'Could not save. Check your connection and try again.',
       soTitle: 'Sign out', soText: 'Your Saved on this device copies and the plan in the form can stay on this phone, or be removed. Plans in My plans (cloud) are never affected.', soSure: 'Tap again to delete the device copies', soKeep: 'Sign out, keep device plans', soClear: 'Sign out and clear device plans', cancel: 'Cancel',
       welcome: 'Welcome {email} to your retirement planner', docsLink: 'Read the documentation',
-      loggedIn: 'Logged in as {email}', docsMenu: 'Documentation', docsSub: 'User guide (PDF)', plansSub: 'Encrypted in your account, opens on any device',
+      loggedIn: 'Logged in as {email}', docsMenu: 'Documentation', docsSub: 'User guide (PDF)', plansSub: 'Open your scenarios on any device with your passphrase',
       lang: 'Français'
     },
     fr: {
@@ -63,8 +63,8 @@
       wrong: 'Ce courriel ou ce mot de passe n’est pas correct.', noaccess: 'Ce compte n’a pas accès à ce planificateur. Demandez à Robert de l’autoriser.',
       offline: 'Impossible de joindre le service de connexion. Vérifiez votre connexion et réessayez.', revoked: 'Votre session est terminée. Veuillez vous reconnecter.',
       error: 'Une erreur est survenue. Réessayez dans un instant.', checking: 'Vérification de votre accès…', loadFail: 'Impossible de charger la connexion. Vérifiez votre connexion et rechargez la page.',
-      myPlans: 'Mes plans (nuage)', close: 'Fermer', signedInAs: 'Connecté en tant que',
-      saveH: 'Enregistrer ce plan dans mon compte', saveHelp: 'Votre plan est chiffré sur cet appareil avant d’être enregistré dans votre compte, et vous pouvez l’ouvrir sur tout appareil. (L’élément de menu Enregistrés sur cet appareil conserve des copies dans ce navigateur seulement.) Seule votre phrase secrète peut l’ouvrir, et elle ne peut pas être récupérée si elle est oubliée.',
+      myPlans: 'Mes plans (nuage)', menuCloud: 'Enregistrer dans le nuage', close: 'Fermer', signedInAs: 'Connecté en tant que',
+      saveH: 'Enregistrer ce plan dans mon compte', saveHelp: 'Votre plan est chiffré sur cet appareil avant d’être enregistré dans votre compte, et vous pouvez l’ouvrir sur tout appareil. (Enregistrer sur cet appareil conserve des copies dans ce navigateur seulement.) Seule votre phrase secrète peut l’ouvrir, et elle ne peut pas être récupérée si elle est oubliée.',
       first: 'Première fois : choisissez une phrase secrète d’au moins 10 caractères (quelques mots suffisent). Vous en aurez besoin sur chaque appareil.',
       pass: 'Phrase secrète', pass2: 'Répétez la phrase secrète', unlock: 'Déverrouiller mes plans', saveBtn: 'Enregistrer ce plan', lock: 'Verrouiller',
       listH: 'Mes plans enregistrés', none: 'Aucun plan enregistré pour le moment.', open: 'Ouvrir dans le formulaire', del: 'Supprimer', unnamed: 'Plan sans nom', savedOn: 'Enregistré',
@@ -74,7 +74,7 @@
       noCrypto: 'Ce navigateur ne peut pas chiffrer ici. Ouvrez la page en https dans un navigateur récent.', saveFail: 'Enregistrement impossible. Vérifiez votre connexion et réessayez.',
       soTitle: 'Se déconnecter', soText: 'Vos copies Enregistrées sur cet appareil et le plan du formulaire peuvent rester sur ce téléphone, ou être supprimés. Les plans de Mes plans (nuage) ne sont jamais touchés.', soSure: 'Touchez encore pour supprimer les copies de l’appareil', soKeep: 'Se déconnecter, garder les plans de l’appareil', soClear: 'Se déconnecter et effacer les plans de l’appareil', cancel: 'Annuler',
       welcome: 'Bienvenue {email} dans votre planificateur de retraite', docsLink: 'Lire la documentation',
-      loggedIn: 'Connecté en tant que {email}', docsMenu: 'Documentation', docsSub: 'Guide de l’utilisateur (PDF)', plansSub: 'Chiffrés dans votre compte, accessibles sur tout appareil',
+      loggedIn: 'Connecté en tant que {email}', docsMenu: 'Documentation', docsSub: 'Guide de l’utilisateur (PDF)', plansSub: 'Ouvrez vos scénarios sur tout appareil avec votre phrase secrète',
       lang: 'English'
     }
   };
@@ -359,7 +359,9 @@
       return el(tag, a, [el('span', { class: 'mi-ico' }, [ico]), el('span', {}, [label, el('small', {}, [sub])])]);
     }
     ['awr-mi-plans', 'awr-mi-docs', 'awr-mi-out'].forEach(function (i) { var o = document.getElementById(i); if (o) o.remove(); });
-    m.appendChild(mk('button', 'awr-mi-plans', '☁', t('myPlans'), t('plansSub'), { type: 'button', onclick: function () { if (typeof closeMenu === 'function') closeMenu(); openPanel(); } }));
+    var cloud = mk('button', 'awr-mi-plans', '☁', t('menuCloud'), t('plansSub'), { type: 'button', onclick: function () { if (typeof closeMenu === 'function') closeMenu(); openPanel(); } });
+    var dev = m.querySelector('[onclick*="showProfileManager"]');
+    if (dev && dev.parentNode === m) dev.insertAdjacentElement('afterend', cloud); else m.appendChild(cloud);
     if (CFG.docs) m.appendChild(mk('a', 'awr-mi-docs', '📖', t('docsMenu'), t('docsSub'), { href: CFG.docs, target: '_blank', rel: 'noopener', style: 'text-decoration:none;color:inherit' }));
     m.appendChild(mk('button', 'awr-mi-out', '⎋', t('signOut'), (S.sess && S.sess.email) || '', { type: 'button', onclick: function () { if (typeof closeMenu === 'function') closeMenu(); signOutDialog(); } }));
   }
