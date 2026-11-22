@@ -95,6 +95,24 @@ with sync_playwright() as pw:
     page.wait_for_function("!document.getElementById('stmtOut').textContent.includes('Reading') && document.getElementById('stmtOut').textContent.length > 20")
     check('not a PDF' in out_text(), 'Image file: asks for the PDF')
 
+
+    # 9. public-sector pension statement: yearly scenarios -> employer pension fields
+    fresh(); upload('fake-public-sector-en.pdf'); page.wait_for_selector('#stmtApplyPub')
+    t = out_text()
+    check('$18,900' in t.replace('\u00a0', ' ') and '$21,300' in t and '$9,800' in t, 'Public sector: yearly amounts for the three scenarios shown')
+    check('earliest possible' in t.lower() and 'age 65' in t.lower(), 'Public sector: scenario labels shown')
+    check(page.evaluate("document.querySelector('input[name=stmtPubChoice]:checked').getAttribute('data-v')") == '21300', 'Public sector: default = at 65, payable from 65 ($21,300)')
+    before = val('ownPensionAnnual')
+    check(before != '21300', 'Public sector: nothing filled before Apply')
+    page.evaluate("document.querySelectorAll('input[name=stmtPubChoice]')[3].checked = true")   # unreduced, from 65 = 18,900
+    page.click('#stmtApplyPub')
+    check(val('ownPensionAnnual') == '18900' and val('ownPensionStartAge') == '61', 'Public sector: Apply fills pension per year 18900 and start age 61')
+    check(val('pensionType') in ('db', 'both'), 'Public sector: pension type switched to a DB option')
+    page.check('input[name=stmtWho][value=spouse]')
+    check('Spouse pension' in out_text() and not page.query_selector('#stmtApplyPub'), 'Public sector: spouse statement is not applied (message)')
+    fresh(); upload('fake-qpp-en.pdf'); page.wait_for_selector('#stmtApply')
+    check(not page.query_selector('#stmtApplyPub'), 'QPP statement does not trigger the public-sector reader')
+
     # 8. privacy + health
     outside = [u for u in requests if not u.startswith(ORIGIN) and not u.startswith('data:') and not u.startswith('blob:')
                and 'fonts.googleapis.com' not in u and 'fonts.gstatic.com' not in u]
