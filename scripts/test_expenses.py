@@ -56,7 +56,7 @@ with sync_playwright() as pw:
     if pg.evaluate("!!(window.QCRP_I18N && QCRP_I18N.toggle)"):
         pg.evaluate("QCRP_I18N.toggle()"); pg.evaluate("openExpenses()"); pg.wait_for_timeout(300)
         txt = pg.inner_text('#expSheet') + ' ' + pg.inner_text('#expLockBox')
-        for w in ('Vos dépenses', 'Utiliser cette liste', 'Ajouter une dépense', 'Total par mois'):
+        for w in ('Vos dépenses', 'Enregistrer pour ce scénario', 'Ajouter une dépense', 'Total par mois'):
             check(w in txt, 'French missing: ' + w)
         check('Vos dépenses totalisent' in txt and 'par mois' in txt, 'French lock text: ' + txt[-200:])
     # living with others but planning just for me: each expense has "Your %" (blank = 100%); only my share drives spending
