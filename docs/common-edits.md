@@ -157,3 +157,9 @@ The green block lists only the sources that pay that year, one line each ("From 
 ## One "Why this matters" button per run of notes
 
 In `initInfoNotes()`, long `.note-text` blocks become a "Why this matters" button. When two such notes follow each other, the second is added to the first one's pop-up instead of getting its own button (`btn._holder`).
+
+## French gotchas (Quebec planner)
+- In a `P.push` pattern a literal `?`, `(`, `)` must be escaped as `\\?`, `\\(`, `\\)` (two backslashes in the JS string). An unescaped `?` silently stops the pattern matching.
+- An `EXACT` key must equal the current English text; if you reword the English, update the key (stale keys leave English on screen). `EXACT` is also tried with `<strong>`/`<em>` tags removed.
+- `statements.js` re-renders itself on the `qcrp-lang` event; its file button is a styled label (the native "Choose File" box is hidden), text in `TXT.en` / `TXT.fr`.
+- Audit: open `?lang=fr`, walk every step, popup and result view, and look for English. Popup titles go through the translator in `showInfo`.

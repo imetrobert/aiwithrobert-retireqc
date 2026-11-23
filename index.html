@@ -6224,7 +6224,7 @@ The numbers in that example are placeholders from a prior year — replace every
                 const lb = document.createElement('label'), sp = document.createElement('span'), pc = document.createElement('input');
                 sp.textContent = cp ? hhLabel(k).slice(0, 12) : (k === 'me' ? 'You' : 'Spouse / others');
                 pc.type = 'number'; pc.className = 'ep'; pc.min = '0'; pc.max = '100'; pc.step = 'any'; pc.inputMode = 'decimal'; pc.placeholder = cp ? 'Auto' : (k === 'me' ? '100' : '0');
-                pc.setAttribute('aria-label', (cp ? hhLabel(k) : (k === 'me' ? 'Your' : 'Spouse / others')) + ' pays %');
+                pc.setAttribute('aria-label', 'Share paid by ' + (cp ? hhLabel(k) : (k === 'me' ? 'you' : 'spouse / others')) + ' (%)');
                 lb.appendChild(sp); lb.appendChild(pc); wrap.appendChild(lb); return pc;
             };
             const a = mk('me'), b = mk('sp');
@@ -6432,7 +6432,12 @@ The numbers in that example are placeholders from a prior year — replace every
             sh.innerHTML = '<div class="bd" onclick="closeInfo()"></div><div class="sh" role="dialog" aria-modal="true"><h3></h3><div class="tx"></div><button type="button" class="x secondary" onclick="closeInfo()"><span>Got it</span></button></div>';
             document.body.appendChild(sh);
         }
-        sh.querySelector('h3').textContent = title || 'More info';
+        let ttl = title || 'More info';
+        if (window.QCRP_I18N && QCRP_I18N.lang === 'fr') {
+            const a = QCRP_I18N.tr(ttl);
+            if (a !== ttl) ttl = a; else { const b = QCRP_I18N.tr(ttl + ':'); if (b !== ttl + ':') ttl = b.replace(/[\s\u00a0]*:+$/, ''); }
+        }
+        sh.querySelector('h3').textContent = ttl;
         sh.querySelector('.tx').innerHTML = html;
         sh.classList.add('open');
         if (window.QCRP_I18N && QCRP_I18N.refresh) QCRP_I18N.refresh();
@@ -6993,7 +6998,7 @@ The numbers in that example are placeholders from a prior year — replace every
             "⚠️ <strong>Alerte de déficit :</strong> vous ne pouvez pas maintenir pleinement vos dépenses nettes visées de $1/an (dollars d’aujourd’hui, indexés à l’inflation) jusqu’à votre espérance de vie de $2 ans. Un manque de liquidités commence à <strong>l’âge de $3 ans</strong> (le revenu net tombe à $4/an). Envisagez d’augmenter votre épargne-retraite, de réduire vos dépenses mensuelles visées ou de modifier votre âge de retraite."],
         ["⚠️ <strong>Deficit Warning:</strong> You cannot fully maintain your target net spending of (\\$[\\d,.]+)/yr up until your life expectancy of age (\\d+)\\. A cash shortfall begins at <strong>age (\\d+)</strong> \\(net take-home drops to (\\$[\\d,.]+)/yr\\)\\. Consider increasing your retirement savings, lowering monthly spend targets, or adjusting your retirement age\\.",
             "⚠️ <strong>Alerte de déficit :</strong> vous ne pouvez pas maintenir pleinement vos dépenses nettes visées de $1/an jusqu’à votre espérance de vie de $2 ans. Un manque de liquidités commence à <strong>l’âge de $3 ans</strong> (le revenu net tombe à $4/an). Envisagez d’augmenter votre épargne-retraite, de réduire vos dépenses mensuelles visées ou de modifier votre âge de retraite."],
-        ["✅ <strong>Will your money last?</strong> Yes. Your portfolio covers your full target spending right up to your life expectancy goal of age (\\d+) without running a deficit\\.",
+        ["✅ <strong>Will your money last\\?</strong> Yes. Your portfolio covers your full target spending right up to your life expectancy goal of age (\\d+) without running a deficit\\.",
             "✅ <strong>Votre argent durera-t-il?</strong> Oui. Votre portefeuille couvre l’intégralité de vos dépenses visées jusqu’à votre espérance de vie de $1 ans, sans déficit."],
         ["🎲 <strong>Monte Carlo Result \\((\\d+) independent simulated retirements\\):</strong>", "🎲 <strong>Résultat Monte-Carlo ($1 retraites simulées indépendantes) :</strong>"],
         ["Your plan met its spending target with money left over in", "Votre plan a atteint son objectif de dépenses avec de l’argent en surplus dans"],
@@ -7054,9 +7059,9 @@ The numbers in that example are placeholders from a prior year — replace every
         ["Not modeled: the real RLIF rules require the transfer request to be made within 60 days of the funds first moving into the RLIF, and your plan administrator/financial institution must offer this option — confirm the mechanics and paperwork with them before acting on this\\. This also assumes you haven't already used this one-time right on this account previously\\.",
             "Non modélisé : les vraies règles du FRVR exigent que la demande de transfert soit faite dans les 60 jours suivant l’arrivée des fonds dans le FRVR, et votre administrateur de régime ou institution financière doit offrir cette option — confirmez les modalités et la paperasse avec eux avant d’agir. On suppose aussi que vous n’avez pas déjà exercé ce droit unique sur ce compte."],
         ["RLIF unlocking was enabled but your chosen trigger age \\((\\d+)\\) falls after your life expectancy horizon in this run, so it never occurred in this simulation\\.", "Le déblocage FRVR était activé, mais l’âge choisi ($1 ans) tombe après votre espérance de vie dans cette simulation; il ne s’est donc jamais produit."],
-        ["⚠️ <span class=\"alert-highlight\">Will your money last?</span> Not fully. Your portfolio starts running short around <strong>age (\\d+)</strong> and does not fully sustain your target spend through life expectancy\\.",
+        ["⚠️ <span class=\"alert-highlight\">Will your money last\\?</span> Not fully. Your portfolio starts running short around <strong>age (\\d+)</strong> and does not fully sustain your target spend through life expectancy\\.",
             "⚠️ <span class=\"alert-highlight\">Votre argent durera-t-il?</span> Pas entièrement. Votre portefeuille commence à manquer vers <strong>$1 ans</strong> et ne soutient pas entièrement vos dépenses visées jusqu’à l’espérance de vie."],
-        ["🎉 <span class=\"highlight\">Will your money last?</span> Yes. No year in your plan runs short: your portfolio covers your target spending all the way to <strong>age (\\d+)</strong>\\.",
+        ["🎉 <span class=\"highlight\">Will your money last\\?</span> Yes. No year in your plan runs short: your portfolio covers your target spending all the way to <strong>age (\\d+)</strong>\\.",
             "🎉 <span class=\"highlight\">Votre argent durera-t-il?</span> Oui. Aucune année de votre plan n’est déficitaire : votre portefeuille couvre vos dépenses visées jusqu’à <strong>$1 ans</strong>."],
         ["⚠️ <span class=\"alert-highlight\">Unlock age adjusted:</span> you entered (\\d+), but the federal one-time 50% unlock is only available from age 55, so the model unlocked at 55\\.", "⚠️ <span class=\"alert-highlight\">Âge de déblocage ajusté :</span> vous avez entré $1, mais le déblocage fédéral unique de 50 % n’est possible qu’à partir de 55 ans; le modèle a donc débloqué à 55 ans."],
         ["🔶 <span class=\"highlight\">Cash-flow timing:</span> in (\\d+) year\\(s\\) \\(ages (\\d+)–(\\d+)\\) your institution would withhold up to (\\$[\\d,.]+) more than your actual tax\\. You'd get it back when you file, so you'd need roughly that much extra cash on hand at withdrawal time — the model assumes your full spending amount arrives each year\\.",
@@ -7275,6 +7280,8 @@ The numbers in that example are placeholders from a prior year — replace every
         ["<small>growth</small>", "<small>rendement</small>"], ["<small>age</small>", "<small>âge</small>"],
         ["( \\+ )TFSA\\b", "$1CELI"], ["( \\+ )FTQ fund", "$1Fonds FTQ"], ["( \\+ )Unlocked RRSP / RRIF", "$1REER / FERR déverrouillé"]
     ]);
+    Object.assign(EXACT, {"Not used": "Non utilisé", "Your spouse (%)": "Votre conjoint(e) (%)", "You (%)": "Vous (%)", "How often this is billed": "Fréquence de facturation", "If a plan like RREGOP, a municipal, university or federal public-service plan will pay you a pension, enter the yearly amount from your pension statement, in today’s dollars. (Savings-pot DC pensions go in the LIRA / federal DC boxes above.)": "Si un régime comme le RREGOP, un régime municipal, universitaire ou de la fonction publique fédérale vous versera une pension, entrez le montant annuel de votre relevé de pension, en dollars d’aujourd’hui. (Les régimes à cotisations déterminées de type compte d’épargne vont dans les champs CRI / régime fédéral ci-dessus.)", "Leave at 0 if you don't have one. It is kept apart from your LIRA and treated as its own <strong>federal</strong> locked-in pool (OSFI maximum withdrawal, and it is the money eligible for the RLIF unlock below), while the LIRA above follows the jurisdiction you chose.": "Laissez à 0 si vous n’en avez pas. Ce montant est distinct de votre CRI et traité comme son propre bloc immobilisé <strong>fédéral</strong> (retrait maximal selon le BSIF; c’est aussi l’argent admissible au déblocage FRVR plus bas), tandis que le CRI ci-dessus suit la juridiction que vous avez choisie."});
+    P.push.apply(P, [["^Your spouse: ", "Votre conjoint(e) : "], ["^You: ", "Vous : "], ["^Share paid by [Yy]ou \\(%\\)$", "Part payée par vous (%)"], ["^Share paid by spouse / others \\(%\\)$", "Part payée par conjoint(e) / autres (%)"], ["^Share paid by [Yy]our spouse \\(%\\)$", "Part payée par votre conjoint(e) (%)"], ["^Share paid by (.+) \\(%\\)$", "Part payée par $1 (%)"]]);
     var FRAGS = P.map(function (x) { return [new RegExp(x[0].replace(/'/g, "['’]"), 'g'), x[1]]; });
     FRAGS.sort(function (p, q) { return q[0].source.length - p[0].source.length; }); // long, specific patterns first
 
@@ -7341,9 +7348,15 @@ The numbers in that example are placeholders from a prior year — replace every
                 var m = html.match(/<strong id="rulesVerifiedDateLabel">([^<]*)/);
                 if (m && m[1]) fr = fr.replace('<strong id="rulesVerifiedDateLabel"></strong>', '<strong id="rulesVerifiedDateLabel">' + m[1] + '</strong>');
             } else {
-                fr = html;
-                for (var i = 0; i < FRAGS.length; i++) { FRAGS[i][0].lastIndex = 0; fr = fr.replace(FRAGS[i][0], FRAGS[i][1]); }
-                fr = numFr(fr);
+                // The exact table is also tried with <strong>/<em> removed, so an entry written as plain text still matches.
+                var plainKey = normHtml(html.replace(/<\/?(?:strong|em|b|i)>/g, ''));
+                if (plainKey !== key && EXACT.hasOwnProperty(plainKey)) {
+                    fr = EXACT[plainKey].replace(/&(?!amp;|lt;|gt;|quot;|#)/g, '&amp;');
+                } else {
+                    fr = html;
+                    for (var i = 0; i < FRAGS.length; i++) { FRAGS[i][0].lastIndex = 0; fr = fr.replace(FRAGS[i][0], FRAGS[i][1]); }
+                    fr = numFr(fr);
+                }
             }
             if (fr !== html) { record('html', el, null, html); el.innerHTML = fr; }
             seen.set(el, el.innerHTML);
