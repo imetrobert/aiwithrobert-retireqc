@@ -149,3 +149,7 @@ The bar under the results (Edit inputs, Save on this device, Save on device and 
 ## Volatility box hidden when the portfolio sets it
 
 In Step 3 (Monte Carlo), choosing "My portfolio's own history" in `mcVolSource` hides the `mcVolatility` box, its label (`mcVolLabel`) and hint (`mcVolHint`); the measured figure is shown in the blue panel (`mcPortfolioStatus`). The hidden box still holds the value. Code: `applyMcVolSource()`.
+
+## Year view: "Income that arrives on its own"
+
+The green block lists only the sources that pay that year, one line each ("From QPP", "From OAS", "From a defined-benefit pension (yours or your spouse's)"), built in `yearCardsHtml` from `r.qppInc`, `r.oasIncGross` and `r.pensionInc`. `pensionInc` is NOT the Bell/federal locked-in pension (that has its own account block); it is a defined-benefit pension. French lines are in the `P.push.apply` list (keys start with `^From`).
