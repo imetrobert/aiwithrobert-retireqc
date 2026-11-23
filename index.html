@@ -5291,6 +5291,7 @@ The numbers in that example are placeholders from a prior year — replace every
             return nums.length ? 'Not used' : '';
         }
         let s = fmtInputMoney(first.id, first.value);
+        if (s.charAt(0) !== '$') return first.id === 'inflationPct' ? s + '%' : '';
         const second = nums.find(i => i !== first && /^contrib/i.test(i.id) && parseFloat(i.value) > 0);
         if (second) s += ' · +' + fmtInputMoney('Amount', second.value) + '/yr';
         else if (nums.some(i => /^contrib/i.test(i.id))) s += ' · not adding';
