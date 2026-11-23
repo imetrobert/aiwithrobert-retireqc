@@ -164,3 +164,4 @@ In `initInfoNotes()`, long `.note-text` blocks become a "Why this matters" butto
 - `statements.js` re-renders itself on the `qcrp-lang` event; its file button is a styled label (the native "Choose File" box is hidden), text in `TXT.en` / `TXT.fr`.
 - Audit: open `?lang=fr`, walk every step, popup and result view, and look for English. Popup titles go through the translator in `showInfo`.
 - Account tags and labels built in code (e.g. "RRSP → TFSA", "surplus → …", "You : …", "Your spouse, 2055") need their own `P.push` patterns; check them with a deficit plan, a defined-benefit pension, life events and couple mode on `?lang=fr`.
+- French audit: run `python3 scripts/audit_french.py` after any English wording change (needs `pip install playwright` and `playwright install chromium`). It exits 0 when no English is left (the "Switch to English" button is ignored); each hit is printed with the screen it was on.
