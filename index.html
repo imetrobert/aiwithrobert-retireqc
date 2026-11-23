@@ -7284,6 +7284,7 @@ The numbers in that example are placeholders from a prior year — replace every
     P.push.apply(P, [["^Your spouse: ", "Votre conjoint(e) : "], ["^You: ", "Vous : "], ["^Share paid by [Yy]ou \\(%\\)$", "Part payée par vous (%)"], ["^Share paid by spouse / others \\(%\\)$", "Part payée par conjoint(e) / autres (%)"], ["^Share paid by [Yy]our spouse \\(%\\)$", "Part payée par votre conjoint(e) (%)"], ["^Share paid by (.+) \\(%\\)$", "Part payée par $1 (%)"]]);
     P.push.apply(P, [["^You : ", "Vous : "], ["^Your spouse : ", "Votre conjoint(e) : "], ["^You, (\\d{4})$", "Vous, $1"], ["^Your spouse, (\\d{4})$", "Votre conjoint(e), $1"], ["^QPP / OAS / pension", "RRQ / PSV / pension"], ["^surplus → ", "excédent → "], ["/ Non-reg$", "/ non enr."]]);
     P.push.apply(P, [["→ TFSA\\b", "→ CELI"], ["→ RRSP\\b", "→ REER"], ["→ RRIF\\b", "→ FERR"], ["^RRSP → ", "REER → "], ["^RRIF → ", "FERR → "], ["^TFSA → ", "CELI → "], ["→ Non-reg(istered)?\\b", "→ non enr."]]);
+    P.push.apply(P, [["Household member \\(own plan, share of household spending\\)", "Membre du ménage (plan individuel, part des dépenses du ménage)"], ["Joint Household \\(You &amp; Your Spouse\\)", "Ménage conjoint (vous et votre conjoint(e))"]]);
     var FRAGS = P.map(function (x) { return [new RegExp(x[0].replace(/'/g, "['’]"), 'g'), x[1]]; });
     FRAGS.sort(function (p, q) { return q[0].source.length - p[0].source.length; }); // long, specific patterns first
 
