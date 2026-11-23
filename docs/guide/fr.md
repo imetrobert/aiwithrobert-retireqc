@@ -305,3 +305,5 @@ eyebrow: AVIS
 ## Lire vos résultats
 
 En haut des résultats, **Votre plan en quelques lignes** indique en mots simples quand votre argent commence, combien de temps il dure et votre revenu annuel, en dollars d’aujourd’hui. Ouvrez **Et si? Testez votre plan** pour essayer des changements, et **Détails techniques et hypothèses** pour le détail des chiffres. À l’étape 2, chaque compte a une explication d’une ligne; les montants marqués « exemple » sont des valeurs de départ à remplacer par les vôtres. À l’étape 3, les boutons Prudent, Équilibré et Optimiste remplissent des rendements d’exemple que vous pouvez modifier.
+
+> **Lire le plan de l’année : dépenses, impôts, déplacements.** Sous *Dépenses*, chaque ligne de compte est l’argent que vous recevez réellement. Sous *Impôts*, chaque ligne de compte est ce que l’institution retient, et l’impôt non retenu est indiqué comme argent à mettre de côté. Si l’institution retient plus que l’impôt de l’année, une note précise que la différence vous revient à la déclaration. Chaque carte d’année affiche l’année civile au-dessus de votre âge.
