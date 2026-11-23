@@ -28,3 +28,7 @@ The first lines of each file (between `---`) hold the cover text: `app`, `doc`, 
 ## What to do when a feature changes
 Change only the chapter that describes it (search the `.md` for the button's name). If a button is renamed in the planner,
 search the guide for the old name and replace it everywhere (both languages).
+
+## After retaking screenshots, rebuild the PDF by hand
+
+The "Guide screenshots" workflow commits the new pictures as a bot, and a bot commit does NOT start "Build guide" by itself. Order: Actions, Guide screenshots, Run workflow; when it is green, Actions, Build guide, Run workflow. `guide.pdf` is then rebuilt and committed. (Editing a chapter by hand in `docs/guide/*.md` starts "Build guide" on its own.)
