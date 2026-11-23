@@ -155,7 +155,7 @@ Under it:
 - **Your savings over time.** A chart of all accounts together.
 - **What to do each year.** The year-by-year plan. Switch between the easy cards and the detailed table.
 
-At the bottom, **Edit inputs** returns you to the steps and **Recalculate** refreshes after changes. The small green or red percentage under each age shows that year's market gain or loss.
+At the bottom, **Edit inputs** returns you to the steps and **Test different returns** (at the top of the results) takes you to the Growth step, where you can pick another set of return assumptions and press **Show my plan** to see how it changes your plan. The small green or red percentage under each age shows that year's market gain or loss.
 
 # How to read a yearly card
 eyebrow: READING THE PLAN
@@ -269,7 +269,7 @@ The planner screens run in your browser and never send your figures anywhere. Cl
 Scenarios saved on this device stay in this browser: clearing the browser's data or using a private window removes them. Cloud scenarios are available on any device with your sign-in and passphrase.
 
 ## The plan says my money runs out. What now?
-Try, one at a time: spend a little less, retire a year or two later, delay QPP or OAS, or add more each year. After each change tap Recalculate and compare.
+Try, one at a time: spend a little less, retire a year or two later, delay QPP or OAS, or add more each year. After each change, go back to the results (Edit inputs, then Show my plan) and compare.
 
 ## Why is "Left after growth" higher than my balance minus the withdrawal?
 Your remaining money earns a return during the year. Open "Left after growth" to see the arithmetic.

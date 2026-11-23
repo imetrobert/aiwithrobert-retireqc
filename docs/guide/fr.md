@@ -154,7 +154,7 @@ En dessous :
 - **L’évolution de votre épargne.** Un graphique de tous les comptes ensemble.
 - **Quoi faire chaque année.** Le plan année par année, en cartes simples ou en tableau détaillé.
 
-Au bas, **Modifier les données** vous ramène aux étapes et **Recalculer** actualise après des changements. Le petit pourcentage vert ou rouge sous chaque âge indique le gain ou la perte du marché pour cette année.
+Au bas, **Modifier les données** vous ramène aux étapes et **Tester d’autres rendements** (en haut des résultats) vous amène à l’étape Croissance, où vous pouvez choisir d’autres hypothèses de rendement puis toucher **Afficher mon plan** pour voir l’effet sur votre plan. Le petit pourcentage vert ou rouge sous chaque âge indique le gain ou la perte du marché pour cette année.
 
 # Comment lire une carte annuelle
 eyebrow: LIRE LE PLAN
@@ -268,7 +268,7 @@ Les écrans du planificateur s’exécutent dans votre navigateur et n’envoien
 Ceux enregistrés sur cet appareil restent dans ce navigateur : effacer les données du navigateur ou utiliser une fenêtre privée les supprime. Les scénarios dans le nuage sont disponibles sur tout appareil avec votre connexion et votre phrase secrète.
 
 ## Le plan dit que mon argent s’épuise. Que faire?
-Essayez, un à la fois : dépenser un peu moins, prendre votre retraite un an ou deux plus tard, retarder la RRQ ou la PSV, ou ajouter plus chaque année. Après chaque changement, touchez Recalculer et comparez.
+Essayez, un à la fois : dépenser un peu moins, prendre votre retraite un an ou deux plus tard, retarder la RRQ ou la PSV, ou ajouter plus chaque année. Après chaque changement, revenez aux résultats (Modifier les données, puis Afficher mon plan) et comparez.
 
 ## Pourquoi « Reste après croissance » est-il plus élevé que mon solde moins le retrait?
 Votre argent restant rapporte un rendement pendant l’année. Ouvrez « Reste après croissance » pour voir le calcul.
