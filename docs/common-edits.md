@@ -163,3 +163,4 @@ In `initInfoNotes()`, long `.note-text` blocks become a "Why this matters" butto
 - An `EXACT` key must equal the current English text; if you reword the English, update the key (stale keys leave English on screen). `EXACT` is also tried with `<strong>`/`<em>` tags removed.
 - `statements.js` re-renders itself on the `qcrp-lang` event; its file button is a styled label (the native "Choose File" box is hidden), text in `TXT.en` / `TXT.fr`.
 - Audit: open `?lang=fr`, walk every step, popup and result view, and look for English. Popup titles go through the translator in `showInfo`.
+- Account tags and labels built in code (e.g. "RRSP → TFSA", "surplus → …", "You : …", "Your spouse, 2055") need their own `P.push` patterns; check them with a deficit plan, a defined-benefit pension, life events and couple mode on `?lang=fr`.
