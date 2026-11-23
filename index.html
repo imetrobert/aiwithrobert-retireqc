@@ -204,7 +204,9 @@ EDIT SAFELY: change wording in the HTML only for labels; do not rename element i
             cursor: pointer; user-select: none; -webkit-user-select: none; border-radius: 10px;
         }
         .asset-row.collapsible:not(.collapsed) > h4 { margin-bottom: 0.45rem; }
-        .ch-title { flex: 1; min-width: 0; }
+        .asset-row.collapsible > h4 { flex-wrap: wrap; }
+        .ch-title { flex: 1 1 calc(100% - 2.4rem); min-width: 0; }
+        .ch-sum { order: 3; }
         .ch-sum { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; color: var(--primary-blue); background: rgba(37,99,235,0.09); border-radius: 999px; padding: 0.15rem 0.6rem; white-space: nowrap; }
         .ch-sum:empty { display: none; }
         .asset-row:not(.collapsed) .ch-sum { display: none; }
@@ -2877,7 +2879,7 @@ The numbers in that example are placeholders from a prior year — replace every
         const dc = pensionOn('dc'), db = pensionOn('db');
         document.getElementById('dbCard').style.display = db ? '' : 'none';
         document.getElementById('dcFields').style.display = dc ? '' : 'none';
-        document.getElementById('dcHeading').textContent = dc ? 'Federal-employer pension (DC)' : 'Federal locked-in limits';
+        (function (h) { return h.querySelector('.ch-title') || h; })(document.getElementById('dcHeading')).textContent = dc ? 'Federal-employer pension (DC)' : 'Federal locked-in limits';
         toggleRlifBlock();
         if (typeof refreshCollapsibleSummaries === 'function') refreshCollapsibleSummaries();
     }
