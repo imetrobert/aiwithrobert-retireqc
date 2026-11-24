@@ -1,6 +1,6 @@
 # aiwithrobert-retireqc (Quebec Retirement Planner) - read this first, it is the map
 
-One static file: `index.html` (about 400-600 KB: HTML form for steps 1-3, results in step 4, one big
+One static file: `index.html` (about 700 KB: HTML form for steps 1-3, results in step 4, one big
 `<script>`). No build step. Data saved in localStorage keys `qcrp_*`. Recipes: `docs/common-edits.md`.
 Line numbers: `docs/code-map.md` (generated). The first ~25 lines of `index.html` are an "AI MAP" comment
 (functions, data flow, tax-rule location, edit rules). NEVER read index.html whole: use
