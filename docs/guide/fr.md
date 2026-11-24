@@ -79,6 +79,7 @@ Cet écran demande pour qui est le plan et quand vous voulez prendre votre retra
 3. **Remplissez-vous ceci pour vous seul(e), ou pour vous et un(e) conjoint(e)?** « Juste moi » ou « Moi et mon ou ma conjoint(e) ». L’option de couple est expliquée dans son propre chapitre. Ne la choisissez que si votre conjoint(e) accepte de partager ses données financières avec vous, car vous verrez tous deux les chiffres de l’autre.
 4. **Vivez-vous seul(e)?** Cela compte pour l’impôt : vivre seul donne un crédit du Québec. Si vous vivez avec d’autres personnes, vous pourrez n’entrer que votre part des dépenses.
 5. **Votre âge aujourd’hui et l’âge de retraite visé.** Cochez **Je suis déjà à la retraite** si vous avez cessé de travailler.
+6. **Aurez-vous d’autres revenus à la retraite?** Choisissez **Non** (par défaut) ou **Oui** si vous prévoyez du travail à temps partiel, de la location, une entreprise ou un revenu semblable. Seul **Oui** ajoute une carte à l’étape 2. N’y comptez pas la RRQ, la PSV ni une pension d’employeur : elles ont leurs propres cartes.
 
 Vers le bas de l’étape 1, deux raccourcis facultatifs sont fermés tant que vous ne les ouvrez pas :
 
@@ -99,6 +100,7 @@ Touchez une carte pour l’ouvrir. **Tout développer** et **Tout réduire** ouv
 5. **Compte immobilisé (CRI / FRV).** Solde, ajouts annuels et règles applicables : réglementation québécoise, fédérale (banques, télécoms, lignes aériennes, chemins de fer) ou aucune.
 6. **Votre pension d’employeur.** Prestation fixe à vie (PD), compte d’épargne qui croît (CD) ou les deux.
 7. **Fonds FTQ et épargne non enregistrée.** Remplissez si vous en avez.
+8. **Autres revenus à la retraite.** Affichée seulement si vous avez répondu Oui à l’étape 1. Voir le chapitre sur les autres revenus.
 
 > **Astuce**
 > Chaque carte a un bouton bleu **Pourquoi c’est important**. Touchez-le dès qu’une question n’est pas claire.
@@ -175,6 +177,22 @@ Touchez une année dans **Quoi faire chaque année**. Elle s’ouvre en une list
 
 > **Qui retient l’impôt à la source?**
 > Oui : pension d’employeur, CRI/FRV, REER/FERR et REER/FERR déverrouillé, sur la partie au-dessus du minimum annuel (un REER avant 71 ans et un compte déverrouillé tout neuf retiennent tout). Non : épargne non enregistrée et CELI. L’impôt retenu est crédité à votre déclaration.
+
+# Autres revenus à la retraite
+eyebrow: OUTIL DE L’ÉTAPE 2
+Certaines personnes prévoient un revenu en plus des pensions et de l’épargne : travail à temps partiel, loyers d’un immeuble, petite entreprise. C’est facultatif. Si vous avez répondu **Oui** à « Aurez-vous d’autres revenus à la retraite? » à l’étape 1, une carte **Autres revenus à la retraite** apparaît à l’étape 2. Si vous avez répondu Non, rien ne change.
+
+- **Un seul montant pour chaque année.** Entrez le revenu prévu chaque année, avant impôt. Il est utilisé pour chaque année de votre retraite.
+- **Un montant différent chaque année.** Touchez **Facultatif : saisir un montant différent pour chaque année**. Le planificateur construit la liste à partir de votre âge actuel, de l’âge de la retraite (étape 1) et de l’âge jusqu’auquel vous planifiez (étape 3) : une ligne par année, avec votre âge et l’année civile déjà remplis. Vous n’entrez que le revenu prévu cette année-là. Laissez une année vide si vous n’attendez rien. **Remplir chaque année** copie un même montant dans toutes les lignes.
+- Touchez **Enregistrer pour ce scénario**. Votre case de montant annuel devient grise. Pour changer la liste, touchez **Modifier la liste**, ou **Ne plus utiliser la liste** pour saisir de nouveau un seul montant.
+- **Quels dollars?** Choisissez sur la carte. **Dollars d’aujourd’hui (plus inflation)** majore les montants de l’inflation chaque année, comme vos dépenses. **Dollars de chaque année (sans inflation)** utilise les chiffres exactement tels que saisis.
+- Si vous changez plus tard votre âge ou l’âge de la retraite, la liste suit. Les montants saisis restent associés aux mêmes âges.
+
+> **Comment c’est imposé**
+> Le planificateur traite cet argent comme un revenu imposable ordinaire (comme un revenu de travail, de location ou d’entreprise). Il réduit les retraits nécessaires de votre épargne et peut augmenter votre impôt et la récupération de la PSV. Il n’est pas traité comme un revenu de pension. N’y mettez pas l’argent non imposable.
+
+> **Couples**
+> En mode « Moi et mon ou ma conjoint(e) », chacun répond pour soi, dans son propre formulaire.
 
 # La liste de dépenses
 eyebrow: OUTIL DE L’ÉTAPE 2
