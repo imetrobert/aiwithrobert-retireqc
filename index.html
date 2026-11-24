@@ -2,16 +2,17 @@
 <!--
 AI MAP - read this first, then open only the line ranges you need (file is 400-500 KB: never read it whole; use grep -n or Read with offset/limit).
 Plain-language helpers: planSummaryHtml (results box), ACCT_HELP + cardSummary (Step 2 cards), applyReturnPreset (Step 3). See docs/common-edits.md.
-QUEBEC RETIREMENT PLANNER (GENERIC, for any Quebec employee) v1.2
+QUEBEC RETIREMENT PLANNER (GENERIC, for any Quebec employee) v1.3
 Single static file: HTML form (steps 1-3 inputs, step 4 results) + one <script>. No build step, no network calls. Runs offline; data saved in localStorage.
 LINE ANCHORS (approx., re-grep if stale): APP_VERSION:2053 | TFSA_ANNUAL_LIMIT:3763 | const MONEY_FIELDS:3461 | <style:30 | <script>:2047 | data-step="1":536 | data-step="2":609 | data-step="3":941 | data-step="4":1021 | i18n_EXACT(FR dictionary):5934 | i18n_patterns_P:5947
 FUNCTIONS (name:line): getDefaultTaxRules:2059 getTaxRules:2124 validateTaxRulesShape:2381 calculateTax:2536 qcSeniorCredits:2522 federalLifMaxPct:2568 rrifMinFactor:2579 calcWithholdingTax:2602 pensionAmt:3395 oasAmt:3406 attributeWithdrawalPurposes:3482 runSimulation:3704 runMonteCarlo:4343 calculateRetirementPlan:4368 getProfileData:3013 populateForm:2631 yearCardsHtml:5214 renderResultsUi:5403 balanceChartSvg:5178 showInfo:5446 initInfoNotes:5460 initUi:5492 updateSpendFrequencyLabel:2809 goStep:5073 scaleRowsForDisplay:3693 compareExtraWithdrawals:4834 findMaxSpending:4957 exportScheduleCsv:4684
 FLOW: Show my plan -> calculateRetirementPlan -> runSimulation(p,qppAge,oasAge,taxRules,wantPurposes) per year -> renderResultsUi -> yearCardsHtml (yearly 'what to do' cards) + detailed table.
 TAX RULES: all 2026 numbers live in getDefaultTaxRules() (editable on screen under Tax & benefit rules via ruleXxx ids; stored in localStorage csl_tax_rules_custom_v1). Hard-coded in code: TFSA limit 7000, 50% capital-gains inclusion, RRIF minimum 1/(90-age) before 71, QPP -0.6%/+0.7% and OAS +0.6% per month.
 TAX ENGINE: calculateTax = federal tax less credits x (1-16.5% Quebec abatement) + Quebec tax less credits (qcSeniorCredits). Legacy couple mode splits income 50/50 and each spouse carries half the Quebec senior-credit reduction (famShare 0.5).
-ROW FIELDS (scheduleRows): age, rrspDraw, liraDraw, rlifUnlockedDraw, nonRegDraw, ftqDraw, tfsaDraw, qppInc, oasIncGross, pensionInc, clawback, taxPaid, withholdingTax, actualNetTakeHome, reinvested, tfsaContribution, rlifTransferThisYear, sim* balances, purposes{rrsp,rlif,lira,nonReg,ftq,tfsa -> income,event,tax,transfer}.
+ROW FIELDS (scheduleRows): age, rrspDraw, liraDraw, rlifUnlockedDraw, nonRegDraw, ftqDraw, tfsaDraw, qppInc, oasIncGross, pensionInc, otherInc, clawback, taxPaid, withholdingTax, actualNetTakeHome, reinvested, tfsaContribution, rlifTransferThisYear, sim* balances, purposes{rrsp,rlif,lira,nonReg,ftq,tfsa -> income,event,tax,transfer}.
 HOUSEHOLD (couple) MODE: the planner form is filled in once per person (HH state, hhSwitch); each person runs runSimulation alone on their share of household spending (hhPlanProfiles); results merge in hhRenderHouse. Blocks to grep: '// ---- Household mode', '// ---- Pension income splitting' (hhSplitPensions: moves income between spouses via p.hhTaxAdj), '// ---- Spousal rollover' (hhRollover: first death passes savings to the survivor via p.hhSurv), '// ---- Optional expense list' (EXP, expSync). Old 'couple' calcMode in runSimulation still splits income 50/50 for legacy plans. Extra row fields: splitBase, splitElig, splitAdj. Each expense row and life event has linked % boxes (you / spouse or others, 100% total; hhExpPctInput, hhEnsureEventPct, evMine) and rows have their own Monthly/Weekly/Yearly (freqMult); hhOptimizeSplit and hhOptimizeEvents recommend splits. Recipes: docs/common-edits.md 13 and 14. Tests: scripts/test_household.py, test_expenses.py, test_tax.py.
-CHECK: money in (draws + qpp + oas + pensionInc) = actualNetTakeHome + taxPaid + clawback + reinvested, every year.
+CHECK: money in (draws + qpp + oas + pensionInc + otherInc) = actualNetTakeHome + taxPaid + clawback + reinvested, every year.
+OTHER INCOME (optional, per person): Step 1 question otherIncDecl -> Step 2 card otherIncCard (one yearly otherIncAmt, or a year-by-year list otherIncList built from the ages); block '// ---- Optional other income in retirement'; runSimulation adds otherIncY to totalPublicPens (taxable, NOT pension income); row field otherInc. Recipe 15 in docs/common-edits.md. Test: scripts/test_other_income.py.
 UI HELPERS: long .note-text blocks become 'Why this matters' buttons that open a bottom sheet (showInfo/initInfoNotes). Collapsible account cards = .asset-row (initCollapsibles). Optional settings sit in <details class=more>.
 FRENCH: every English string you change needs a French entry. Add it to Object.assign(EXACT,{...}) (exact text -> French) or P.push([...]) (regex -> French) near the i18n anchors; test with window.QCRP_I18N.toggle().
 Has: 'Personalize with AI' import, encrypted client files (.qcrp), saved profiles. No Bell-specific or ETF-tracker import.
@@ -603,6 +604,13 @@ details.resultnote:has(#deficitReportBanner:empty):has(#mcReportBanner:empty){di
             </label>
             <span class="note-text" id="alreadyRetiredNote" style="display:none;">The plan starts this year at your current age, using your balances as they are today. Contributions are ignored, and spending, benefits and tax rules start at today's values. If you already collect QPP or OAS, switch the optimizer to Manual and enter the age you started.</span>
 
+            <label for="otherIncDecl">Will you have other income during retirement?</label>
+            <select id="otherIncDecl" onchange="oiUi(true)">
+                <option value="no">No</option>
+                <option value="yes">Yes (work, rental, business)</option>
+            </select>
+            <span class="note-text">If yes, a card appears in Step 2. QPP, OAS and employer pensions have their own cards.</span>
+
             <div id="spouseBlock" class="spouse-section">
                 <label for="spouseAge">Your spouse’s age today</label>
                 <input type="number" id="spouseAge" value="55" min="18" max="90">
@@ -917,6 +925,25 @@ details.resultnote:has(#deficitReportBanner:empty):has(#mcReportBanner:empty){di
                         <input type="number" id="oasStartAge" value="65" min="65" max="70">
                     </div>
                 </div>
+            </div>
+
+            <div class="asset-row" id="otherIncCard" style="display:none;">
+                <h4>Other income during retirement</h4>
+                <label for="otherIncAmt">Income expected each year ($)</label>
+                <input type="number" id="otherIncAmt" value="0" step="500" min="0">
+                <span class="note-text">The same amount every year of retirement, before tax. Taxed like any other income.</span>
+                <div id="oiLinkRow" class="oi-linkrow"><button type="button" class="link-btn" onclick="openOtherIncome()">Optional: enter a different amount for each year →</button></div>
+                <div id="oiLockBox" class="oi-lock" hidden>
+                    <strong>Year-by-year list in use</strong>
+                    <span id="oiLockText" class="oi-lock-t"></span>
+                    <span class="oi-lock-t">Edit the list to change it, or stop using the list to type one amount.</span>
+                    <div class="oi-lock-b"><button type="button" class="link-btn" onclick="openOtherIncome()">Edit the list</button><button type="button" class="link-btn" onclick="oiStop()">Stop using the list</button></div>
+                </div>
+                <label for="otherIncBasis">The amounts I enter are in</label>
+                <select id="otherIncBasis" onchange="oiUi()">
+                    <option value="today">Today's dollars (plus inflation)</option>
+                    <option value="year">Dollars of each year (no inflation)</option>
+                </select>
             </div>
 
             <div id="spouseAssetBlock" class="spouse-section">
@@ -2108,7 +2135,7 @@ details.resultnote:has(#deficitReportBanner:empty):has(#mcReportBanner:empty){di
     let lastFinalRun = null;
     let lastExportProfile = null;
     let lastAuditMeta = null;
-    const APP_VERSION = 'Quebec Retirement Planner 1.2 (2026 rules; plain-language redesign, couple-mode Quebec credit fix)';
+    const APP_VERSION = 'Quebec Retirement Planner 1.3 (2026 rules; optional other income in retirement)';
 
     // ============================================================
     // TAX & BENEFIT RULES — editable, versioned, stored separately
@@ -2715,6 +2742,7 @@ The numbers in that example are placeholders from a prior year — replace every
         document.getElementById('spendAmount').value = p.spendAmount ?? 4000;
         updateSpendFrequencyLabel();
         expLoad(p);
+        oiLoad(p);
 
         document.getElementById('currentRrsp').value = p.currentRrsp ?? 250000;
         document.getElementById('contribRrsp').value = p.contribRrsp ?? 5000;
@@ -3136,6 +3164,8 @@ The numbers in that example are placeholders from a prior year — replace every
             spouseAge: parseFloat(document.getElementById('spouseAge').value) || 0,
             spendFrequency: document.getElementById('spendFrequency').value,
             spendAmount: expState().on ? expSpend(EXP.items, EXP.freq) : (parseFloat(document.getElementById('spendAmount').value) || 0),
+            otherIncOn: oiDeclared(), otherIncAmt: Math.max(0, parseFloat(document.getElementById('otherIncAmt').value) || 0), otherIncBasis: document.getElementById('otherIncBasis').value,
+            otherIncListOn: OI.on, otherIncList: Object.assign({}, OI.list),
             expenseOn: expState().on, expenseFreq: EXP.freq, expenseItems: EXP.items.map(i => ({ name: i.name, amount: i.amount, freq: i.freq, pct: (i.pct === undefined ? null : i.pct) })),
 
             currentRrsp: parseFloat(document.getElementById('currentRrsp').value) || 0,
@@ -3685,7 +3715,7 @@ The numbers in that example are placeholders from a prior year — replace every
         return r;
     }
     const MONEY_FIELDS = ['splitAdj', 'rrspDraw', 'simRrsp', 'liraDraw', 'simLira', 'nonRegDraw', 'simNonReg', 'ftqDraw', 'simFtq', 'tfsaDraw', 'simTfsa',
-        'rlifTransferThisYear', 'oRrsp', 'oRlif', 'oLira', 'oBell', 'oNon', 'oFtq', 'oTfsa', 'ulBellBefore', 'ulOtherBefore', 'ulFromBell', 'ulFromOther', 'rlifUnlockedDraw', 'simRlifUnlocked', 'qppInc', 'oasIncGross', 'oasIncNet', 'pensionInc', 'fedDcDraw', 'simFedDcBal', 'clawback', 'taxPaid',
+        'rlifTransferThisYear', 'oRrsp', 'oRlif', 'oLira', 'oBell', 'oNon', 'oFtq', 'oTfsa', 'ulBellBefore', 'ulOtherBefore', 'ulFromBell', 'ulFromOther', 'rlifUnlockedDraw', 'simRlifUnlocked', 'qppInc', 'oasIncGross', 'oasIncNet', 'pensionInc', 'otherInc', 'fedDcDraw', 'simFedDcBal', 'clawback', 'taxPaid',
         'withholdingTax', 'whtRrsp', 'whtRlif', 'whtLira', 'whtFtq', 'actualNetTakeHome', 'reinvested', 'nonRegYieldIncome', 'extraRegWithdrawal', 'eventTotalThisYear', 'targetSpend', 'tfsaContribution', 'tfsaAnnualLimit', 'tfsaRoomLeft', 'nonRegCostBase'];
 
     // ============================================================
@@ -4100,7 +4130,13 @@ The numbers in that example are placeholders from a prior year — replace every
                 oasIncGross += oasAmt(p.spouseOasMonthlyAmt, p.spouseOasStartAge, spouseAgeSim) * idxY;
             }
 
-            let totalPublicPens = qppInc + oasIncGross + annualRregop;
+            // Other income the user expects (work, rental, business): taxed as ordinary income, not pension income.
+            let otherIncY = 0;
+            if (p.otherIncOn) {
+                const oiBase = p.otherIncListOn ? (parseFloat((p.otherIncList || {})[Math.floor(currentAgeSim)]) || 0) : (parseFloat(p.otherIncAmt) || 0);
+                otherIncY = Math.max(0, oiBase) * (p.otherIncBasis === 'year' ? 1 : idxY);
+            }
+            let totalPublicPens = qppInc + oasIncGross + annualRregop + otherIncY;
 
             // LUMP-SUM LIFE EVENTS (wedding, health crisis, etc.): funded in
             // the most tax-efficient order — TFSA first (tax-free, no income
@@ -4522,7 +4558,7 @@ The numbers in that example are placeholders from a prior year — replace every
                 rrspDraw, simRrsp, liraDraw, simLira, nonRegDraw, simNonReg,
                 ftqDraw, simFtq, tfsaDraw, simTfsa,
                 rlifTransferThisYear, rlifUnlockedDraw, simRlifUnlocked, oRrsp: opn.rrsp, oRlif: opn.rlif, oLira: opn.lira, oBell: opn.bell, oNon: opn.non, oFtq: opn.ftq, oTfsa: opn.tfsa, ulBellBefore: ul.bB, ulOtherBefore: ul.oB, ulFromBell: ul.fB, ulFromOther: ul.fO, ulOtherElig: ul.elig,
-                qppInc, oasIncGross, oasIncNet, pensionInc: annualRregop, fedDcDraw, simFedDcBal: simFedDc, clawback: yearClawback,
+                qppInc, oasIncGross, oasIncNet, pensionInc: annualRregop, otherInc: otherIncY, fedDcDraw, simFedDcBal: simFedDc, clawback: yearClawback,
                 taxPaid, withholdingTax, whtRrsp: whtP.whtRrsp, whtRlif: whtP.whtRlif, whtLira: whtP.whtLira, whtFtq: whtP.whtFtq, actualNetTakeHome, reinvested, nonRegYieldIncome, targetSpend: annualNetNeedY, inflationIndex: idxY, extraRegWithdrawal: extraRegThisYear, tfsaContribution: reinvestToTfsa, tfsaSkippedLossYear: !!(tfsaSkipThisYear && tfsaRoom > 1 && p.tfsaMaxMode && p.tfsaMaxMode !== 'off'), tfsaAnnualLimit: tfsaLimitY, tfsaRoomLeft: tfsaRoom, nonRegGainFraction: nonRegGainFrac, nonRegCostBase: nonRegACB,
                 splitBase: standardTaxable, splitElig: pensionEligibleIncome, splitAdj,
                 eventTotalThisYear, eventNamesThisYear, eventDetailsThisYear, purposes
@@ -4679,6 +4715,7 @@ The numbers in that example are placeholders from a prior year — replace every
 
         const showRlifCols = !!p.rlifUnlockEnabled;
         const showPensionCol = finalRun.scheduleRows.some(r => (r.pensionInc || 0) > 0);
+        const showOtherCol = finalRun.scheduleRows.some(r => (r.otherInc || 0) > 0);
         let schedHtml = `
             <table class="sched-table">
                 <tr>
@@ -4700,6 +4737,7 @@ The numbers in that example are placeholders from a prior year — replace every
                     <th class="col-income">QPP</th>
                     <th class="col-income">OAS (gross)</th>
                     ${showPensionCol ? '<th class="col-income">Employer Pension</th>' : ''}
+                    ${showOtherCol ? '<th class="col-income">Other income</th>' : ''}
                     <th class="col-tax">OAS Clawback</th>
                     <th class="col-tax">Est. Tax</th>
                     <th class="col-tax">Withholding 🔶</th>
@@ -4731,6 +4769,7 @@ The numbers in that example are placeholders from a prior year — replace every
                     <td class="col-income">${fmtNum(r.qppInc)}</td>
                     <td class="col-income">${fmtNum(r.oasIncGross)}</td>
                     ${showPensionCol ? `<td class="col-income">${fmtNum(r.pensionInc)}</td>` : ''}
+                    ${showOtherCol ? `<td class="col-income">${fmtNum(r.otherInc)}</td>` : ''}
                     <td class="col-tax">${r.clawback > 0 ? '(' + fmtNum(r.clawback) + ')' : '—'}</td>
                     <td class="col-tax">(${fmtNum(r.taxPaid)})</td>
                     <td class="col-tax" style="${r.withholdingTax > 0 ? 'font-weight:bold;' : ''}">${r.withholdingTax > 0 ? '🔶 (' + fmtNum(r.withholdingTax) + ')' : '—'}</td>
@@ -4844,7 +4883,7 @@ The numbers in that example are placeholders from a prior year — replace every
         headers = headers.concat([
             'LIRA/LIF Draw', 'LIRA/LIF Balance', 'Non-Reg Draw', 'Non-Reg Balance',
             'FTQ Draw', 'FTQ Balance', 'TFSA Draw', 'TFSA Balance', 'TFSA Contribution',
-            'QPP Income', 'OAS (gross)', 'Employer Pension', 'OAS Clawback', 'Estimated Tax',
+            'QPP Income', 'OAS (gross)', 'Employer Pension', 'Other Income', 'OAS Clawback', 'Estimated Tax',
             'Withholding Tax (info only - already inside Estimated Tax)', 'Reinvested', 'Net Spend'
         ]);
 
@@ -4863,7 +4902,7 @@ The numbers in that example are placeholders from a prior year — replace every
                 -Math.round(r.nonRegDraw), Math.round(r.simNonReg),
                 -Math.round(r.ftqDraw), Math.round(r.simFtq),
                 -Math.round(r.tfsaDraw), Math.round(r.simTfsa), Math.round(r.tfsaContribution || 0),
-                Math.round(r.qppInc), Math.round(r.oasIncGross), Math.round(r.pensionInc || 0), -Math.round(r.clawback),
+                Math.round(r.qppInc), Math.round(r.oasIncGross), Math.round(r.pensionInc || 0), Math.round(r.otherInc || 0), -Math.round(r.clawback),
                 -Math.round(r.taxPaid), Math.round(r.withholdingTax), Math.round(r.reinvested), -Math.round(r.actualNetTakeHome)
             ]);
             return { row: row, r: r };
@@ -5002,7 +5041,7 @@ The numbers in that example are placeholders from a prior year — replace every
                 tfsaDraw: 'TFSA withdrawal', simTfsa: 'TFSA year-end balance',
                 purposes: 'Per account: that year\'s withdrawal split into income / event / tax / transfer (adds to the draw), with tags; plus eventNames, rlifUnlock (not a withdrawal), reinvestToTfsa and reinvestToNonReg',
                 rlifTransferThisYear: 'Amount moved from LIRA/LIF into unlocked RLIF pool', rlifUnlockedDraw: 'Unlocked RLIF withdrawal', simRlifUnlocked: 'Unlocked RLIF year-end balance',
-                qppInc: 'QPP income', oasIncGross: 'OAS before clawback', oasIncNet: 'OAS after clawback', pensionInc: 'Employer pension income (own defined-benefit pension plus any spouse RREGOP), before tax', clawback: 'OAS clawback',
+                qppInc: 'QPP income', oasIncGross: 'OAS before clawback', oasIncNet: 'OAS after clawback', pensionInc: 'Employer pension income (own defined-benefit pension plus any spouse RREGOP), before tax', otherInc: 'Other income you entered (work, rental, business), before tax', clawback: 'OAS clawback',
                 taxPaid: 'Estimated combined federal+Quebec tax', withholdingTax: 'Withholding at source (information only, inside taxPaid)',
                 actualNetTakeHome: 'Net spendable cash that year', reinvested: 'Surplus reinvested', targetSpend: 'Spending target that year, in that year\'s dollars', inflationIndex: 'Price level vs today (1.00 = today)', extraRegWithdrawal: 'Extra RRSP/LIF withdrawal beyond spending needs (estate melt-down), already included in the draw fields above', nonRegYieldIncome: 'Taxable income thrown off by the non-registered account that year', eventTotalThisYear: 'Life-event lump sum that year, in that year\'s dollars', tfsaContribution: 'Money put into the TFSA that year', tfsaSkippedLossYear: 'True if the TFSA contribution was skipped because that year\'s return was zero or negative', tfsaAnnualLimit: 'Estimated new TFSA room that year', tfsaRoomLeft: 'Unused TFSA room after this year\'s contribution', nonRegGainFraction: 'Share of the non-registered balance that was unrealized gain at the start of the year', nonRegCostBase: 'Non-registered cost base (ACB) at year end', eventDetailsThisYear: 'Each event that year: amount in today\'s dollars and in that year\'s dollars'
             },
@@ -5311,6 +5350,7 @@ The numbers in that example are placeholders from a prior year — replace every
         return String(n);
     }
     function cardSummary(card) {
+        if (card.id === 'otherIncCard') return typeof oiSummary === 'function' ? oiSummary() : '';
         const idm = card.id || '';
         const gq = card.querySelector('#qppMonthlyAmt, #spouseQppMonthlyAmt');
         if (gq) {
@@ -5352,6 +5392,7 @@ The numbers in that example are placeholders from a prior year — replace every
     }
     // One plain sentence under each account name: what it is and where to find the number.
     const ACCT_HELP = [
+            [/^Other income/, "Work, rental or business income you expect while retired. It is taxed like any other income."],
             [/^📈 Inflation/, "Prices rise over time. These settings keep your spending power the same from year to year."],
             [/^RRSP/, "Your registered retirement savings. Every dollar you take out counts as taxable income. The balance is on your bank, insurer or investment statement."],
             [/^TFSA/, "Your tax-free savings. Money taken out is not taxed and does not reduce your government benefits."],
@@ -5473,7 +5514,7 @@ The numbers in that example are placeholders from a prior year — replace every
             const evt = r.eventTotalThisYear || 0;
             const deficit = r.age <= p.lifeExpectancy && r.actualNetTakeHome < (tgt + evt) * 0.98;
             const total = rowTotalBalance(r);
-            const pens = (r.qppInc || 0) + (r.oasIncGross || 0) + (r.pensionInc || 0);
+            const pens = (r.qppInc || 0) + (r.oasIncGross || 0) + (r.pensionInc || 0) + (r.otherInc || 0);
             const draws = ACC.map(a => [a, r[a[2]] || 0]).filter(x => has(x[1]));
             const withdrawn = draws.reduce((t, x) => t + x[1], 0);
             const taxBill = (r.taxPaid || 0) + (r.clawback || 0);
@@ -5596,7 +5637,7 @@ The numbers in that example are placeholders from a prior year — replace every
             const pensCover = genPen + (has(evt) ? Math.max(0, evt - sumP('event')) : 0);
             if (has(pens)) {
                 acctHtml += '<div class="yp-acct pen"><div class="yp-ah"><span>Income that arrives on its own</span><b>' + fmtNum(pens) + '</b></div>' +
-                    [[r.qppInc, 'QPP'], [r.oasIncGross, 'OAS'], [r.pensionInc, "a defined-benefit pension (yours or your spouse's)"]].filter(x => has(x[0])).map(x => '<div class="yp-al">From ' + x[1] + ' <b>' + fmtNum(x[0]) + '</b></div>').join('') +
+                    [[r.qppInc, 'QPP'], [r.oasIncGross, 'OAS'], [r.pensionInc, "a defined-benefit pension (yours or your spouse's)"], [r.otherInc, 'your other income']].filter(x => has(x[0])).map(x => '<div class="yp-al">From ' + x[1] + ' <b>' + fmtNum(x[0]) + '</b></div>').join('') +
                     (has(pensCover) ? '<div class="yp-al">Goes to spending <b>' + fmtNum(pensCover) + '</b></div>' : '') +
                     (has(taxPen) ? '<div class="yp-al">Goes to tax <b>' + fmtNum(taxPen) + '</b></div>' : '') +
                     (has(penMove) ? '<div class="yp-al">Moved or reinvested <b>' + fmtNum(penMove) + '</b></div>' : '') + '</div>';
@@ -5851,7 +5892,7 @@ The numbers in that example are placeholders from a prior year — replace every
         const s = hhClone(me) || {}; delete s.hhSpouse; delete s.id; s.name = '';
         ['currentRrsp', 'contribRrsp', 'currentTfsa', 'contribTfsa', 'liraBalance', 'contribLira', 'fedDcBalance', 'contribFedDc', 'ftqBalance', 'contribFtq', 'currentNonReg', 'contribNonReg', 'ownPensionAnnual', 'extraRegAmt', 'tfsaRoomNow']
             .forEach(k => { if (k in s) s[k] = 0; });
-        s.events = []; s.recurringEvents = []; s.rlifUnlockEnabled = false; s.livesAlone = 'no'; s.calcMode = 'couple'; s.alreadyRetired = false;
+        s.otherIncOn = false; s.otherIncAmt = 0; s.otherIncListOn = false; s.otherIncList = {}; s.events = []; s.recurringEvents = []; s.rlifUnlockEnabled = false; s.livesAlone = 'no'; s.calcMode = 'couple'; s.alreadyRetired = false;
         return s;
     }
     function hhFromLegacy(p) {   // plans saved before household mode kept the spouse in a few fields on the same form
@@ -6112,8 +6153,8 @@ The numbers in that example are placeholders from a prior year — replace every
         const take = r => ['rrspDraw', 'liraDraw', 'rlifUnlockedDraw', 'ftqDraw', 'nonRegDraw', 'tfsaDraw'].reduce((s, k) => s + (r[k] || 0), 0);
         const acc = r => [['RRSP/RRIF', r.rrspDraw], ['Locked-in', r.liraDraw], ['Unlocked', r.rlifUnlockedDraw], ['FTQ', r.ftqDraw], ['Non-reg.', r.nonRegDraw], ['TFSA', r.tfsaDraw]]
             .filter(x => (x[1] || 0) > 0.5).map(x => '<span class="hh-ac"><i>' + x[0] + '</i> <span>' + fmt(x[1]) + '</span></span>').join('<span> · </span>');
-        const gov = r => (r.qppInc != null ? r.qppInc : 0) + (r.oasIncGross || 0) + (r.pensionInc || 0);
-        const cell = r => r ? '<td><b>' + fmt(take(r)) + '</b><small>' + (acc(r) || '–') + '</small><small><i>Benefits &amp; pension</i> <span>' + fmt(gov(r)) + '</span></small></td>' : '<td>–</td>';
+        const gov = r => (r.qppInc != null ? r.qppInc : 0) + (r.oasIncGross || 0) + (r.pensionInc || 0) + (r.otherInc || 0);
+        const cell = r => r ? '<td><b>' + fmt(take(r)) + '</b><small>' + (acc(r) || '–') + '</small><small><i>' + (r.otherInc > 0 ? 'Benefits, pension &amp; other income' : 'Benefits &amp; pension') + '</i> <span>' + fmt(gov(r)) + '</span></small></td>' : '<td>–</td>';
         let rows = '', taxTot = 0;
         for (let i = 0; i < n; i++) {
             const a = rA[i], b = rB[i];
@@ -6422,6 +6463,153 @@ The numbers in that example are placeholders from a prior year — replace every
         const amt = document.getElementById('spendAmount');
         amt.dispatchEvent(new Event('input', { bubbles: true })); amt.dispatchEvent(new Event('change', { bubbles: true }));
         if (typeof refreshCollapsibleSummaries === 'function') refreshCollapsibleSummaries();
+        try { saveProfileProgress(); showSaveBadge('Saved for this scenario'); } catch (e) { /* ignore */ }
+    }
+
+    // ---- Optional other income in retirement (work, rental, business): one yearly amount or a year-by-year list ----
+    // Saved with the plan as otherIncOn / otherIncAmt / otherIncBasis / otherIncListOn / otherIncList ({age: amount}).
+    // runSimulation adds it to taxable income every year (row field otherInc); it is NOT pension income.
+    var OI = { on: false, list: {} }, oiDraft = null;
+    (function () {
+        const st = document.createElement('style');
+        st.textContent = '#otherIncAmt:disabled{opacity:.55;background:#eef1f5;color:#64748b;cursor:not-allowed}'
+            + '.oi-linkrow{margin:-0.3rem 0 0.9rem}.oi-lock{background:#f1f5f9;border:1px solid #cbd5e1;border-radius:12px;padding:0.7rem 0.8rem;margin:-0.3rem 0 0.9rem;font-size:0.82rem;line-height:1.45;color:#334155}.oi-lock[hidden]{display:none}.oi-lock strong{display:block;color:#0f172a}.oi-lock-t{display:block}.oi-lock-b{display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.3rem}'
+            + '#oiSheet{position:fixed;inset:0;z-index:9998;display:none}#oiSheet.open{display:block}#oiSheet .bd{position:absolute;inset:0;background:rgba(15,23,42,.5)}'
+            + '#oiSheet .sh{position:absolute;left:0;right:0;bottom:0;max-height:92vh;overflow:auto;background:#fff;border-radius:18px 18px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom));box-shadow:0 -8px 30px rgba(0,0,0,.25)}'
+            + '#oiSheet h3{margin:0 0 8px}#oiSheet .oi-note{display:block;font-size:13px;line-height:1.45;color:#475569;margin:0 0 8px}'
+            + '#oiSheet .oi-row{display:flex;gap:8px;align-items:center;margin:0 0 6px}#oiSheet .oi-a{flex:0 0 66px;font-weight:700}#oiSheet .oi-y{flex:0 0 52px;color:#64748b}#oiSheet .oi-row input{margin:0;min-width:0;flex:1 1 auto;width:auto}'
+            + '#oiSheet .oi-head{font-size:12px;color:#64748b;font-weight:700}#oiSheet .oi-head span:last-child{flex:1 1 auto}'
+            + '#oiSheet .oi-tot{display:flex;justify-content:space-between;align-items:center;margin:10px 0;padding:10px 12px;border-radius:12px;background:#eff6ff;font-weight:700;color:#1e3a8a}'
+            + '#oiSheet .oi-err{color:#b91c1c;font-size:13px;margin:6px 0}#oiSheet .oi-err[hidden]{display:none}#oiSheet .oi-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}'
+            + '#oiSheet .oi-save{display:flex;gap:8px;margin-top:12px}#oiSheet .oi-save button{flex:1}';
+        document.head.appendChild(st);
+    })();
+    function oiRange() {   // first and last year of the list, from the ages in Steps 1 and 3
+        const cur = parseInt(document.getElementById('currentAge').value, 10);
+        const ret = document.getElementById('alreadyRetired').checked ? cur : parseInt(document.getElementById('targetAge').value, 10);
+        const end = parseInt(document.getElementById('lifeExpectancy').value, 10);
+        if (!(cur > 0) || !(ret >= cur) || !(end >= ret) || end - ret > 80) return null;
+        return { cur: cur, start: ret, end: end, year: new Date().getFullYear() };
+    }
+    function oiClean(list) {
+        const o = {};
+        if (list && typeof list === 'object') Object.keys(list).forEach(k => {
+            const a = parseInt(k, 10), v = Math.round((parseFloat(list[k]) || 0) * 100) / 100;
+            if (a >= 0 && a <= 130 && v > 0) o[a] = v;
+        });
+        return o;
+    }
+    function oiMoney(n) { return '$' + Math.round(n).toLocaleString('en-CA'); }
+    function oiDeclared() { const d = document.getElementById('otherIncDecl'); return !!d && d.value === 'yes'; }
+    function oiTotal(list, r) {
+        let t = 0, n = 0;
+        if (r) for (let a = r.start; a <= r.end; a++) { const v = parseFloat(list[a]) || 0; if (v > 0) { t += v; n++; } }
+        return { total: t, years: n };
+    }
+    function oiSummary() {
+        if (!oiDeclared()) return '';
+        if (OI.on) return 'Year by year';
+        const v = parseFloat(document.getElementById('otherIncAmt').value) || 0;
+        return v > 0 ? oiMoney(v) + ' a year' : 'Not used';
+    }
+    function oiLoad(p) {   // called by populateFormRaw
+        const d = document.getElementById('otherIncDecl'); if (!d) return;
+        d.value = (p && p.otherIncOn) ? 'yes' : 'no';
+        document.getElementById('otherIncAmt').value = Math.max(0, parseFloat(p && p.otherIncAmt) || 0);
+        document.getElementById('otherIncBasis').value = (p && p.otherIncBasis === 'year') ? 'year' : 'today';
+        const list = oiClean(p && p.otherIncList);
+        OI = { on: !!(p && p.otherIncListOn) && Object.keys(list).length > 0, list: list };
+        oiDraft = null;
+        oiUi();
+    }
+    function oiUi(opened) {
+        const card = document.getElementById('otherIncCard'); if (!card) return;
+        const yes = oiDeclared();
+        card.style.display = yes ? '' : 'none';
+        if (yes && opened === true && typeof setCardCollapsed === 'function') setCardCollapsed(card, false);
+        document.getElementById('otherIncAmt').disabled = OI.on;
+        document.getElementById('oiLinkRow').style.display = OI.on ? 'none' : '';
+        document.getElementById('oiLockBox').hidden = !OI.on;
+        if (OI.on) {
+            const t = oiTotal(OI.list, oiRange());
+            document.getElementById('oiLockText').textContent = 'Your year-by-year list adds up to ' + oiMoney(t.total) + ' over ' + t.years + (t.years === 1 ? ' year.' : ' years.');
+        }
+        if (typeof refreshCollapsibleSummaries === 'function') refreshCollapsibleSummaries();
+        if (window.QCRP_I18N && QCRP_I18N.refresh) QCRP_I18N.refresh();
+    }
+    ['currentAge', 'targetAge', 'lifeExpectancy', 'alreadyRetired'].forEach(id => { const e = document.getElementById(id); if (e) { e.addEventListener('change', () => { if (OI.on) oiUi(); }); } });
+    function oiStop() {
+        OI.on = false; oiDraft = null; closeOi(); oiUi();
+        try { saveProfileProgress(); } catch (e) { /* ignore */ }
+    }
+    function buildOiSheet() {
+        let sh = document.getElementById('oiSheet'); if (sh) return sh;
+        sh = document.createElement('div'); sh.id = 'oiSheet';
+        sh.innerHTML = '<div class="bd" onclick="oiCancel()"></div><div class="sh" role="dialog" aria-modal="true">'
+            + '<h3>Other income, year by year</h3>'
+            + '<span class="oi-note" id="oiRangeNote"></span>'
+            + '<span class="oi-note">Enter what you expect to receive each year, before tax. Leave a year blank if you expect nothing. Work, rental and business income are taxed like any other income.</span>'
+            + '<span class="oi-note" id="oiBasisNote"></span>'
+            + '<label for="oiFillVal">Fill every year with the same amount (optional)</label>'
+            + '<div class="oi-btns"><input type="number" id="oiFillVal" min="0" step="any" inputmode="decimal" placeholder="Amount ($)" style="max-width:150px"><button type="button" class="secondary" onclick="oiFill()">Fill every year</button></div>'
+            + '<div class="oi-row oi-head"><span class="oi-a">Age</span><span class="oi-y">Year</span><span>Income expected ($)</span></div>'
+            + '<div id="oiList"></div>'
+            + '<div class="oi-tot"><span>Total over these years</span><b id="oiTotal">$0</b></div>'
+            + '<div class="oi-err" id="oiErr" hidden>Enter an amount for at least one year, or tap Cancel.</div>'
+            + '<div class="oi-btns"><button type="button" class="link-btn" id="oiStopBtn" onclick="oiStop()">Stop using the list</button></div>'
+            + '<div class="oi-save"><button type="button" class="secondary" onclick="oiCancel()">Cancel</button><button type="button" onclick="oiCommit()">Save for this scenario</button></div></div>';
+        document.body.appendChild(sh);
+        return sh;
+    }
+    function openOtherIncome() {
+        if (!oiDraft) oiDraft = Object.assign({}, OI.list);
+        const sh = buildOiSheet();
+        document.getElementById('oiErr').hidden = true;
+        document.getElementById('oiStopBtn').style.display = OI.on ? '' : 'none';
+        oiRender();
+        sh.classList.add('open');
+        if (window.QCRP_I18N && QCRP_I18N.refresh) QCRP_I18N.refresh();
+    }
+    function closeOi() { const sh = document.getElementById('oiSheet'); if (sh) sh.classList.remove('open'); }
+    function oiCancel() { oiDraft = null; closeOi(); }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeOi(); });
+    function oiFill() {
+        const v = parseFloat(document.getElementById('oiFillVal').value), r = oiRange();
+        if (!r || !isFinite(v) || v < 0) return;
+        for (let a = r.start; a <= r.end; a++) oiDraft[a] = v;
+        oiRender();
+    }
+    function oiRender() {
+        const r = oiRange(), list = document.getElementById('oiList'); list.innerHTML = '';
+        document.getElementById('oiRangeNote').textContent = r
+            ? 'Ages ' + r.start + ' to ' + r.end + ', from the ages you entered in Steps 1 and 3 (you are ' + r.cur + ' today). Change them there to change this list.'
+            : 'First enter your age today and the age you retire in Step 1, and the age to plan until in Step 3. The list is built from them.';
+        document.getElementById('oiBasisNote').textContent = document.getElementById('otherIncBasis').value === 'year'
+            ? 'Amounts are in the dollars of each year: they are not raised for inflation.'
+            : 'Amounts are in today\'s dollars: the plan raises them for inflation each year. You can change this on the card.';
+        if (!r) { oiUpdateTotal(); return; }
+        for (let a = r.start; a <= r.end; a++) {
+            const row = document.createElement('div'); row.className = 'oi-row';
+            const ag = document.createElement('span'); ag.className = 'oi-a'; ag.textContent = 'Age ' + a;
+            const yr = document.createElement('span'); yr.className = 'oi-y'; yr.textContent = String(r.year + (a - r.cur));
+            const inp = document.createElement('input'); inp.type = 'number'; inp.min = '0'; inp.step = 'any'; inp.inputMode = 'decimal';
+            inp.setAttribute('aria-label', 'Income expected at age ' + a);
+            const cur = parseFloat(oiDraft[a]); inp.value = cur > 0 ? cur : '';
+            inp.oninput = () => { oiDraft[a] = inp.value; oiUpdateTotal(); };
+            row.appendChild(ag); row.appendChild(yr); row.appendChild(inp); list.appendChild(row);
+        }
+        oiUpdateTotal();
+    }
+    function oiUpdateTotal() {
+        const t = oiTotal(oiDraft || {}, oiRange());
+        document.getElementById('oiTotal').textContent = oiMoney(t.total);
+        document.getElementById('oiErr').hidden = true;
+    }
+    function oiCommit() {
+        const r = oiRange(), list = oiClean(oiDraft);
+        if (!r || !oiTotal(list, r).years) { document.getElementById('oiErr').hidden = false; return; }
+        OI = { on: true, list: list };
+        oiDraft = null; closeOi(); oiUi();
         try { saveProfileProgress(); showSaveBadge('Saved for this scenario'); } catch (e) { /* ignore */ }
     }
 
@@ -7285,6 +7473,45 @@ The numbers in that example are placeholders from a prior year — replace every
     P.push.apply(P, [["^You : ", "Vous : "], ["^Your spouse : ", "Votre conjoint(e) : "], ["^You, (\\d{4})$", "Vous, $1"], ["^Your spouse, (\\d{4})$", "Votre conjoint(e), $1"], ["^QPP / OAS / pension", "RRQ / PSV / pension"], ["^surplus → ", "excédent → "], ["/ Non-reg$", "/ non enr."]]);
     P.push.apply(P, [["→ TFSA\\b", "→ CELI"], ["→ RRSP\\b", "→ REER"], ["→ RRIF\\b", "→ FERR"], ["^RRSP → ", "REER → "], ["^RRIF → ", "FERR → "], ["^TFSA → ", "CELI → "], ["→ Non-reg(istered)?\\b", "→ non enr."]]);
     P.push.apply(P, [["Household member \\(own plan, share of household spending\\)", "Membre du ménage (plan individuel, part des dépenses du ménage)"], ["Joint Household \\(You &amp; Your Spouse\\)", "Ménage conjoint (vous et votre conjoint(e))"]]);
+    Object.assign(EXACT, {
+        "Will you have other income during retirement?": "Aurez-vous d’autres revenus à la retraite ?",
+        "No": "Non",
+        "Yes (work, rental, business)": "Oui (travail, location, entreprise)",
+        "If yes, a card appears in Step 2. QPP, OAS and employer pensions have their own cards.": "Si oui, une carte apparaît à l’étape 2. La RRQ, la PSV et les pensions d’employeur ont leurs propres cartes.",
+        "Other income during retirement": "Autres revenus à la retraite",
+        "Income expected each year ($)": "Revenu prévu chaque année ($)",
+        "The same amount every year of retirement, before tax. Taxed like any other income.": "Le même montant chaque année de retraite, avant impôt. Imposé comme tout autre revenu.",
+        "Optional: enter a different amount for each year →": "Facultatif : saisir un montant différent pour chaque année →",
+        "Year-by-year list in use": "Liste année par année utilisée",
+        "Edit the list to change it, or stop using the list to type one amount.": "Modifiez la liste pour la changer, ou cessez de l’utiliser pour saisir un seul montant.",
+        "Edit the list": "Modifier la liste",
+        "The amounts I enter are in": "Les montants que je saisis sont en",
+        "Today's dollars (plus inflation)": "Dollars d’aujourd’hui (plus inflation)",
+        "Dollars of each year (no inflation)": "Dollars de chaque année (sans inflation)",
+        "Other income, year by year": "Autres revenus, année par année",
+        "Enter what you expect to receive each year, before tax. Leave a year blank if you expect nothing. Work, rental and business income are taxed like any other income.": "Saisissez ce que vous prévoyez recevoir chaque année, avant impôt. Laissez une année vide si vous n’attendez rien. Les revenus de travail, de location et d’entreprise sont imposés comme tout autre revenu.",
+        "Amounts are in the dollars of each year: they are not raised for inflation.": "Les montants sont en dollars de chaque année : ils ne sont pas majorés de l’inflation.",
+        "Amounts are in today's dollars: the plan raises them for inflation each year. You can change this on the card.": "Les montants sont en dollars d’aujourd’hui : le plan les majore de l’inflation chaque année. Vous pouvez changer cela sur la carte.",
+        "First enter your age today and the age you retire in Step 1, and the age to plan until in Step 3. The list is built from them.": "Saisissez d’abord votre âge actuel et l’âge de la retraite à l’étape 1, et l’âge jusqu’auquel planifier à l’étape 3. La liste en découle.",
+        "Fill every year with the same amount (optional)": "Remplir chaque année avec le même montant (facultatif)",
+        "Amount ($)": "Montant ($)",
+        "Fill every year": "Remplir chaque année",
+        "Age": "Âge",
+        "Year": "Année",
+        "Income expected ($)": "Revenu prévu ($)",
+        "Total over these years": "Total pour ces années",
+        "Enter an amount for at least one year, or tap Cancel.": "Saisissez un montant pour au moins une année, ou touchez Annuler.",
+        "Year by year": "Année par année",
+        "Benefits, pension & other income": "Prestations, pension et autres revenus",
+        "Other income": "Autres revenus",
+        "Other Income": "Autres revenus"
+    });
+    P.push(["^Ages (\\d+) to (\\d+), from the ages you entered in Steps 1 and 3 \\(you are (\\d+) today\\)\\. Change them there to change this list\\.$", "De $1 à $2 ans, selon les âges saisis aux étapes 1 et 3 (vous avez $3 ans aujourd’hui). Modifiez-les là pour changer cette liste."]);
+    P.push(["^Age (\\d+)$", "Âge $1"]);
+    P.push(["^Income expected at age (\\d+)$", "Revenu prévu à $1 ans"]);
+    P.push(["^Your year-by-year list adds up to (\\S+) over (\\d+) years?\\.$", "Votre liste année par année totalise $1 sur $2 année(s)."]);
+    P.push(["^(\\S+) a year$", "$1 par année"]);
+    P.push(["^From your other income ", "De vos autres revenus "]);
     var FRAGS = P.map(function (x) { return [new RegExp(x[0].replace(/'/g, "['’]"), 'g'), x[1]]; });
     FRAGS.sort(function (p, q) { return q[0].source.length - p[0].source.length; }); // long, specific patterns first
 
