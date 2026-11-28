@@ -169,7 +169,7 @@ Sous le titre, un encadré **Cette simulation** apparaît. Les chiffres principa
 
 La ligne « % des 300 marchés simulés » donne les vraies probabilités. Touchez **Relancer un autre scénario** pour tirer de nouveaux marchés au hasard et recalculer; le numéro du scénario augmente à chaque fois. **Afficher mon plan** recommence au scénario 1. Si « Mêmes marchés aléatoires à chaque calcul » est coché, le scénario 1 se répète, alors que chaque relance en donne un autre.
 
-Sous le grand bandeau, un commutateur **Juger le plan selon** permet de choisir. **Cette simulation** (par défaut) décide du message « Vous êtes sur la bonne voie » d’après la seule simulation affichée. **Tous les marchés** le décide d’après la part des 300 marchés simulés qui financent le plan : 90 % ou plus donne « Vous êtes sur la bonne voie », de 70 % à 89 % « Risque modéré », et moins de 70 % « Un changement s’impose ». Les chiffres d’impôt et d’épargne viennent toujours de la simulation affichée. Le choix reste quand vous touchez **Relancer un autre scénario**.
+Sous le grand bandeau, un commutateur **Juger le plan selon** permet de choisir. **Cette simulation** (par défaut) décide du message « Vous êtes sur la bonne voie » d’après la seule simulation affichée. **Tous les marchés** affiche la part des 300 marchés simulés qui financent le plan, sans verdict, coche ni croix : le niveau de risque acceptable vous appartient. À titre indicatif, moins de 70 % représente un risque élevé et 90 % ou plus est confortable. Les chiffres d’impôt et d’épargne viennent toujours de la simulation affichée. Le choix reste quand vous touchez **Relancer un autre scénario**.
 
 # Comparer et mettre à l’épreuve votre plan
 eyebrow: ÉTAPE 4
