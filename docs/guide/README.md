@@ -32,3 +32,9 @@ search the guide for the old name and replace it everywhere (both languages).
 ## After retaking screenshots, rebuild the PDF by hand
 
 The "Guide screenshots" workflow commits the new pictures as a bot, and a bot commit does NOT start "Build guide" by itself. Order: Actions, Guide screenshots, Run workflow; when it is green, Actions, Build guide, Run workflow. `guide.pdf` is then rebuilt and committed. (Editing a chapter by hand in `docs/guide/*.md` starts "Build guide" on its own.)
+
+## Keep guide.pdf small
+`scripts/build_guide.py` shrinks each screenshot for the PDF only (`slim()`: at most 560 px wide, JPEG quality 80), so the
+PDF is about 2 to 4 MB, not 4 to 9 MB. Every rebuild adds a new copy of the PDF to the repo history, so keep it small:
+do not raise `max_w` or `quality` without a reason, and do not add full-size images straight into the PDF. The originals in
+`docs/guide/img` are never changed.
