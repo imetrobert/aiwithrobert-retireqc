@@ -181,7 +181,7 @@ At the bottom of your results, open **Compare and stress-test**. Each button re-
 - **Test weak markets early on.** Shows whether your money still lasts if the first retirement years are poor.
 - **Estate view.** Shows what your family receives, the tax at death, and the same plan if it ended earlier or later.
 
-To compare two saved plans, open **Save / load scenarios** from the Menu and open **Compare two scenarios**. To share your plan, open **Save or share** and tap **One-page summary**: your phone's print sheet opens, where you choose "Save to Files". In the Menu, **Text size** makes everything larger.
+To compare two saved plans, open **Load scenario** from the Menu and open **Compare two scenarios**. To share your plan, open **Save or share** and tap **One-page summary**: your phone's print sheet opens, where you choose "Save to Files". In the Menu, **Text size** makes everything larger.
 
 # How to read a yearly card
 eyebrow: READING THE PLAN
@@ -278,18 +278,18 @@ Tap **Menu** at the top right of any screen.
 
 - **Personalize with AI.** The optional helper from Step 1.
 - **Life events** and **Expenses.** See the two previous chapters.
-- **Two ways to save your scenarios.** Save a version for "retire at 60" and another for "retire at 65" and compare.
-- **Save / load scenarios on this device.** Reopen them any time on this device only.
-- **Save / load scenarios in the cloud.** Open them on any device. They are encrypted on your device with your own passphrase before they are stored, so nobody else can read them. **A forgotten passphrase cannot be recovered.**
+- **Save and load.** Save a version for "retire at 60" and another for "retire at 65" and compare.
+- **Load scenario.** Reopen a scenario you saved. Scenarios are saved on this device first. If you sign in on several devices, you can also turn on a cloud copy on this screen.
+- **Cloud copy (optional).** On the Load scenario screen, tick **Also keep a copy in the cloud** and every save also updates an encrypted copy that you can open on another device. It is encrypted on your device with your own passphrase before it is stored, so nobody else can read it. **A forgotten passphrase cannot be recovered.**
 - **Tax & benefit rules.** The brackets, credits, OAS thresholds and RRIF factors behind the numbers.
 - **New scenario.** Starts again from a blank form.
 - **Logged in as** and **Sign out** are in the same menu. Signing out keeps your saved copy on the device.
 
-On the results screen, **Save on this device** keeps the scenario in this browser, and **Save on device and cloud** also sends it to the cloud in one tap. The **Saved on this device** list marks the scenario you just saved (**JUST SAVED**) and shows a status line under each one: green means the device and cloud copies match, orange means the device copy is newer than the cloud one, and grey means it is only on this device. Under orange or grey, tap **Sync to cloud** to update the cloud copy (you enter your passphrase first if the cloud is locked). The status reflects saves made from this phone.
+On the results screen, the big **Save scenario** button keeps the scenario on this device. If the cloud copy is on, it also updates the cloud copy; if not, a line under the button says it is saved on this device only. The **Load scenario** list marks the scenario you just saved (**JUST SAVED**). With the cloud copy on, each scenario shows a status line: green means the device and cloud copies match, orange means the device copy is newer, and grey means it is only on this device (tap **Sync to cloud**). Scenarios saved on another device appear under **Only in the cloud**: tap **Download and load** to copy one to this device.
 
 **Remember the passphrase on this device (optional).** On the passphrase screen, tick **Remember the passphrase on this device** and this phone will not ask for it again. Leave it unticked (the default) on any phone or computer you share. Tapping **Lock** or **Sign out** erases the remembered passphrase, and a wrong remembered passphrase is erased automatically. Anyone who can use your unlocked, signed-in browser could open your cloud scenarios while it is remembered.
 
-If you save while you are already working in a scenario you saved earlier, a box asks what to do: **Overwrite** the saved scenario with what is on screen, **Save as a new scenario** under a name you type, or **Cancel**. The same choice appears when you use **Save this plan** in the cloud panel.
+If you save while you are already working in a scenario you saved earlier, a box asks what to do: **Overwrite** the saved scenario with what is on screen, **Save as a new scenario** under a name you type, or **Cancel**.
 
 The line "rates verified" at the bottom shows when the built-in tax numbers were last checked.
 
