@@ -56,6 +56,7 @@ eyebrow: GLOSSARY
 Retirement planning uses many acronyms. Here is each one in plain language, with the French term you may see on your statements.
 
 | Term | In plain words |
+| **Everyday spending** | The money you need for normal day-to-day life, after tax: housing, food, transport, insurance and the like. It is the amount you type in Step 2, and the plan labels it "Everyday spending" and "Goes to everyday spending". Special, year-specific costs are not part of it: set them up as Life events. |
 | **RRSP** (REER) | A savings account where you got a tax deduction when you put money in. You pay tax when you take money out. |
 | **RRIF** (FERR) | What an RRSP becomes by the end of the year you turn 71. You must take out a minimum every year, and it is taxed. |
 | **TFSA** (CELI) | Growth and withdrawals are tax-free. The planner touches it last. |
@@ -94,7 +95,7 @@ eyebrow: STEP 2 OF 3
 side: step2.png
 Tap a card to open it. **Expand all** and **Collapse all** open or close every card.
 
-1. **How often you are paid, and your spending.** Enter what you want to spend after tax, in today's dollars. The planner raises it with inflation each year. Choose per week, month or year.
+1. **How often you are paid, and your everyday spending.** Enter the money you need for normal day-to-day life, after tax, in today's dollars. Leave out special, year-specific costs (a trip, a wedding, a new roof): add those as Life events in the Menu. Tap **Why this matters** under the box for the full definition. The planner raises it with inflation each year. Choose per week, month or year.
 2. **Your expenses (optional list).** Under the spending box, a link opens a list where you add each regular expense. See the chapter on the expense list.
 3. **Inflation.** Leave the defaults unless you know why you would change them (about 2% a year).
 4. **RRSP and TFSA.** Today's balance and how much you add each year until you retire.
@@ -188,7 +189,7 @@ side: yearcard.png
 Tap any year in **What to do each year**. It opens into a **Do this** list, in the order you would act.
 
 1. **Total to take out this year** (dark blue bar): spending + taxes + anything moved to another account.
-2. **One block per account**, for example RRSP/RRIF or Non-registered. Each shows what to withdraw and what that money pays for: living costs, tax, and **Goes to life events**, which lists each event by the name you gave it on the Life events screen (recurring or one-time) with the amount that account covers. When several accounts pay for events in the same year, each account's amount is shared across the events in proportion to their cost.
+2. **One block per account**, for example RRSP/RRIF or Non-registered. Each shows what to withdraw and what that money pays for: everyday spending, tax, and **Goes to life events**, which lists each event by the name you gave it on the Life events screen (recurring or one-time) with the amount that account covers. When several accounts pay for events in the same year, each account's amount is shared across the events in proportion to their cost.
 
    When part of an account's withdrawal is moved into another account (for example into the TFSA), the source block shows a blue **Moved into …** line and the receiving block shows a green **Transfer in from …** line, so you can see where the money came from.
 3. **The yellow note** says who handles the tax. "Bank holds back $X at source, so you receive $Y in pocket" means the institution withholds a down payment on your tax. "There is no withholding tax, so put this money aside" means you must keep money for the tax bill.
@@ -367,4 +368,4 @@ At the top of the results, **Your plan in a few lines** says in plain words when
 
 > **Reading the year plan: spending, taxes, moves.** Under *Spending*, each account line is the money you actually receive. Under *Taxes*, each account line is what the bank withholds from it, and any tax not withheld is shown as money to set aside. If the bank withholds more than the year's tax, a note says the difference comes back when you file. Each year card shows the calendar year above your age.
 
-> **Withheld or set aside?** A tax line marked *(withheld)* is taken by the bank before you ever see the money: it is already paid to the government and you cannot spend it. A line marked *(set aside, do not spend)* is money you do receive, but it is needed for your tax bill, so it must not go to living costs or events.
+> **Withheld or set aside?** A tax line marked *(withheld)* is taken by the bank before you ever see the money: it is already paid to the government and you cannot spend it. A line marked *(set aside, do not spend)* is money you do receive, but it is needed for your tax bill, so it must not go to everyday spending or events.
