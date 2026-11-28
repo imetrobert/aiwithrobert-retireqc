@@ -143,7 +143,7 @@ Touchez **Voir mon plan**.
 
 # Étape 4 · Vos résultats
 eyebrow: RÉSULTATS
-side: results.png
+side: results.png, mcrun.png
 Le bandeau du haut donne le message principal : « Vous êtes sur la bonne voie. Votre argent dure jusqu’à 90 ans » (ou un avertissement s’il s’épuise plus tôt), avec quatre chiffres clés :
 
 - L’impôt total sur le revenu pendant votre retraite.

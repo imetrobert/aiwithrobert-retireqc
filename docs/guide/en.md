@@ -144,7 +144,7 @@ Tap **Show my plan**.
 
 # Step 4 · Your results
 eyebrow: RESULTS
-side: results.png
+side: results.png, mcrun.png
 The top banner gives the headline: "You are on track. Your money lasts to age 90" (or a warning if it runs out earlier), with four key numbers:
 
 - Total income tax over your retirement.
