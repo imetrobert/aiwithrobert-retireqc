@@ -166,7 +166,7 @@ Sous le titre, un encadré **Cette simulation** apparaît. Les chiffres principa
 - Le rendement annuel moyen de cette simulation à côté de celui que vous avez supposé, la pire et la meilleure année (avec votre âge) et la moyenne des cinq premières années.
 - Où cette simulation s’est classée parmi les 300 marchés simulés. Un mauvais départ fait le plus mal, car vous retirez de l’argent pendant que les prix baissent.
 
-La ligne « % des 300 marchés simulés » donne les vraies probabilités. Touchez **Relancer un autre scénario** pour tirer de nouveaux marchés au hasard et recalculer; le numéro du scénario augmente à chaque fois. **Afficher mon plan** recommence au scénario 1. Si « mêmes marchés aléatoires à chaque fois » est coché, le scénario 1 se répète, alors que chaque relance en donne un autre.
+La ligne « % des 300 marchés simulés » donne les vraies probabilités. Touchez **Relancer un autre scénario** pour tirer de nouveaux marchés au hasard et recalculer; le numéro du scénario augmente à chaque fois. **Afficher mon plan** recommence au scénario 1. Si « Mêmes marchés aléatoires à chaque calcul » est coché, le scénario 1 se répète, alors que chaque relance en donne un autre.
 
 # Comparer et mettre à l’épreuve votre plan
 eyebrow: ÉTAPE 4
