@@ -159,6 +159,17 @@ Under it:
 
 At the bottom, **Edit inputs** returns you to the steps and **Test different returns** (at the top of the results) takes you to the Growth step, where you can pick another set of return assumptions and press **Show my plan** to see how it changes your plan. The small green or red percentage under each age shows that year's market gain or loss.
 
+# Compare and stress-test your plan
+eyebrow: STEP 4
+At the bottom of your results, open **Compare and stress-test**. Each button re-runs your plan with one thing changed and shows the results side by side. Nothing in your plan is changed. The first row is always your plan as entered, and the highlighted row is the one that leaves the most to your family after tax while still paying for your spending.
+
+- **When to start QPP and OAS.** Compares starting QPP at 60, 65 or 70 and OAS at 65 or 70.
+- **Compare withdrawal strategies.** Compares spending the TFSA or non-registered savings first, taking extra RRSP/RRIF money in the early years, and topping up the TFSA.
+- **Test weak markets early on.** Shows whether your money still lasts if the first retirement years are poor.
+- **Estate view.** Shows what your family receives, the tax at death, and the same plan if it ended earlier or later.
+
+To compare two saved plans, open **Save / load scenarios** from the Menu and open **Compare two scenarios**. To share your plan, open **Save or share** and tap **One-page summary**: your phone's print sheet opens, where you choose "Save to Files". In the Menu, **Text size** makes everything larger.
+
 # How to read a yearly card
 eyebrow: READING THE PLAN
 side: yearcard.png
@@ -225,7 +236,7 @@ Choose **Me and my spouse** at the top of Step 1. You fill in your own form, the
 # Life events
 eyebrow: MENU
 side: events.png
-Open **Life events** from the Menu for one-time costs (a car, a roof, a wedding) or yearly extras. The plan funds them from your accounts, with the taxes that creates. When you are done, tap **Save for this scenario** at the bottom to keep your changes, or **Cancel** to put things back as they were.
+Open **Life events** from the Menu for one-time costs (a car, a roof, a wedding) or yearly extras. Use **Add a common event** at the top to fill the next empty row with an example you can change (car, renovation, long-term care, travel). The plan funds them from your accounts, with the taxes that creates. When you are done, tap **Save for this scenario** at the bottom to keep your changes, or **Cancel** to put things back as they were.
 
 - If you share these costs, each event has the same linked **You** and **Spouse / others** boxes. Only your share counts in your plan.
 - In couple mode, **Recommend an optimized split of these events** suggests one percentage for all events on the form you have open.

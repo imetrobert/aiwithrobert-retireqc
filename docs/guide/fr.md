@@ -158,6 +158,17 @@ En dessous :
 
 Au bas, **Modifier les données** vous ramène aux étapes et **Tester d’autres rendements** (en haut des résultats) vous amène à l’étape Croissance, où vous pouvez choisir d’autres hypothèses de rendement puis toucher **Afficher mon plan** pour voir l’effet sur votre plan. Le petit pourcentage vert ou rouge sous chaque âge indique le gain ou la perte du marché pour cette année.
 
+# Comparer et mettre à l’épreuve votre plan
+eyebrow: ÉTAPE 4
+Au bas de vos résultats, ouvrez **Comparer et mettre à l’épreuve**. Chaque bouton refait votre plan en changeant un seul élément et affiche les résultats côte à côte. Rien dans votre plan n’est modifié. La première rangée est toujours votre plan tel que saisi; la rangée en surbrillance est celle qui laisse le plus à votre famille après impôt tout en finançant vos dépenses.
+
+- **Quand commencer la RRQ et la PSV.** Compare un début de la RRQ à 60, 65 ou 70 ans et de la PSV à 65 ou 70 ans.
+- **Comparer les stratégies de retrait.** Compare le fait de dépenser d’abord le CELI ou l’épargne non enregistrée, de retirer plus du REER/FERR dans les premières années et de remplir le CELI.
+- **Tester des marchés faibles au début.** Montre si votre argent dure même si les premières années de retraite sont mauvaises.
+- **Vue de la succession.** Montre ce que reçoit votre famille, l’impôt au décès et le même plan s’il se terminait plus tôt ou plus tard.
+
+Pour comparer deux plans enregistrés, ouvrez **Enregistrer / charger des scénarios** dans le menu, puis **Comparer deux scénarios**. Pour partager votre plan, ouvrez **Enregistrer ou partager** et touchez **Sommaire d’une page** : la fenêtre d’impression de votre téléphone s’ouvre; choisissez « Enregistrer dans Fichiers ». Dans le menu, **Taille du texte** agrandit tout.
+
 # Comment lire une carte annuelle
 eyebrow: LIRE LE PLAN
 side: yearcard.png
@@ -224,7 +235,7 @@ Choisissez **Moi et mon ou ma conjoint(e)** au haut de l’étape 1. Vous rempli
 # Événements de vie
 eyebrow: MENU
 side: events.png
-Ouvrez **Événements de vie** depuis le Menu pour des dépenses ponctuelles (une auto, un toit, un mariage) ou des suppléments annuels. Le plan les finance à partir de vos comptes, avec les impôts que cela entraîne. Quand vous avez terminé, touchez **Enregistrer pour ce scénario** au bas pour garder vos changements, ou **Annuler** pour tout remettre comme avant.
+Ouvrez **Événements de vie** depuis le Menu pour des dépenses ponctuelles (une auto, un toit, un mariage) ou des suppléments annuels. Utilisez **Ajouter un événement courant** en haut pour remplir la prochaine rangée vide avec un exemple modifiable (auto, rénovation, soins de longue durée, voyages). Le plan les finance à partir de vos comptes, avec les impôts que cela entraîne. Quand vous avez terminé, touchez **Enregistrer pour ce scénario** au bas pour garder vos changements, ou **Annuler** pour tout remettre comme avant.
 
 - Si vous partagez ces dépenses, chaque événement a les mêmes cases liées **Vous** et **Conjoint(e) / autres**. Seule votre part compte dans votre plan.
 - En mode couple, **Recommander un partage optimisé de ces événements** propose un pourcentage pour tous les événements du formulaire ouvert.
