@@ -56,7 +56,7 @@ with sync_playwright() as pw:
     page.goto(URL+'?lang=fr'); page.wait_for_selector('#awr-gate')
     collect(page,'gate')
     page.fill('#awr-email','t@e.com'); page.fill('#awr-pw','pw-ok'); page.click('#awr-gate button[type=submit]')
-    page.wait_for_selector('#awr-mi-plans',state='attached'); page.wait_for_timeout(600)
+    page.wait_for_function('window.awrCloudReady===true'); page.wait_for_timeout(600)
     collect(page,'after sign-in (start FR)')
     page.click('#menuBtn'); page.wait_for_timeout(300); collect(page,'menu')
     page.click('#menuBtn')
@@ -110,7 +110,7 @@ with sync_playwright() as pw:
     try:
         page.evaluate("document.querySelectorAll('#infoSheet,.save-choice,.ask-save,[id*=askSave],[class*=overlay],[class*=modal]').forEach(e=>{try{e.remove()}catch(x){}})")
         page.evaluate("showStep(1)")
-        page.evaluate("document.getElementById('menuBtn').click()"); page.evaluate("document.getElementById('awr-mi-plans').click()"); page.wait_for_selector('#awr-p1',timeout=5000); collect(page,'cloud panel (passphrase)')
+        page.evaluate("awrOpenCloud()"); page.wait_for_selector('#awr-p1',timeout=5000); collect(page,'cloud panel (passphrase)')
         page.fill('#awr-p1','correct horse battery'); page.fill('#awr-p2','correct horse battery'); page.evaluate("document.querySelector('#awr-panel .awr-btn').click()"); page.wait_for_timeout(900); collect(page,'cloud panel (list)')
     except Exception as e: errs.append('cloud '+str(e)[:80])
     # ---- extra scenarios (deficit, events, DB pension, unlock, retired, couple, invalid input)

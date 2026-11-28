@@ -277,18 +277,18 @@ Touchez **Menu** en haut à droite de n’importe quel écran.
 
 - **Personnaliser avec l’IA.** L’aide facultative de l’étape 1.
 - **Événements de vie** et **Dépenses.** Voir les deux chapitres précédents.
-- **Deux façons d’enregistrer vos scénarios.** Enregistrez une version « retraite à 60 ans » et une autre « retraite à 65 ans », puis comparez.
-- **Enregistrer / ouvrir des scénarios sur cet appareil.** Rouvrez-les en tout temps, sur cet appareil seulement.
-- **Enregistrer / ouvrir des scénarios dans le nuage.** Ouvrez-les sur n’importe quel appareil. Ils sont chiffrés sur votre appareil avec votre propre phrase secrète avant d’être stockés : personne d’autre ne peut les lire. **Une phrase secrète oubliée ne peut pas être récupérée.**
+- **Enregistrer et ouvrir.** Enregistrez une version « retraite à 60 ans » et une autre « retraite à 65 ans », puis comparez.
+- **Ouvrir un scénario.** Rouvrez un scénario enregistré. Les scénarios sont d’abord enregistrés sur cet appareil. Si vous vous connectez sur plusieurs appareils, vous pouvez aussi activer une copie dans le nuage sur cet écran.
+- **Copie dans le nuage (facultatif).** Sur l’écran Ouvrir un scénario, cochez **Garder aussi une copie dans le nuage** : chaque enregistrement met aussi à jour une copie chiffrée que vous pouvez ouvrir sur un autre appareil. Elle est chiffrée sur votre appareil avec votre propre phrase secrète avant d’être stockée : personne d’autre ne peut la lire. **Une phrase secrète oubliée ne peut pas être récupérée.**
 - **Règles fiscales et de prestations.** Paliers, crédits, seuils de PSV et facteurs de FERR derrière les chiffres.
 - **Nouveau scénario.** Repart d’un formulaire vide.
 - **Connecté en tant que** et **Se déconnecter** sont dans le même menu. Se déconnecter conserve votre copie enregistrée sur l’appareil.
 
-Sur l’écran des résultats, **Enregistrer sur cet appareil** garde le scénario dans ce navigateur, et **Enregistrer sur l’appareil et dans le nuage** l’envoie aussi dans le nuage d’un seul geste. La liste des scénarios enregistrés sur cet appareil marque celui que vous venez d’enregistrer (**ENREGISTRÉ À L’INSTANT**) et affiche une ligne d’état sous chacun : vert, les copies de l’appareil et du nuage sont identiques; orange, la copie de l’appareil est plus récente; gris, le scénario n’est que sur cet appareil. Sous l’orange ou le gris, touchez **Synchroniser avec le nuage** pour mettre à jour la copie du nuage (vous entrez d’abord votre phrase secrète si le nuage est verrouillé). L’état reflète les enregistrements faits depuis ce téléphone.
+Sur l’écran des résultats, le gros bouton **Enregistrer le scénario** garde le scénario sur cet appareil. Si la copie dans le nuage est activée, il met aussi à jour cette copie; sinon, une ligne sous le bouton indique que le scénario n’est enregistré que sur cet appareil. La liste **Ouvrir un scénario** marque celui que vous venez d’enregistrer (**ENREGISTRÉ À L’INSTANT**). Avec la copie dans le nuage, chaque scénario affiche une ligne d’état : vert, les copies sont identiques; orange, la copie de l’appareil est plus récente; gris, le scénario n’est que sur cet appareil (touchez **Synchroniser avec le nuage**). Les scénarios enregistrés sur un autre appareil apparaissent sous **Seulement dans le nuage** : touchez **Télécharger et ouvrir** pour en copier un sur cet appareil.
 
 **Retenir la phrase secrète sur cet appareil (facultatif).** Sur l’écran de la phrase secrète, cochez **Retenir la phrase secrète sur cet appareil** et ce téléphone ne la demandera plus. Laissez la case décochée (valeur par défaut) sur tout appareil partagé. **Verrouiller** et **Se déconnecter** effacent la phrase retenue, et une phrase retenue erronée est effacée automatiquement. Toute personne qui peut utiliser votre navigateur déverrouillé et connecté pourrait ouvrir vos scénarios du nuage tant que la phrase est retenue.
 
-Si vous enregistrez alors que vous travaillez déjà dans un scénario enregistré, une fenêtre demande quoi faire : **Remplacer** le scénario enregistré par ce qui est à l’écran, **Enregistrer comme nouveau scénario** sous un nom que vous saisissez, ou **Annuler**. Le même choix apparaît avec **Enregistrer ce plan** dans le panneau du nuage.
+Si vous enregistrez alors que vous travaillez déjà dans un scénario enregistré, une fenêtre demande quoi faire : **Remplacer** le scénario enregistré par ce qui est à l’écran, **Enregistrer comme nouveau scénario** sous un nom que vous saisissez, ou **Annuler**.
 
 La ligne « taux vérifiés » au bas indique la date de la dernière vérification des chiffres fiscaux intégrés.
 

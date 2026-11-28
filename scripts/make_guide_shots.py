@@ -43,7 +43,6 @@ with sync_playwright() as pw:
     pg.evaluate("document.querySelectorAll('*').forEach(e=>{const p=getComputedStyle(e).position; if((p=='fixed'||p=='sticky')) e.style.visibility='hidden'})"); pg.locator('.year-cards details.yp').nth(idx).screenshot(path=f'{out}/yearcard.png'); pg.evaluate("document.querySelectorAll('*').forEach(e=>{if(e.style.visibility=='hidden') e.style.visibility=''})")
     # menu
     pg.evaluate("showStep(1); window.scrollTo(0,0)"); pg.evaluate('toggleMenu(true)'); pg.wait_for_timeout(250)
-    pg.evaluate("""()=>{const m=document.getElementById('toolMenu'); const dev=m.querySelector('[onclick*="showProfileManager"]'); if(dev&&!document.getElementById('awr-mi-plans')){const b=document.createElement('button'); b.type='button'; b.className='menu-item'; b.id='awr-mi-plans'; const cloudTitle=%s; b.innerHTML='<span class="mi-ico">☁</span><span>'+cloudTitle[0]+'<small>'+cloudTitle[1]+'</small></span>'; dev.insertAdjacentElement('afterend',b);} }""" % ("['Enregistrer / ouvrir des scénarios dans le nuage','Ouvrez vos scénarios sur tout appareil avec votre phrase secrète']" if lang=='fr' else "['Save / load scenarios in the cloud','Open your scenarios on any device with your passphrase']"))
     pg.wait_for_timeout(200); clip(pg,'menu'); pg.evaluate("closeMenu()")
     # couple
     pg.evaluate("showStep(1)"); pg.select_option('#calcMode','couple'); pg.fill('#hhNameMe','Alex'); pg.fill('#hhNameSp','Sam'); pg.evaluate("window.scrollTo(0,0)"); pg.wait_for_timeout(200); clip(pg,'couple')
