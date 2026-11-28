@@ -583,7 +583,7 @@ details.resultnote:has(#deficitReportBanner:empty):has(#mcReportBanner:empty){di
         <button type="button" class="menu-item" onclick="closeMenu(); showAiCard()"><span class="mi-ico">✨</span><span>Personalize with AI<small>Let an AI assistant fill this in for you</small></span></button>
         <button type="button" class="menu-item" onclick="closeMenu(); showStep(7)"><span class="mi-ico">🎉</span><span>Life events<small>One-time and yearly costs</small></span></button>
         <button type="button" class="menu-item" onclick="closeMenu(); openExpenses()"><span class="mi-ico">🧾</span><span>Expenses<small>(if you need it to calculate your regular spend needs)</small></span></button>
-        <button type="button" class="menu-item" onclick="closeMenu(); showProfileManager()"><span class="mi-ico">📂</span><span>Load scenario<small>Reopen a scenario you saved</small></span></button>
+        <button type="button" class="menu-item" id="menuLoad" onclick="openLoadScenario()"><span class="mi-ico">📂</span><span>Load scenario<small>Reopen a scenario you saved</small></span></button>
         <button type="button" class="menu-item" onclick="closeMenu(); showTaxRulesPanel()"><span class="mi-ico">⚙️</span><span>Tax &amp; benefit rules<small>Brackets, credits, OAS, RRIF factors</small></span></button>
         <button type="button" class="menu-item" onclick="closeMenu(); startNewScenario()"><span class="mi-ico">🆕</span><span>New scenario<small>Start again from a blank form</small></span></button>
         <button type="button" class="menu-item" onclick="cycleTextSize()"><span class="mi-ico">🔎</span><span>Text size: <b id="tsLabel">Normal</b><small>Tap to make everything larger</small></span></button>
@@ -3534,8 +3534,8 @@ The numbers in that example are placeholders from a prior year — replace every
             if (this.checked) syncAllToCloud(); else renderProfileManager();
         };
         document.getElementById('awr-cloud-manage').onclick = function () { if (window.awrOpenCloud) window.awrOpenCloud(); };
-        if (!on || !window.awrCloudRows) return;
-        window.awrCloudRows().then(function (rows) {
+        if (!window.awrCloudRows) return;
+        (on || !window.awrCloudCount ? Promise.resolve(1) : window.awrCloudCount()).then(function (n) { return n > 0 ? window.awrCloudRows() : []; }).then(function (rows) {
             const o = document.getElementById('cloudOnly'); if (!o) return;
             if (rows === null) {
                 o.innerHTML = '<p class="note-text" style="margin:8px 0 4px;">Unlock your cloud copies to see scenarios saved on other devices.</p><button type="button" id="cloudUnlock">Unlock cloud copies</button>';
@@ -3672,6 +3672,7 @@ The numbers in that example are placeholders from a prior year — replace every
             const title = p.name ? escHtml(p.name) : ('Unnamed scenario ' + (keys.length - i));
             const isRenaming = renamingId === k;
             const isDeleting = pendingDeleteId === k;
+            const cloudCopy = cloudAvailable() && (cloudOn() || !!syncMap[k]);
             html += `
                 <div id="pm-${escHtml(k)}" style="background:${isLatest ? '#f0fdf4' : '#fff'}; padding:10px; border-radius:6px; margin-bottom:8px; border:${isLatest ? '2px solid #16a34a' : '1px solid #cbd5e1'};">
                     <div style="margin-bottom:6px;">
@@ -3686,7 +3687,8 @@ The numbers in that example are placeholders from a prior year — replace every
                             <button type="button" style="${btn}" data-act="saveName" data-id="${escHtml(k)}">Save name</button>
                             <button type="button" class="secondary" style="${btn}" data-act="cancelRename" data-id="${escHtml(k)}">Cancel</button>
                         ` : isDeleting ? `
-                            <button type="button" class="warn-btn" style="${btn}" data-act="confirmDelete" data-id="${escHtml(k)}">Yes, delete permanently</button>
+                            ${cloudCopy ? `<button type="button" class="warn-btn" style="${btn}" data-act="confirmDelete" data-id="${escHtml(k)}">Delete on this device only</button>
+                            <button type="button" class="warn-btn" style="${btn}" data-act="confirmDeleteBoth" data-id="${escHtml(k)}">Delete on device and cloud</button>` : `<button type="button" class="warn-btn" style="${btn}" data-act="confirmDelete" data-id="${escHtml(k)}">Yes, delete permanently</button>`}
                             <button type="button" class="secondary" style="${btn}" data-act="cancelDelete" data-id="${escHtml(k)}">Keep it</button>
                         ` : `
                             <button type="button" style="${btn}" data-act="load" data-id="${escHtml(k)}">Load</button>
@@ -3732,6 +3734,7 @@ The numbers in that example are placeholders from a prior year — replace every
         else if (act === 'delete') { pendingDeleteId = id; renamingId = null; renderProfileManager(); }
         else if (act === 'cancelDelete') { pendingDeleteId = null; renderProfileManager(); }
         else if (act === 'confirmDelete') deleteSpecificProfile(id);
+        else if (act === 'confirmDeleteBoth') deleteScenarioEverywhere(id);
     });
 
     function renameSpecificProfile(id) {
@@ -3770,6 +3773,7 @@ The numbers in that example are placeholders from a prior year — replace every
         const allProfiles = getAllProfiles();
         delete allProfiles[id];
         putAllProfiles(allProfiles);
+        try { const sm = getSyncMap(); delete sm[id]; localStorage.setItem(SYNC_KEY, JSON.stringify(sm)); } catch (e) { /* ignore */ }
         try {
             const cur = JSON.parse(localStorage.getItem('qcrp_profile_v1') || 'null');
             if (cur && cur.id === id) {
@@ -3780,6 +3784,33 @@ The numbers in that example are placeholders from a prior year — replace every
         pendingDeleteId = null;
         renderProfileManager();
         showSaveBadge('Profile deleted');
+    }
+
+    // ---- Load scenario menu row: greyed out until something is saved on this device or in the cloud
+    function localScenarioCount() { return Object.keys(getAllProfiles()).length; }
+    function refreshLoadItem() {
+        const b = document.getElementById('menuLoad'); if (!b) return;
+        const set = function (ok) {
+            b.disabled = !ok; b.setAttribute('aria-disabled', ok ? 'false' : 'true'); b.style.opacity = ok ? '' : '.45';
+            const sm = b.querySelector('small'); if (sm) sm.textContent = ok ? 'Reopen a scenario you saved' : 'No saved scenarios yet';
+        };
+        if (localScenarioCount() > 0) { set(true); return; }
+        set(false);
+        if (cloudAvailable() && window.awrCloudCount) window.awrCloudCount().then(function (n) { if (n > 0 && localScenarioCount() === 0) set(true); });
+    }
+    // Nothing on this device but something in the cloud: ask for the passphrase first; opening a scenario then saves it here.
+    function openLoadScenario() {
+        closeMenu();
+        if (localScenarioCount() > 0 || !cloudAvailable() || !window.awrCloudRows) { showProfileManager(); return; }
+        window.awrCloudRows().then(function (rows) { if (rows === null) window.awrOpenCloud(); else showProfileManager(); });
+    }
+    function deleteScenarioEverywhere(id) {
+        if (!window.awrDeletePlan) { deleteSpecificProfile(id); return; }
+        window.awrDeletePlan(id).then(function (r) {
+            if (r === 'ok' || r === 'none') { deleteSpecificProfile(id); if (r === 'ok') showSaveBadge('Deleted on this device and in the cloud'); }
+            else if (r === 'locked') showSaveBadge('Unlock your cloud copies, then delete again');
+            else showSaveBadge('Could not reach the cloud. Nothing was deleted');
+        });
     }
 
     function startNewScenario() {
@@ -5553,6 +5584,7 @@ The numbers in that example are placeholders from a prior year — replace every
         const m = document.getElementById('toolMenu'), b = document.getElementById('menuBtn');
         const open = (typeof force === 'boolean') ? force : m.hasAttribute('hidden');
         if (open) m.removeAttribute('hidden'); else m.setAttribute('hidden', '');
+        if (open && typeof refreshLoadItem === 'function') refreshLoadItem();
         b.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
     function closeMenu() { toggleMenu(false); }
@@ -8211,6 +8243,7 @@ The numbers in that example are placeholders from a prior year — replace every
     Object.assign(EXACT, {"Each bar is one year (the age is under it): what you take out, by account. The amount above each bar is the total for that year. Tap a bar to jump to that year’s details. Swipe sideways to see every year.": "Chaque barre représente une année (l’âge est sous la barre) : ce que vous retirez, par compte. Le montant au-dessus de chaque barre est le total de cette année. Touchez une barre pour aller aux détails de cette année. Glissez de côté pour voir toutes les années."});
     Object.assign(EXACT, {"The solid lines show when QPP and OAS start: after that, these pensions pay part of your spending, so your accounts pay less.": "Les lignes pleines montrent quand le RRQ et la PSV commencent : ensuite, ces pensions paient une partie de vos dépenses, donc vos comptes paient moins.", "QPP starts": "RRQ débute", "OAS starts": "PSV débute", "QPP + OAS start": "RRQ + PSV débutent"});
     Object.assign(EXACT, {"💾 Save scenario": "💾 Enregistrer le scénario", "Load scenario": "Ouvrir un scénario", "Load scenario<small>Reopen a scenario you saved</small>": "Ouvrir un scénario<small>Rouvrir un scénario enregistré</small>", "Scenarios you saved on this device. Tap Load to reopen one.": "Scénarios enregistrés sur cet appareil. Touchez Ouvrir pour en rouvrir un.", "Also keep a copy in the cloud (to use on other devices)": "Garder aussi une copie dans le nuage (pour utiliser d’autres appareils)", "Optional. Every save goes to this device first. With this on, each save also updates an encrypted cloud copy.": "Facultatif. Chaque enregistrement va d’abord sur cet appareil. Si l’option est activée, chaque enregistrement met aussi à jour une copie chiffrée dans le nuage.", "Manage cloud copies": "Gérer les copies dans le nuage", "Only in the cloud": "Seulement dans le nuage", "Download and load": "Télécharger et ouvrir", "Unlock cloud copies": "Déverrouiller les copies dans le nuage", "Unlock your cloud copies to see scenarios saved on other devices.": "Déverrouillez vos copies dans le nuage pour voir les scénarios enregistrés sur d’autres appareils.", "Cloud copy is on: your saved scenarios are in the cloud": "Copie dans le nuage activée : vos scénarios enregistrés sont dans le nuage", "Could not reach the cloud. It will sync on your next save": "Nuage inaccessible. La synchronisation se fera à votre prochain enregistrement", "Cloud copy is on: each save also updates your cloud copy.": "Copie dans le nuage activée : chaque enregistrement met aussi à jour votre copie dans le nuage.", "Saved on this device only. You can turn on a cloud copy from Load scenario in the menu.": "Enregistré sur cet appareil seulement. Vous pouvez activer une copie dans le nuage depuis Ouvrir un scénario, dans le menu.", "Unnamed scenario": "Scénario sans nom"});
+    Object.assign(EXACT, {"Delete on this device only": "Supprimer sur cet appareil seulement", "Delete on device and cloud": "Supprimer sur l’appareil et dans le nuage", "No saved scenarios yet": "Aucun scénario enregistré", "Reopen a scenario you saved": "Rouvrir un scénario enregistré", "Deleted on this device and in the cloud": "Supprimé sur l’appareil et dans le nuage", "Unlock your cloud copies, then delete again": "Déverrouillez vos copies dans le nuage, puis supprimez de nouveau", "Could not reach the cloud. Nothing was deleted": "Nuage inaccessible. Rien n’a été supprimé"});
     Object.assign(EXACT, {"Not used": "Non utilisé", "Your spouse (%)": "Votre conjoint(e) (%)", "You (%)": "Vous (%)", "How often this is billed": "Fréquence de facturation", "If a plan like RREGOP, a municipal, university or federal public-service plan will pay you a pension, enter the yearly amount from your pension statement, in today’s dollars. (Savings-pot DC pensions go in the LIRA / federal DC boxes above.)": "Si un régime comme le RREGOP, un régime municipal, universitaire ou de la fonction publique fédérale vous versera une pension, entrez le montant annuel de votre relevé de pension, en dollars d’aujourd’hui. (Les régimes à cotisations déterminées de type compte d’épargne vont dans les champs CRI / régime fédéral ci-dessus.)", "Leave at 0 if you don't have one. It is kept apart from your LIRA and treated as its own <strong>federal</strong> locked-in pool (OSFI maximum withdrawal, and it is the money eligible for the RLIF unlock below), while the LIRA above follows the jurisdiction you chose.": "Laissez à 0 si vous n’en avez pas. Ce montant est distinct de votre CRI et traité comme son propre bloc immobilisé <strong>fédéral</strong> (retrait maximal selon le BSIF; c’est aussi l’argent admissible au déblocage FRVR plus bas), tandis que le CRI ci-dessus suit la juridiction que vous avez choisie."});
     P.push.apply(P, [["^Your spouse: ", "Votre conjoint(e) : "], ["^You: ", "Vous : "], ["^Share paid by [Yy]ou \\(%\\)$", "Part payée par vous (%)"], ["^Share paid by spouse / others \\(%\\)$", "Part payée par conjoint(e) / autres (%)"], ["^Share paid by [Yy]our spouse \\(%\\)$", "Part payée par votre conjoint(e) (%)"], ["^Share paid by (.+) \\(%\\)$", "Part payée par $1 (%)"]]);
     P.push.apply(P, [["^You : ", "Vous : "], ["^Your spouse : ", "Votre conjoint(e) : "], ["^You, (\\d{4})$", "Vous, $1"], ["^Your spouse, (\\d{4})$", "Votre conjoint(e), $1"], ["^QPP / OAS / pension", "RRQ / PSV / pension"], ["^surplus → ", "excédent → "], ["/ Non-reg$", "/ non enr."]]);
