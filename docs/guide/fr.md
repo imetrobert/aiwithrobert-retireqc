@@ -217,6 +217,23 @@ Certaines personnes prévoient un revenu en plus des pensions et de l’épargne
 > **Couples**
 > En mode « Moi et mon ou ma conjoint(e) », chacun répond pour soi, dans son propre formulaire.
 
+# Vente de votre maison
+eyebrow: FACULTATIF
+L’étape 1 demande si vous prévoyez **vendre votre maison pendant la retraite**. Choisissez **Oui, et déménager dans une plus petite maison** ou **Oui, et louer à la place** : une carte « Vente de votre maison » apparaît à l’étape 2.
+
+1. **Âge à la vente.** Jamais avant votre âge de retraite.
+2. **Prix de vente prévu, en dollars d’aujourd’hui.** Le planificateur l’augmente avec l’inflation.
+3. **Frais de vente.** Courtier, frais juridiques et de notaire. Environ 5 % est courant.
+4. **Hypothèque ou prêts remboursés à la vente.**
+5. **Plus petite maison seulement :** son prix en dollars d’aujourd’hui et les frais d’achat et de déménagement.
+6. **Frais de logement annuels que vous cessez de payer**, et **coût annuel de votre nouveau logement** (loyer, ou taxes et entretien de la plus petite maison). Vos dépenses annuelles changent de la différence à partir de l’année de la vente.
+7. **Où va l’argent.** « CELI d’abord » place dans le CELI autant que votre droit inutilisé le permet, et le reste dans votre compte non enregistré. « Tout dans mon compte non enregistré » évite le CELI.
+
+L’argent de la vente de votre résidence principale n’est pas imposé : tout ce qui reste après les frais, votre hypothèque et la plus petite maison est investi l’année de la vente. La carte montre ce montant en dollars d’aujourd’hui avant le calcul. Les résultats indiquent ensuite ce qui est allé dans chaque compte, dans le résumé du plan et sur la carte de cette année-là.
+
+> **Bon à savoir**
+> Un CELI croît à l’abri de l’impôt, mais n’accepte que ce que votre droit permet. L’argent d’un compte non enregistré est imposé chaque année sur son revenu et ses gains. En couple, répondez sur le formulaire d’une seule personne pour ne pas compter la vente deux fois. Le planificateur ne modélise pas un nouveau prêt hypothécaire, une deuxième propriété ni un prêt hypothécaire inversé.
+
 # La liste de dépenses
 eyebrow: OUTIL DE L’ÉTAPE 2
 side: expenses_top.png, expenses_rows.png
