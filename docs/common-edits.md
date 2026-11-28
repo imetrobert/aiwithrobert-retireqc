@@ -198,3 +198,12 @@ In `initInfoNotes()`, long `.note-text` blocks become a "Why this matters" butto
 - Audit: open `?lang=fr`, walk every step, popup and result view, and look for English. Popup titles go through the translator in `showInfo`.
 - Account tags and labels built in code (e.g. "RRSP → TFSA", "surplus → …", "You : …", "Your spouse, 2055") need their own `P.push` patterns; check them with a deficit plan, a defined-benefit pension, life events and couple mode on `?lang=fr`.
 - French audit: run `python3 scripts/audit_french.py` after any English wording change (needs `pip install playwright` and `playwright install chromium`). It exits 0 when no English is left (the "Switch to English" button is ignored); each hit is printed with the screen it was on.
+
+## 17. Monte Carlo run summary and re-run button (Step 4, top)
+Why it exists: with the Monte Carlo model the headline numbers (spending, tax, savings left, "on track") come from ONE random run, while "N% of 300 markets fund the plan" is the odds across all runs. The summary box says what kind of market that one run drew so the two are not confused.
+- Where: `mcRunBannerHtml` (grep it) fills `#mcRunBanner` right after `mcReportBanner` is set in `calculateRetirementPlanCore`. It uses `run.yearReturns` (recorded in `runSimulation`), `p.mcAvgReturn`, and the ending balances of the 300 trials (`mcFinals`, collected by `runMonteCarlo(..., collect)`).
+- Verdict thresholds: rank of this run's ending savings among the 300 trials: under 25% = rougher than typical, over 75% = luckier, otherwise typical. Weak/strong start note: first 5 years average more than 3 points below/above the assumed return.
+- Re-run: `mcRerun()` increments `mcRerunN` (the Scenario number) and `mcSeedShift` (changes the fixed seed when "same random markets" is on; otherwise every run is already random), then recalculates. Show my plan resets both.
+- Not shown in household mode (`p.hhRole`) or for flat/custom models.
+- Wording: each phrase is its own element so the Quebec planner needs only exact-text French entries (the `Object.assign(EXACT, ...)` line after `var EXACT`).
+- Test: `python3 scripts/test_mc_run.py`.
