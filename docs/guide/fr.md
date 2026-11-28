@@ -158,6 +158,16 @@ En dessous :
 
 Au bas, **Modifier les données** vous ramène aux étapes et **Tester d’autres rendements** (en haut des résultats) vous amène à l’étape Croissance, où vous pouvez choisir d’autres hypothèses de rendement puis toucher **Afficher mon plan** pour voir l’effet sur votre plan. Le petit pourcentage vert ou rouge sous chaque âge indique le gain ou la perte du marché pour cette année.
 
+## Si vous avez choisi Monte-Carlo (marchés aléatoires)
+
+Sous le titre, un encadré **Cette simulation** apparaît. Les chiffres principaux de la page viennent d’UNE seule simulation du marché, et l’encadré dit quel genre de marché c’était :
+
+- Un verdict : un marché plus difficile que la normale, typique ou plus favorable que la normale.
+- Le rendement annuel moyen de cette simulation à côté de celui que vous avez supposé, la pire et la meilleure année (avec votre âge) et la moyenne des cinq premières années.
+- Où cette simulation s’est classée parmi les 300 marchés simulés. Un mauvais départ fait le plus mal, car vous retirez de l’argent pendant que les prix baissent.
+
+La ligne « % des 300 marchés simulés » donne les vraies probabilités. Touchez **Relancer un autre scénario** pour tirer de nouveaux marchés au hasard et recalculer; le numéro du scénario augmente à chaque fois. **Afficher mon plan** recommence au scénario 1. Si « Mêmes marchés aléatoires à chaque calcul » est coché, le scénario 1 se répète, alors que chaque relance en donne un autre.
+
 # Comparer et mettre à l’épreuve votre plan
 eyebrow: ÉTAPE 4
 Au bas de vos résultats, ouvrez **Comparer et mettre à l’épreuve**. Chaque bouton refait votre plan en changeant un seul élément et affiche les résultats côte à côte. Rien dans votre plan n’est modifié. La première rangée est toujours votre plan tel que saisi; la rangée en surbrillance est celle qui laisse le plus à votre famille après impôt tout en finançant vos dépenses.
