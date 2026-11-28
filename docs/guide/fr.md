@@ -55,6 +55,7 @@ eyebrow: GLOSSAIRE
 La planification de la retraite regorge d’acronymes. Voici chacun en mots simples, avec le terme anglais que vous pourriez croiser.
 
 | Terme | En mots simples |
+| **Dépenses courantes** (everyday spending) | L’argent dont vous avez besoin pour la vie de tous les jours, après impôt : logement, nourriture, transport, assurances et le reste. C’est le montant saisi à l’étape 2, et le plan l’appelle « Dépenses courantes » et « Sert aux dépenses courantes ». Les coûts particuliers d’une année précise n’en font pas partie : configurez-les comme Événements de vie. |
 | **REER** (RRSP) | Compte d’épargne pour lequel vous avez obtenu une déduction d’impôt à l’entrée. L’impôt est payé à la sortie. |
 | **FERR** (RRIF) | Ce que devient un REER à la fin de l’année de vos 71 ans. Vous devez retirer un minimum chaque année, et il est imposable. |
 | **CELI** (TFSA) | Compte où la croissance et les retraits sont libres d’impôt. Le planificateur y touche en dernier. |
@@ -93,7 +94,7 @@ eyebrow: ÉTAPE 2 DE 3
 side: step2.png
 Touchez une carte pour l’ouvrir. **Tout développer** et **Tout réduire** ouvrent ou ferment toutes les cartes.
 
-1. **Fréquence de paie et dépenses.** Entrez ce que vous voulez dépenser après impôt, en dollars d’aujourd’hui. Le planificateur l’augmente selon l’inflation chaque année. Choisissez par semaine, par mois ou par année.
+1. **Fréquence de paie et dépenses courantes.** Entrez l’argent dont vous avez besoin pour la vie de tous les jours, après impôt, en dollars d’aujourd’hui. Laissez de côté les coûts particuliers d’une année précise (un voyage, un mariage, un nouveau toit) : ajoutez-les comme Événements de vie dans le menu. Touchez **Pourquoi c’est important** sous la case pour la définition complète. Le planificateur l’augmente selon l’inflation chaque année. Choisissez par semaine, par mois ou par année.
 2. **Votre liste de dépenses (facultative).** Sous la case des dépenses, un lien ouvre une liste où vous ajoutez chaque dépense régulière. Voir le chapitre sur la liste de dépenses.
 3. **Inflation.** Gardez les valeurs par défaut sauf raison précise (environ 2 % par année).
 4. **REER et CELI.** Solde actuel et montant ajouté chaque année jusqu’à la retraite.
@@ -187,7 +188,7 @@ side: yearcard.png
 Touchez une année dans **Quoi faire chaque année**. Elle s’ouvre en une liste **À faire cette année**, dans l’ordre où vous agiriez.
 
 1. **Total à retirer cette année** (barre bleu foncé) : dépenses + impôts + ce qui est déplacé vers un autre compte.
-2. **Un bloc par compte**, par exemple REER / FERR ou épargne non enregistrée. Chacun indique quoi retirer et à quoi sert cet argent : frais courants, impôt et **Sert aux événements de vie**, qui énumère chaque événement sous le nom que vous lui avez donné à l’écran Événements de vie (récurrent ou ponctuel) avec le montant que ce compte couvre. Quand plusieurs comptes paient des événements la même année, le montant de chaque compte est réparti entre les événements en proportion de leur coût.
+2. **Un bloc par compte**, par exemple REER / FERR ou épargne non enregistrée. Chacun indique quoi retirer et à quoi sert cet argent : dépenses courantes, impôt et **Sert aux événements de vie**, qui énumère chaque événement sous le nom que vous lui avez donné à l’écran Événements de vie (récurrent ou ponctuel) avec le montant que ce compte couvre. Quand plusieurs comptes paient des événements la même année, le montant de chaque compte est réparti entre les événements en proportion de leur coût.
 
    Lorsqu’une partie du retrait d’un compte est transférée vers un autre compte (par exemple le CELI), le bloc d’origine affiche une ligne bleue **Transféré vers …** et le bloc qui reçoit affiche une ligne verte **Transfert reçu de …**, pour voir d’où vient l’argent.
 3. **La note jaune** dit qui s’occupe de l’impôt. « L’institution retient X $ ... Vous recevrez donc Y $ en main » signifie que l’institution retient un acompte sur votre impôt. « Il n’y a aucune retenue à la source : mettez cet argent de côté » signifie que vous devez garder l’argent pour la facture d’impôt.
