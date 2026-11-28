@@ -59,12 +59,27 @@ def parse(path):
             continue
         cur['lines'].append(ln)
     return meta, pages
+_SLIM = {}
+def slim(path, max_w=560, quality=80):
+    """Shrink a screenshot for the PDF only: at most 560 px wide (about 230 dpi at the 2.4 inch size used)
+    and JPEG quality 80, which reportlab embeds as is. Keeps guide.pdf small so the repo does not grow by
+    megabytes on every rebuild. The originals in docs/guide/img are untouched. Cached per run."""
+    if path in _SLIM: return _SLIM[path]
+    import tempfile
+    from PIL import Image as PI
+    im = PI.open(path).convert('RGB')
+    if im.width > max_w: im = im.resize((max_w, round(im.height * max_w / im.width)), PI.LANCZOS)
+    d = os.path.join(tempfile.gettempdir(), 'guide_slim'); os.makedirs(d, exist_ok=True)
+    out = os.path.join(d, '%d.jpg' % len(_SLIM))
+    im.save(out, 'JPEG', quality=quality, optimize=True, subsampling=0); _SLIM[path] = out
+    return out
 def blocks(lines, lang, content_w):
     out = []; i = 0
     def img(fn, w):
         p = os.path.join(GD, 'img', lang, fn)
         if not os.path.exists(p): sys.exit('missing screenshot: ' + p)
         from PIL import Image as PI
+        p = slim(p)   # smaller copy for the PDF only; the originals in docs/guide/img stay untouched
         iw, ih = PI.open(p).size; im = Image(p, width=w, height=w * ih / iw)
         t = Table([[im]], colWidths=[w + 4]); t.setStyle(TableStyle([('BOX', (0, 0), (-1, -1), 0.6, LINE), ('LEFTPADDING', (0, 0), (-1, -1), 1), ('RIGHTPADDING', (0, 0), (-1, -1), 1), ('TOPPADDING', (0, 0), (-1, -1), 1), ('BOTTOMPADDING', (0, 0), (-1, -1), 1)])); return t
     while i < len(lines):
