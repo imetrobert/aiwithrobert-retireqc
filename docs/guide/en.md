@@ -159,6 +159,16 @@ Under it:
 
 At the bottom, **Edit inputs** returns you to the steps and **Test different returns** (at the top of the results) takes you to the Growth step, where you can pick another set of return assumptions and press **Show my plan** to see how it changes your plan. The small green or red percentage under each age shows that year's market gain or loss.
 
+## If you chose Monte Carlo (random markets)
+
+Under the heading you will see a **This run** box. The headline numbers on the page come from ONE random run of the market, and the box says what kind of market it was:
+
+- A verdict: a rougher-than-typical, typical or luckier-than-typical market.
+- The average yearly return of this run next to the one you assumed, plus the worst and best year (with your age) and the average of the first five years.
+- Where this run ended among the 300 simulated markets. A weak start hurts most, because you draw money while prices are down.
+
+The "% of 300 simulated markets" line is the real odds. Tap **Re-run another scenario** to draw a new random set of markets and recalculate; the scenario number goes up each time. **Show my plan** starts again at scenario 1. If "same random markets every run" is ticked, scenario 1 repeats every time, while each re-run gives a different one.
+
 # Compare and stress-test your plan
 eyebrow: STEP 4
 At the bottom of your results, open **Compare and stress-test**. Each button re-runs your plan with one thing changed and shows the results side by side. Nothing in your plan is changed. The first row is always your plan as entered, and the highlighted row is the one that leaves the most to your family after tax while still paying for your spending.
