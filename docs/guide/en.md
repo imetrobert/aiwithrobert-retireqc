@@ -218,6 +218,23 @@ Some people expect income besides pensions and savings: part-time work, rent fro
 > **Couples**
 > In "Me and my spouse" mode each of you answers for yourself, in your own form.
 
+# Selling your home
+eyebrow: OPTIONAL
+Step 1 asks whether you plan to **sell your home during retirement**. Choose **Yes, and move to a smaller home** or **Yes, and rent instead** and a card called "Selling your home" appears in Step 2.
+
+1. **Age when you sell.** Never earlier than your retirement age.
+2. **Expected sale price, in today's dollars.** The planner raises it with inflation.
+3. **Selling costs.** Agent, legal and notary fees. About 5% is common.
+4. **Mortgage or loans paid off at the sale.**
+5. **Smaller home only:** its price in today's dollars and the buying and moving costs.
+6. **Yearly housing costs you stop paying**, and **the yearly cost of your new housing** (rent, or tax and upkeep of the smaller home). Your yearly spending changes by the difference from the sale year on.
+7. **Where the money goes.** "TFSA first" puts as much as your unused TFSA room allows into the TFSA and the rest into your non-registered account. "All in my non-registered account" skips the TFSA.
+
+The money from selling your main home is not taxed, so the whole amount left after costs, your mortgage and the smaller home is invested in the year you sell. The card shows that amount in today's dollars before you calculate. The results then say how much went into each account, in the plan's summary and on that year's card.
+
+> **Good to know**
+> A TFSA grows tax-free but only takes what your room allows. Money in a non-registered account is taxed every year on its income and gains. As a couple, answer on one person's form only, so the sale is not counted twice. The planner does not model a new mortgage, a second property or a reverse mortgage.
+
 # The expense list
 eyebrow: STEP 2 TOOL
 side: expenses_top.png, expenses_rows.png

@@ -31,6 +31,7 @@ jobs:
           python3 scripts/test_household.py
           python3 scripts/test_planning_tools.py
           python3 scripts/test_mc_run.py
+          python3 scripts/test_home_sale.py
           python3 scripts/test_statements.py
       - name: Check the shared code has not drifted from the sibling planners
         run: python3 scripts/check_drift.py
