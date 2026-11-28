@@ -2,7 +2,7 @@
 <!--
 AI MAP - read this first, then open only the line ranges you need (file is 400-500 KB: never read it whole; use grep -n or Read with offset/limit).
 Plain-language helpers: planSummaryHtml (results box), ACCT_HELP + cardSummary (Step 2 cards), applyReturnPreset (Step 3). See docs/common-edits.md.
-QUEBEC RETIREMENT PLANNER (GENERIC, for any Quebec employee) v1.3
+QUEBEC RETIREMENT PLANNER (GENERIC, for any Quebec employee) v1.4
 Single static file: HTML form (steps 1-3 inputs, step 4 results) + one <script>. No build step, no network calls. Runs offline; data saved in localStorage.
 LINE NUMBERS: not kept in this comment (they go stale). Use docs/code-map.md (rebuilt by CI on every push) or grep -n NAME index.html.
 FUNCTIONS (names only; find lines in docs/code-map.md): getDefaultTaxRules getTaxRules validateTaxRulesShape calculateTax qcSeniorCredits federalLifMaxPct rrifMinFactor calcWithholdingTax pensionAmt oasAmt attributeWithdrawalPurposes runSimulation runMonteCarlo calculateRetirementPlan getProfileData populateForm yearCardsHtml renderResultsUi balanceChartSvg showInfo initInfoNotes initUi updateSpendFrequencyLabel goStep scaleRowsForDisplay compareExtraWithdrawals findMaxSpending exportScheduleCsv
@@ -13,6 +13,7 @@ ROW FIELDS (scheduleRows): age, rrspDraw, liraDraw, rlifUnlockedDraw, nonRegDraw
 HOUSEHOLD (couple) MODE: the planner form is filled in once per person (HH state, hhSwitch); each person runs runSimulation alone on their share of household spending (hhPlanProfiles); results merge in hhRenderHouse. Blocks to grep: '// ---- Household mode', '// ---- Pension income splitting' (hhSplitPensions: moves income between spouses via p.hhTaxAdj), '// ---- Spousal rollover' (hhRollover: first death passes savings to the survivor via p.hhSurv), '// ---- Optional expense list' (EXP, expSync). Old 'couple' calcMode in runSimulation still splits income 50/50 for legacy plans. Extra row fields: splitBase, splitElig, splitAdj. Each expense row and life event has linked % boxes (you / spouse or others, 100% total; hhExpPctInput, hhEnsureEventPct, evMine) and rows have their own Monthly/Weekly/Yearly (freqMult); hhOptimizeSplit and hhOptimizeEvents recommend splits. Recipes: docs/common-edits.md 13 and 14. Tests: scripts/test_household.py, test_expenses.py, test_tax.py.
 CHECK: money in (draws + qpp + oas + pensionInc + otherInc) = actualNetTakeHome + taxPaid + clawback + reinvested, every year.
 OTHER INCOME (optional, per person): Step 1 question otherIncDecl -> Step 2 card otherIncCard (one yearly otherIncAmt, or a year-by-year list otherIncList built from the ages); block '// ---- Optional other income in retirement'; runSimulation adds otherIncY to totalPublicPens (taxable, NOT pension income); row field otherInc. Recipe 15 in docs/common-edits.md. Test: scripts/test_other_income.py.
+COMPARE AND STRESS-TEST TOOLS (v1.4): one block, '// COMPARE AND STRESS-TEST TOOLS' (ptStartAges, ptStrategies, ptStress, ptEstate, ptCompareSaved/ptFillSaved, ptOnePage, cycleTextSize, ptAddPreset). They only call runSimulation with changed copies of the plan; engine change: customSeqType 'bear_severe'. Results fold 'Compare and stress-test', Save or share 'One-page summary', Saved screen 'Compare two scenarios', Menu 'Text size', Life events 'Add a common event'. Recipe 16 in docs/common-edits.md. Test: scripts/test_planning_tools.py.
 UI HELPERS: long .note-text blocks become 'Why this matters' buttons that open a bottom sheet (showInfo/initInfoNotes). Collapsible account cards = .asset-row (initCollapsibles). Optional settings sit in <details class=more>.
 FRENCH: every English string you change needs a French entry. Add it to Object.assign(EXACT,{...}) (exact text -> French) or P.push([...]) (regex -> French) near the i18n anchors; test with window.QCRP_I18N.toggle().
 Has: 'Personalize with AI' import, encrypted client files (.qcrp), saved profiles. No Bell-specific or ETF-tracker import.
@@ -452,11 +453,31 @@ EDIT SAFELY: change wording in the HTML only for labels; do not rename element i
             body.print-purposes .sched-table .purpose-detail { display: block !important; }
             body.print-purposes .purpose-key, body.print-key .purpose-key { display: flex !important; }
         }
+        .ptbl { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px; }
+        .ptbl th, .ptbl td { padding: 5px 6px; border-bottom: 1px solid #e2e8f0; text-align: right; vertical-align: top; }
+        .ptbl tr.best { background: #dcfce7; font-weight: 700; }
+        .ptbox { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; margin: 8px 0; }
+        #onePagePrint { display: none; }
+        @media print {
+            body.print-onepage > *:not(#onePagePrint) { display: none !important; }
+            body.print-onepage #onePagePrint { display: block !important; font: 11pt/1.35 system-ui, sans-serif; color: #0f172a; zoom: 1; }
+            #onePagePrint h1 { font-size: 20pt; margin: 0; color: #1e3a8a; }
+            #onePagePrint h2 { font-size: 12pt; margin: 12px 0 4px; color: #1e3a8a; border-bottom: 1px solid #cbd5e1; padding-bottom: 2px; }
+            #onePagePrint .op-sub, #onePagePrint .op-small { font-size: 9pt; color: #475569; }
+            #onePagePrint .op-verdict { margin: 10px 0; padding: 8px 12px; border-radius: 8px; background: #dcfce7; font-weight: 700; font-size: 13pt; }
+            #onePagePrint .op-verdict.short { background: #ffedd5; }
+            #onePagePrint .op-cols { display: flex; gap: 18px; } #onePagePrint .op-cols > div { flex: 1; }
+            #onePagePrint table { width: 100%; border-collapse: collapse; }
+            #onePagePrint .op-kv td { padding: 2px 0; border-bottom: 1px solid #e2e8f0; font-size: 10.5pt; } #onePagePrint .op-kv td:last-child { text-align: right; }
+            #onePagePrint .op-grid th, #onePagePrint .op-grid td { padding: 3px 6px; border-bottom: 1px solid #e2e8f0; text-align: right; font-size: 10pt; }
+            #onePagePrint .op-grid th:first-child, #onePagePrint .op-grid td:first-child { text-align: left; }
+            #onePagePrint .plan-sum { border: 1px solid #cbd5e1; padding: 6px 10px; margin: 10px 0; } #onePagePrint .plan-sum h3 { display: none; }
+            #onePagePrint .op-foot { margin-top: 14px; font-size: 8.5pt; color: #475569; border-top: 1px solid #cbd5e1; padding-top: 6px; }
+        }
         .hdr-actions { display: flex; gap: 0.4rem; align-items: center; flex-shrink: 0; }
         .lang-btn { padding: 0 0.7rem !important; font-weight: 800 !important; letter-spacing: 0.04em; min-width: 44px; }
         .save-badge { white-space: normal !important; text-align: center; width: max-content; max-width: calc(100vw - 2rem); border-radius: 18px !important; }
     </style>
-'
 <style id="ux2css">
 .info-btn{display:inline-flex;align-items:center;gap:4px;margin:2px 0 6px;padding:4px 10px;border-radius:999px;border:1px solid #bfdbfe;background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:600;min-height:28px;cursor:pointer;width:auto}
 .info-btn:active{background:#dbeafe}
@@ -543,6 +564,7 @@ details.resultnote:has(#deficitReportBanner:empty):has(#mcReportBanner:empty){di
         <button type="button" class="menu-item" onclick="closeMenu(); showProfileManager()"><span class="mi-ico">📁</span><span>Save / load scenarios on this device<small>Reopen your scenarios any time on this device</small></span></button>
         <button type="button" class="menu-item" onclick="closeMenu(); showTaxRulesPanel()"><span class="mi-ico">⚙️</span><span>Tax &amp; benefit rules<small>Brackets, credits, OAS, RRIF factors</small></span></button>
         <button type="button" class="menu-item" onclick="closeMenu(); startNewScenario()"><span class="mi-ico">🆕</span><span>New scenario<small>Start again from a blank form</small></span></button>
+        <button type="button" class="menu-item" onclick="cycleTextSize()"><span class="mi-ico">🔎</span><span>Text size: <b id="tsLabel">Normal</b><small>Tap to make everything larger</small></span></button>
         <div class="menu-note" id="mainRulesDateLabel"></div>
     </div>
 </header>
@@ -1126,6 +1148,18 @@ details.resultnote:has(#deficitReportBanner:empty):has(#mcReportBanner:empty){di
                 <span class="note-text" id="auditExportStatus">Audit Export bundles ALL your inputs, the tax &amp; benefit rules in force, the model's built-in assumptions and the full-precision year-by-year results in one block, so every number can be re-checked from its inputs. It contains your balances and event names — share it only with whoever is auditing.</span>
             </div></details>
 
+            <details class="fold"><summary>Compare and stress-test</summary><div class="fold-body">
+                <span class="note-text">Each button re-runs your plan with one thing changed and shows the results side by side. Nothing in your plan is changed.</span>
+                <div class="whatif-row"><button type="button" onclick="ptStartAges()">When to start QPP and OAS</button></div>
+                <div id="ptBoxStart"></div>
+                <div class="whatif-row"><button type="button" onclick="ptStrategies()">Compare withdrawal strategies</button></div>
+                <div id="ptBoxStrat"></div>
+                <div class="whatif-row"><button type="button" onclick="ptStress()">Test weak markets early on</button></div>
+                <div id="ptBoxStress"></div>
+                <div class="whatif-row"><button type="button" onclick="ptEstate()">Estate view</button></div>
+                <div id="ptBoxEstate"></div>
+            </div></details>
+
             <h3 class="section-title">What to do each year</h3>
             <div class="seg" role="group" aria-label="Schedule view">
                 <button type="button" class="seg-btn active" id="segCards" onclick="setScheduleView('cards')">Year plan</button>
@@ -1145,6 +1179,8 @@ details.resultnote:has(#deficitReportBanner:empty):has(#mcReportBanner:empty){di
 
 
             <details class="fold"><summary>Save or share</summary><div class="fold-body">
+                <div class="export-panel" style="margin-bottom:10px;"><div class="export-level"><div class="export-what"><b>One-page summary</b><span>Your plan, key results and the first years on a single portrait page to share with your advisor or accountant.</span></div>
+                <div class="export-btns"><button type="button" class="save-btn" onclick="ptOnePage()">🖨️ PDF</button></div></div></div>
                             <div class="export-panel">
                 <strong style="font-size:13px;">Export the schedule — choose a level of detail</strong>
                 <div class="export-level">
@@ -1184,6 +1220,15 @@ details.resultnote:has(#deficitReportBanner:empty):has(#mcReportBanner:empty){di
             <div class="results-box" id="profileListContainer">
                 <p>No saved profiles found.</p>
             </div>
+
+            <details class="fold" ontoggle="if(this.open)ptFillSaved()"><summary>Compare two scenarios</summary><div class="fold-body">
+                <div id="ptSavedPick" hidden>
+                    <label for="ptSavedA">First scenario</label><select id="ptSavedA"></select>
+                    <label for="ptSavedB" style="margin-top:8px;">Second scenario</label><select id="ptSavedB"></select>
+                    <button type="button" class="save-btn" style="margin-top:10px" onclick="ptCompareSaved()">Compare</button>
+                </div>
+                <div id="ptBoxSaved"></div>
+            </div></details>
 
             <div class="ai-card" id="vaultCard">
                 <h3>🔐 Client files (encrypted)</h3>
@@ -1406,6 +1451,25 @@ details.resultnote:has(#deficitReportBanner:empty):has(#mcReportBanner:empty){di
             </div>
             <div class="verify-banner" style="background:#f0fdf4; border-color:#bbf7d0; color:#14532d;">
                 <strong>How the model funds each event:</strong> in the order that costs the least tax — TFSA first (tax-free, no income or OAS clawback impact), then non-registered savings (only the gain portion is taxed), and only then your registered accounts (RRSP/LIRA/FTQ) as a last resort, since those are fully taxable and could push you into a higher bracket or trigger OAS clawback that year. The results screen shows exactly how each event ended up being funded, and the schedule table flags which year(s) had one.
+            </div>
+            <div class="asset-row" id="presetBox">
+                <h4>Add a common event</h4>
+                <select id="presetSel">
+                    <option value="">Choose an event...</option>
+                    <optgroup label="One-time costs">
+                        <option value="car">Replace the car</option>
+                        <option value="reno">Home renovation or major repairs</option>
+                        <option value="move">Moving or downsizing costs</option>
+                        <option value="help">Help a child or grandchild</option>
+                    </optgroup>
+                    <optgroup label="Costs that repeat each year">
+                        <option value="care">Long-term care (home help or residence)</option>
+                        <option value="travel">Travel in the early retirement years</option>
+                        <option value="health">Health costs not covered by insurance</option>
+                    </optgroup>
+                </select>
+                <button type="button" class="secondary" style="margin-top:8px;" onclick="ptAddPreset()">Add to my list</button>
+                <span class="note-text" id="presetMsg">Fills the next empty row with an example amount and age that you can change.</span>
             </div>
             <span class="note-text">The month is used for your own planning reference — this tool simulates year-by-year, so it doesn't change the math within a year, only which age/year the lump sum lands in.</span>
 
@@ -2135,7 +2199,7 @@ details.resultnote:has(#deficitReportBanner:empty):has(#mcReportBanner:empty){di
     let lastFinalRun = null;
     let lastExportProfile = null;
     let lastAuditMeta = null;
-    const APP_VERSION = 'Quebec Retirement Planner 1.3 (2026 rules; optional other income in retirement)';
+    const APP_VERSION = 'Quebec Retirement Planner 1.4 (2026 rules; compare and stress-test tools, one-page summary, text size, life-event presets)';
 
     // ============================================================
     // TAX & BENEFIT RULES — editable, versioned, stored separately
@@ -4109,6 +4173,11 @@ The numbers in that example are placeholders from a prior year — replace every
                     if (yr === 0) yearRate = -0.10;
                     else if (yr === 1) yearRate = -0.05;
                     else if (yr === 2) yearRate = 0.02;
+                    else yearRate = p.customFallbackReturn / 100;
+                } else if (p.customSeqType === 'bear_severe') {
+                    if (yr === 0) yearRate = -0.20;
+                    else if (yr === 1) yearRate = -0.10;
+                    else if (yr === 2) yearRate = 0.0;
                     else yearRate = p.customFallbackReturn / 100;
                 } else if (p.customSeqType === 'bull_early') {
                     if (yr === 0 || yr === 1) yearRate = 0.12;
@@ -7106,6 +7175,298 @@ The numbers in that example are placeholders from a prior year — replace every
 })();
 
 // ============================================================
+// COMPARE AND STRESS-TEST TOOLS (v1.4)
+// Start ages, withdrawal strategies, weak early markets, estate by age, two saved scenarios,
+// one-page summary, text size, life-event presets. They only CALL runSimulation with changed
+// copies of the plan; nothing here changes a calculation. Recipe 16 in docs/common-edits.md.
+// ============================================================
+(function () {
+    'use strict';
+    const PEN = 'QPP';                      // the pension name shown in tables ('CPP' in the Ontario planner)
+    const $ = id => document.getElementById(id);
+    const money = n => (n < 0 ? '−' : '') + '$' + Math.round(Math.abs(n)).toLocaleString();
+    const flatOf = p => (p.returnModel === 'montecarlo' ? Object.assign({}, p, { returnModel: 'flat', returnPost: p.mcAvgReturn }) : p);
+
+    function ctx(box) {
+        if (!lastExportProfile || !lastAuditMeta) { box.innerHTML = '<p class="note-text">Calculate a plan first.</p>'; return null; }
+        return { p: flatOf(lastExportProfile), rules: getTaxRules(), q: (lastAuditMeta.chosenQppAge ?? lastAuditMeta.chosenCppAge), o: lastAuditMeta.chosenOasAge };
+    }
+    function sim(c, over, q, o) {
+        return runSimulation(Object.assign({}, c.p, over || {}), q === undefined ? c.q : q, o === undefined ? c.o : o, c.rules);
+    }
+    // Same test the results page uses to say "money runs out at age X".
+    function shortAge(r, p) {
+        const need = getAnnualNetNeed(p);
+        const s = r.scheduleRows.find(x => x.age <= p.lifeExpectancy && x.actualNetTakeHome < ((x.targetSpend ?? need) + (x.eventTotalThisYear || 0)) * 0.98);
+        return s ? s.age : null;
+    }
+    function metrics(r, p) {
+        const t = r.taxAtDeath;
+        return { tax: r.totalTaxesPaidToday, left: t.portfolioAtEndToday, death: t.taxAtDeathToday, estate: t.afterTaxEstateToday, short: shortAge(r, p) };
+    }
+    const lastsTxt = m => (m.short === null ? 'Yes' : 'Short at ' + m.short);
+    function bestIdx(ms) {
+        let b = -1;
+        ms.forEach((m, i) => { if (m.short === null && (b < 0 || m.estate > ms[b].estate)) b = i; });
+        return b;
+    }
+    function table(head, rows, best) {
+        let h = '<div style="overflow-x:auto;"><table class="ptbl"><tr>' + head.map((x, i) => '<th' + (i ? '' : ' style="text-align:left"') + '>' + x + '</th>').join('') + '</tr>';
+        rows.forEach((r, i) => {
+            h += '<tr' + (best === i ? ' class="best"' : '') + '>' + r.map((x, j) => '<td' + (j ? '' : ' style="text-align:left"') + '>' + x + '</td>').join('') + '</tr>';
+        });
+        return h + '</table></div>';
+    }
+    function finish(box, html) {
+        box.innerHTML = html;
+        if (window.QCRP_I18N && QCRP_I18N.refresh) QCRP_I18N.refresh();
+    }
+    const note = function () { return Array.prototype.map.call(arguments, t => '<span class="note-text">' + t + '</span>').join(''); };
+    const unit = () => {
+        const p = lastExportProfile;
+        return (p && (p.inflationMode || 'none') !== 'none') ? "All amounts are in today's dollars." : 'All amounts are in dollars.';
+    };
+
+    // ---- 1. Start ages ----
+    window.ptStartAges = function () {
+        const box = $('ptBoxStart'), c = ctx(box); if (!c) return;
+        const combos = [{ q: c.q, o: c.o, mine: true }];
+        [60, 65, 70].forEach(q => [65, 70].forEach(o => { if (!(q === c.q && o === c.o)) combos.push({ q: q, o: o }); }));
+        const ms = combos.map(k => metrics(sim(c, null, k.q, k.o), c.p));
+        const rows = combos.map((k, i) => [PEN + ' ' + k.q + ' · OAS ' + k.o + (k.mine ? ' (your plan)' : ''), money(ms[i].tax), lastsTxt(ms[i]), money(ms[i].left), money(ms[i].estate)]);
+        finish(box, '<div class="ptbox">' + table(['Start ages', 'Lifetime tax', 'Money lasts', 'Savings left', 'Left to family after tax'], rows, bestIdx(ms)) +
+            note('Highlighted = the most left to your family after tax among the options where your spending is still fully funded.', 'A later start pays more each month for fewer years. Your spouse’s start ages stay as entered.', unit()) + '</div>');
+    };
+
+    // ---- 2. Withdrawal strategies ----
+    window.ptStrategies = function () {
+        const box = $('ptBoxStrat'), c = ctx(box); if (!c) return;
+        const p = c.p, minPen = Math.min(c.q, c.o);
+        const start = p.extraRegStartAge > 0 ? p.extraRegStartAge : p.targetAge;
+        const end = p.extraRegEndAge > 0 ? p.extraRegEndAge : Math.max(start, minPen - 1);
+        const altOrder = p.taxFundingOrder === 'tfsa' ? 'nonreg' : 'tfsa';
+        const defs = [{ label: 'Your plan as entered', over: {} },
+            { label: altOrder === 'tfsa' ? 'Spend the TFSA before non-registered savings' : 'Spend non-registered savings before the TFSA', over: { taxFundingOrder: altOrder } }];
+        [10000, 20000, 30000].forEach(x => defs.push({ label: 'Extra RRSP/RRIF withdrawal of ' + money(x) + ' a year', over: { extraRegAmt: x, extraRegStartAge: start, extraRegEndAge: end }, extra: x }));
+        if ((p.tfsaMaxMode || 'off') === 'off') {
+            defs.push({ label: 'Top up the TFSA each year from non-registered savings', over: { tfsaMaxMode: 'nonreg' } });
+            defs.push({ label: 'Top up the TFSA each year with extra RRSP/RRIF withdrawals', over: { tfsaMaxMode: 'registered' } });
+        }
+        let ms = defs.map(d => metrics(sim(c, d.over), p));
+        // One combined row: the best extra-withdrawal level together with the other funding order.
+        let bx = -1; defs.forEach((d, i) => { if (d.extra && ms[i].short === null && (bx < 0 || ms[i].estate > ms[bx].estate)) bx = i; });
+        if (bx >= 0) {
+            const d = { label: money(defs[bx].extra) + ' extra a year, and ' + (altOrder === 'tfsa' ? 'TFSA first' : 'non-registered first'), over: Object.assign({}, defs[bx].over, { taxFundingOrder: altOrder }) };
+            defs.push(d); ms.push(metrics(sim(c, d.over), p));
+        }
+        const rows = defs.map((d, i) => [d.label, money(ms[i].tax), lastsTxt(ms[i]), money(ms[i].death), money(ms[i].estate)]);
+        finish(box, '<div class="ptbox">' + table(['Strategy', 'Lifetime tax', 'Money lasts', 'Tax at death', 'Left to family after tax'], rows, bestIdx(ms)) +
+            note('Extra RRSP/RRIF withdrawals run from age ' + start + ' to ' + end + '.', 'They default to the years before your pensions start; set your own window under Extra RRSP/LIF withdrawals.', 'Highlighted = most left to your family after tax while spending is still fully funded.', 'To use a strategy, change that setting in your plan and recalculate.', unit()) + '</div>');
+    };
+
+    // ---- 3. Weak early markets ----
+    window.ptStress = function () {
+        const box = $('ptBoxStress'), c = ctx(box); if (!c) return;
+        const p = c.p, fb = p.returnModel === 'custom' ? (p.customFallbackReturn ?? p.returnPost) : p.returnPost;
+        const mk = t => ({ returnModel: 'custom', customSeqType: t, customFallbackReturn: fb });
+        const defs = [{ label: 'Your plan as entered', over: {} },
+            { label: 'Weak first years: −10%, −5%, +2%, then your normal return', over: mk('bear_early') },
+            { label: 'Severe first years: −20%, −10%, 0%, then your normal return', over: mk('bear_severe') },
+            { label: 'Slow growth: 1.5% a year for 10 years', over: mk('stagnant') }];
+        const ms = defs.map(d => metrics(sim(c, d.over), p));
+        const rows = defs.map((d, i) => [d.label, lastsTxt(ms[i]), money(ms[i].left), money(ms[i].estate)]);
+        const weak = ms.slice(1).filter(m => m.short !== null).length;
+        finish(box, '<div class="ptbox">' + table(['If the markets are weak early on', 'Money lasts', 'Savings left', 'Left to family after tax'], rows, -1) +
+            note('The bad years come right after you retire, when they hurt most.', weak ? 'Your money runs short in ' + weak + ' of the 3 tests: consider a lower spending target, a later retirement, or keeping a cash reserve for the first years.' : 'Your money lasts in all 3 tests.', unit()) + '</div>');
+    };
+
+    // ---- 4. Estate by age ----
+    window.ptEstate = function () {
+        const box = $('ptBoxEstate'), c = ctx(box); if (!c || !lastFinalRun) return;
+        const p = c.p, t = lastFinalRun.taxAtDeath, es = lastFinalRun.endState, ix = t.inflationIndexAtEnd || 1;
+        let h = '<div class="ptbox"><strong>What your family receives at age ' + t.age + '</strong>';
+        h += table(['Item', 'Amount'], [
+            ['Registered savings (taxed at death)', money(t.registeredBalances / ix)],
+            ['Non-registered savings', money(es.non / ix)],
+            ['Taxable profit on non-registered savings', money(t.nonRegGainIncluded / ix)],
+            ['TFSA (passes tax-free)', money(es.tfsa / ix)],
+            ['Estimated tax at death', money(t.taxAtDeathToday)],
+            ['Left to family after tax', money(t.afterTaxEstateToday)]], 5);
+        if (p.hhRollover) h += note('Your spouse inherits registered accounts without tax at the first death (spousal rollover is on), so this is the tax when the second spouse dies.');
+        const ages = [75, 85, 95].filter(a => a > p.targetAge && a > p.currentAge && a !== p.lifeExpectancy);
+        ages.push(p.lifeExpectancy); ages.sort((a, b) => a - b);
+        const rows = ages.map(a => {
+            const r = sim(c, { lifeExpectancy: a }), tt = r.taxAtDeath;
+            return ['If the plan ended at ' + a, money(tt.portfolioAtEndToday), money(tt.taxAtDeathToday), money(tt.afterTaxEstateToday)];
+        });
+        h += '<div style="margin-top:10px;"><strong>The same plan if it ended at a different age</strong></div>' + table(['Age', 'Savings', 'Tax at death', 'Left to family after tax'], rows, -1);
+        h += note('Tax at death treats registered accounts as income in the final year and counts half of the non-registered profit. Probate and estate fees are not included.', 'Ending the plan earlier means the same spending for fewer years.', unit()) + '</div>';
+        finish(box, h);
+    };
+
+    // ---- 5. Two saved scenarios ----
+    function savedList() {
+        const all = getAllProfiles();
+        return Object.keys(all).map(k => ({ id: k, p: all[k] })).filter(x => x.p.savedExplicitly || x.p.results)
+            .sort((a, b) => (b.p.timestampMs || 0) - (a.p.timestampMs || 0));
+    }
+    window.ptFillSaved = function () {
+        const list = savedList(), box = $('ptBoxSaved');
+        if (!box) return;
+        if (list.length < 1) { box.innerHTML = '<p class="note-text">Save at least one scenario with its results first (Results, then Save on this device).</p>'; $('ptSavedPick').hidden = true; return; }
+        $('ptSavedPick').hidden = false;
+        ['ptSavedA', 'ptSavedB'].forEach((id, n) => {
+            const s = $(id), keep = s.value;
+            s.innerHTML = (lastFinalRun ? '<option value="__now">The plan on screen now</option>' : '') +
+                list.map(x => '<option value="' + escHtml(x.id) + '">' + escHtml(x.p.name || 'Unnamed scenario') + '</option>').join('');
+            if (keep && Array.from(s.options).some(o => o.value === keep)) s.value = keep;
+            else if (n === 1 && s.options.length > 1) s.selectedIndex = 1;
+        });
+        box.innerHTML = '';
+    };
+    function sideOf(v) {
+        if (v === '__now') {
+            const p = lastExportProfile, r = resultsSummary();
+            return p && r ? { name: 'The plan on screen now', p: p, r: r } : null;
+        }
+        const x = getAllProfiles()[v];
+        return x ? { name: x.name || 'Unnamed scenario', p: x, r: x.results || null } : null;
+    }
+    window.ptCompareSaved = function () {
+        const box = $('ptBoxSaved'), a = sideOf($('ptSavedA').value), b = sideOf($('ptSavedB').value);
+        if (!a || !b) { box.innerHTML = '<p class="note-text">Pick two scenarios.</p>'; return; }
+        const f = x => (x.r ? x.r : null);
+        const lasts = r => r ? (r.depletionAge === null || r.depletionAge === undefined ? 'Yes' : 'Short at ' + r.depletionAge) : 'No results saved';
+        const m = (r, k) => r ? money(r[k]) : '—';
+        const est = r => r ? money((r.finalPortfolio || 0) - (r.taxAtDeath || 0)) : '—';
+        const spend = p => money(p.spendAmount) + ' ' + (p.spendFrequency === 'weekly' ? 'a week' : p.spendFrequency === 'yearly' ? 'a year' : 'a month');
+        const rows = [
+            ['Retirement age', String(a.p.targetAge), String(b.p.targetAge)],
+            ['Plan until age', String(a.p.lifeExpectancy), String(b.p.lifeExpectancy)],
+            ['Spending (after tax)', spend(a.p), spend(b.p)],
+            ['Money lasts', lasts(f(a)), lasts(f(b))],
+            ['Total income tax', m(f(a), 'totalTaxesPaid'), m(f(b), 'totalTaxesPaid')],
+            ['Savings left at the end', m(f(a), 'finalPortfolio'), m(f(b), 'finalPortfolio')],
+            ['Tax at death', m(f(a), 'taxAtDeath'), m(f(b), 'taxAtDeath')],
+            ['Left to family after tax', est(f(a)), est(f(b))],
+            ['Saved on', a.r && a.r.savedAt ? a.r.savedAt.slice(0, 10) : '—', b.r && b.r.savedAt ? b.r.savedAt.slice(0, 10) : '—']];
+        finish(box, '<div class="ptbox">' + table(['', escHtml(a.name), escHtml(b.name)], rows, -1) +
+            note('These are the results saved with each scenario, in future dollars when inflation is on, using the tax rules of the day it was saved. If you changed the tax rules since, open the scenario, press Show my plan and save it again.') + '</div>');
+    };
+
+    // ---- 6. One-page summary ----
+    const ACCS = [['rrsp', 'RRSP / RRIF', 'rrspDraw'], ['rlif', 'Unlocked RRSP / RRIF', 'rlifUnlockedDraw'], ['lira', 'Locked-in (federal pension + LIRA)', 'liraDraw'], ['nonReg', 'Non-registered savings', 'nonRegDraw'], ['ftq', 'FTQ fund', 'ftqDraw'], ['tfsa', 'TFSA', 'tfsaDraw']];
+    function onePageHtml() {
+        const f = lastFinalRun, p = lastExportProfile, q = (lastAuditMeta.chosenQppAge ?? lastAuditMeta.chosenCppAge), o = lastAuditMeta.chosenOasAge;
+        const infl = (p.inflationMode || 'none') !== 'none';
+        const rows = scaleRowsForDisplay(f.scheduleRows, !!p.showRealDollars).filter(r => r.age <= p.lifeExpectancy);
+        const sa = shortAge(f, p), te = f.taxAtDeath;
+        const real = infl && p.showRealDollars;
+        const estate = real ? te.afterTaxEstateToday : te.afterTaxEstate;
+        const nm = (($('profileName') || {}).value || '').trim();
+        const per = p.spendFrequency === 'weekly' ? 'a week' : p.spendFrequency === 'yearly' ? 'a year' : 'a month';
+        const kv = (k, v) => '<tr><td>' + k + '</td><td><b>' + v + '</b></td></tr>';
+        let h = '<div class="op-head"><div><h1>Retirement plan summary</h1><div class="op-sub">' + escHtml(nm || 'My plan') + ' · ' + new Date().toISOString().slice(0, 10) + '</div></div></div>';
+        h += '<div class="op-verdict' + (sa ? ' short' : '') + '">' + (sa ? 'Money runs short at age ' + sa : 'Your money lasts to age ' + p.lifeExpectancy) + '</div>';
+        h += '<div class="op-cols"><div><h2>Your plan</h2><table class="op-kv">' +
+            kv('Retire at age', p.targetAge) + kv('Plan until age', p.lifeExpectancy) + kv('Spending after tax', money(p.spendAmount) + ' ' + per) +
+            kv(PEN + ' starts at age', q) + kv('OAS starts at age', o) +
+            kv('Return before / after retirement', p.returnPre + '% / ' + (p.returnModel === 'montecarlo' ? p.mcAvgReturn : p.returnPost) + '%') +
+            kv('Inflation', infl ? 'On' : 'Off') + '</table></div>' +
+            '<div><h2>What it means</h2><table class="op-kv">' +
+            kv('Total income tax', money(rows.reduce((t, r) => t + (r.taxPaid || 0), 0))) +
+            kv('OAS paid back', money(rows.reduce((t, r) => t + (r.clawback || 0), 0))) +
+            kv('Savings left at age ' + te.age, money(real ? te.portfolioAtEndToday : te.portfolioAtEnd)) +
+            kv('Left to family after tax', money(estate)) + '</table>' +
+            '<div class="op-small">Amounts are in ' + (infl ? (real ? "today's dollars" : 'future dollars') : "today's dollars") + '.</div></div></div>';
+        h += planSummaryHtml(rows, p, q, o, sa || 0);
+        const first = rows[0];
+        if (first) {
+            const parts = ACCS.filter(a => Math.round(first[a[2]] || 0) > 0).map(a => '<tr><td>' + a[1] + '</td><td style="text-align:right"><b>' + money(first[a[2]]) + '</b></td></tr>');
+            h += '<h2>Your first year (age ' + first.age + ')</h2><table class="op-kv">' + (parts.length ? parts.join('') : '<tr><td>No withdrawal needed</td><td></td></tr>') + '</table>';
+        }
+        const show = rows.slice(0, 6); const lastR = rows[rows.length - 1]; if (lastR && show.indexOf(lastR) < 0) show.push(lastR);
+        h += '<h2>Year by year</h2><table class="op-grid"><tr><th>Age</th><th>Take-home</th><th>Income tax</th><th>Savings at year end</th></tr>' +
+            show.map(r => '<tr><td>' + r.age + '</td><td>' + money(r.actualNetTakeHome) + '</td><td>' + money(r.taxPaid) + '</td><td>' + money(rowTotalBalance(r)) + '</td></tr>').join('') + '</table>';
+        h += '<div class="op-foot">This is an estimate based on the figures entered and the 2026 tax rules, not tax, legal or investment advice. Real returns, rules and your own situation will differ. Review the plan each year.</div>';
+        return h;
+    }
+    window.ptOnePage = function () {
+        if (!lastFinalRun || !lastExportProfile || !lastAuditMeta) { alert('Calculate a plan first, then export.'); return; }
+        let el = $('onePagePrint');
+        if (!el) { el = document.createElement('div'); el.id = 'onePagePrint'; document.body.appendChild(el); }
+        el.innerHTML = onePageHtml();
+        if (window.QCRP_I18N && QCRP_I18N.refresh) QCRP_I18N.refresh();
+        const pg = document.createElement('style'); pg.id = 'onePagePage'; pg.textContent = '@media print{@page{size:portrait;margin:12mm}}';
+        document.head.appendChild(pg);
+        document.body.classList.add('print-onepage');
+        const wasOpen = Array.from(document.querySelectorAll('details')).map(d => [d, d.open]);
+        const cleanup = () => { document.body.classList.remove('print-onepage'); const s = $('onePagePage'); if (s) s.remove(); wasOpen.forEach(x => { x[0].open = x[1]; }); window.removeEventListener('afterprint', cleanup); };
+        window.addEventListener('afterprint', cleanup);
+        setTimeout(() => { window.print(); }, 150);
+        setTimeout(cleanup, 60000);
+    };
+    window.ptOnePageHtml = function () { return onePageHtml(); };   // used by tests
+
+    // ---- 7. Text size ----
+    const SIZES = [['Normal', 1], ['Large', 1.15], ['Extra large', 1.3]];
+    function applySize(i) {
+        const s = SIZES[i] || SIZES[0];
+        document.body.style.zoom = s[1] === 1 ? '' : String(s[1]);
+        const l = $('tsLabel'); if (l) { l.textContent = s[0]; l.setAttribute('data-i', String(i)); }
+        if (window.QCRP_I18N && QCRP_I18N.refresh) QCRP_I18N.refresh();
+    }
+    window.cycleTextSize = function () {
+        let i = 0; try { i = (parseInt(localStorage.getItem('qcrp_textsize'), 10) || 0); } catch (e) { /* ignore */ }
+        i = (i + 1) % SIZES.length;
+        try { localStorage.setItem('qcrp_textsize', String(i)); } catch (e) { /* ignore */ }
+        applySize(i);
+    };
+    window.ptInitTextSize = function () {
+        let i = 0; try { i = (parseInt(localStorage.getItem('qcrp_textsize'), 10) || 0); } catch (e) { /* ignore */ }
+        applySize(i);
+    };
+
+    // ---- 8. Life-event presets (amounts are examples; every field stays editable) ----
+    const PRESETS = {
+        car:   { once: true, name: 'Replace the car', amount: 35000, off: 8 },
+        reno:  { once: true, name: 'Home renovation or major repairs', amount: 40000, off: 10 },
+        move:  { once: true, name: 'Moving or downsizing costs', amount: 20000, off: 12 },
+        help:  { once: true, name: 'Help a child or grandchild', amount: 25000, off: 5 },
+        care:  { once: false, name: 'Long-term care (home help or residence)', amount: 60000, from: 85, to: 0 },
+        travel: { once: false, name: 'Travel in the early retirement years', amount: 10000, off: 0, len: 10 },
+        health: { once: false, name: 'Health costs not covered by insurance', amount: 5000, from: 75, to: 0 }
+    };
+    window.ptAddPreset = function () {
+        const k = $('presetSel').value, d = PRESETS[k], msg = $('presetMsg');
+        if (!d) { msg.textContent = 'Pick an event first.'; return; }
+        const ret = parseFloat($('targetAge').value) || 65, life = parseFloat($('lifeExpectancy').value) || 90;
+        const pre = d.once ? 'event' : 'recur';
+        let n = 0;
+        for (let i = 1; i <= 10; i++) {
+            if (!$(pre + i + 'Name').value.trim() && !(parseFloat($(pre + i + 'Amount').value) > 0)) { n = i; break; }
+        }
+        if (!n) { msg.textContent = 'All 10 rows are in use. Clear one first.'; return; }
+        const set = (id, v) => { const e = $(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
+        set(pre + n + 'Name', d.name);
+        set(pre + n + 'Amount', d.amount);
+        if (d.once) set('event' + n + 'Age', Math.min(life, ret + d.off));
+        else {
+            const from = d.from !== undefined ? Math.max(d.from, ret) : ret + (d.off || 0);
+            set('recur' + n + 'StartAge', Math.min(from, life));
+            set('recur' + n + 'EndAge', d.len ? Math.min(life, from + d.len - 1) : life);
+        }
+        const card = $((d.once ? 'eventCard' : 'recurCard') + n);
+        if (card && typeof setCardCollapsed === 'function') { try { setCardCollapsed(card, false); } catch (e) { /* ignore */ } }
+        if (card && card.scrollIntoView) card.scrollIntoView({ block: 'center' });
+        msg.textContent = 'Added as ' + (d.once ? 'event ' : 'yearly cost ') + n + '. The amount is an example in today’s dollars: change it and the age to fit you.';
+        if (window.QCRP_I18N && QCRP_I18N.refresh) QCRP_I18N.refresh();
+    };
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', window.ptInitTextSize); else window.ptInitTextSize();
+})();
+
+// ============================================================
 // LANGUAGE (EN / FR) — runtime translation layer
 // English is the source language. In French mode every piece of text on
 // screen is looked up in a dictionary (exact strings) or rewritten by
@@ -7348,6 +7709,77 @@ The numbers in that example are placeholders from a prior year — replace every
     ];
     P.push.apply(P, [["Money runs out at age (\\d+)", "L’argent s’épuise à l’âge de $1"], ["Your money lasts to age (\\d+)", "Votre argent dure jusqu’à l’âge de $1"], ["Your (\\$[\\d,.]+)/(week|month) target can't be fully met from age (\\d+) \\(take-home drops to (\\$[\\d,.]+) a year\\)\\. You could spend a little less, retire later, or save more\\.", "Votre objectif de $1/$2 ne peut pas être entièrement atteint dès l’âge de $3 (le revenu net tombe à $4 par année). Vous pourriez dépenser un peu moins, prendre votre retraite plus tard ou épargner davantage."], ["You can spend (\\$[\\d,.]+)/(week|month) every year, rising with inflation\\.", "Vous pouvez dépenser $1/$2 chaque année, montant qui augmente avec l’inflation."], ["You can spend (\\$[\\d,.]+)/(week|month) every year\\.", "Vous pouvez dépenser $1/$2 chaque année."], ["Total income tax", "Impôt total sur le revenu"], ["OAS paid back", "PSV remboursée"], ["Savings left at age (\\d+)", "Épargne restante à l’âge de $1"], ["Left to family after tax", "Laissé à la famille après impôt"], ["Your savings over time", "Votre épargne au fil du temps"], ["All accounts together, each year end \\(today's dollars\\)\\.", "Tous les comptes ensemble, à la fin de chaque année (dollars d’aujourd’hui)."], ["All accounts together, each year end \\(future dollars\\)\\.", "Tous les comptes ensemble, à la fin de chaque année (dollars futurs)."], ["^Short: only ", "Manque : seulement "], ["^Take out (\\$)", "Retirer $1"], ["^To spend ", "Pour dépenser "], ["/mo\\b", "/mois"], [" · tax ", " · impôt "], [" · move ", " · déplacer "], [">Money in<", ">Argent reçu<"], [">spending<", ">dépenses<"], [">tax<", ">impôt<"], [">reinvested<", ">réinvesti<"], ["^One-time: ", "Ponctuel : "], ["^life event$", "événement de vie"], ["^QPP$", "RRQ"], ["Account balances at year end · ", "Soldes des comptes en fin d’année · "]]);
     P.push(["· not adding", "· aucun ajout"]);
+    // ---- Compare and stress-test tools, one-page summary, text size, life-event presets (v1.4) ----
+    Object.assign(EXACT, {
+        "Compare and stress-test": "Comparer et mettre à l’épreuve",
+        "Each button re-runs your plan with one thing changed and shows the results side by side. Nothing in your plan is changed.": "Chaque bouton refait votre plan en changeant un seul élément et affiche les résultats côte à côte. Rien dans votre plan n’est modifié.",
+        "When to start QPP and OAS": "Quand commencer la RRQ et la PSV",
+        "Compare withdrawal strategies": "Comparer les stratégies de retrait",
+        "Test weak markets early on": "Tester des marchés faibles au début",
+        "Estate view": "Vue de la succession",
+        "One-page summary": "Sommaire d’une page",
+        "Your plan, key results and the first years on a single portrait page to share with your advisor or accountant.": "Votre plan, les résultats clés et les premières années sur une seule page à partager avec votre conseiller ou votre comptable.",
+        "Compare two scenarios": "Comparer deux scénarios", "First scenario": "Premier scénario", "Second scenario": "Deuxième scénario", "Compare": "Comparer",
+        "Save at least one scenario with its results first (Results, then Save on this device).": "Enregistrez d’abord au moins un scénario avec ses résultats (Résultats, puis Enregistrer sur cet appareil).",
+        "Pick two scenarios.": "Choisissez deux scénarios.", "The plan on screen now": "Le plan à l’écran",
+        "Start ages": "Âges de début", "Lifetime tax": "Impôt sur la vie entière", "Money lasts": "L’argent dure", "Savings left": "Épargne restante",
+        "Left to family after tax": "Laissé à la famille après impôt", "Strategy": "Stratégie", "Tax at death": "Impôt au décès",
+        "Yes": "Oui", "Your plan as entered": "Votre plan tel que saisi",
+        "Spend the TFSA before non-registered savings": "Dépenser le CELI avant l’épargne non enregistrée",
+        "Spend non-registered savings before the TFSA": "Dépenser l’épargne non enregistrée avant le CELI",
+        "Top up the TFSA each year from non-registered savings": "Remplir le CELI chaque année avec l’épargne non enregistrée",
+        "Top up the TFSA each year with extra RRSP/RRIF withdrawals": "Remplir le CELI chaque année avec des retraits supplémentaires du REER/FERR",
+        "Highlighted = the most left to your family after tax among the options where your spending is still fully funded.": "En surbrillance = ce qui reste de plus à votre famille après impôt parmi les options où vos dépenses restent entièrement financées.",
+        "A later start pays more each month for fewer years. Your spouse’s start ages stay as entered.": "Un début plus tardif verse plus chaque mois, mais pendant moins d’années. Les âges de début de votre conjoint(e) restent tels que saisis.",
+        "They default to the years before your pensions start; set your own window under Extra RRSP/LIF withdrawals.": "Par défaut, ce sont les années avant le début de vos pensions; fixez votre propre période sous Retraits supplémentaires du REER/FERR.",
+        "Highlighted = most left to your family after tax while spending is still fully funded.": "En surbrillance = le plus laissé à votre famille après impôt tant que les dépenses restent entièrement financées.",
+        "To use a strategy, change that setting in your plan and recalculate.": "Pour utiliser une stratégie, modifiez ce réglage dans votre plan et recalculez.",
+        "All amounts are in today's dollars.": "Tous les montants sont en dollars d’aujourd’hui.", "All amounts are in dollars.": "Tous les montants sont en dollars.",
+        "If the markets are weak early on": "Si les marchés sont faibles au début",
+        "Weak first years: −10%, −5%, +2%, then your normal return": "Premières années faibles : −10 %, −5 %, +2 %, puis votre rendement normal",
+        "Severe first years: −20%, −10%, 0%, then your normal return": "Premières années sévères : −20 %, −10 %, 0 %, puis votre rendement normal",
+        "Slow growth: 1.5% a year for 10 years": "Croissance lente : 1,5 % par année pendant 10 ans",
+        "The bad years come right after you retire, when they hurt most.": "Les mauvaises années arrivent tout de suite après la retraite, quand elles font le plus mal.",
+        "Your money lasts in all 3 tests.": "Votre argent dure dans les 3 tests.",
+        "Item": "Élément", "Amount": "Montant", "Registered savings (taxed at death)": "Épargne enregistrée (imposée au décès)",
+        "Non-registered savings": "Épargne non enregistrée", "Taxable profit on non-registered savings": "Profit imposable sur l’épargne non enregistrée",
+        "TFSA (passes tax-free)": "CELI (transmis sans impôt)", "Estimated tax at death": "Impôt estimé au décès",
+        "Your spouse inherits registered accounts without tax at the first death (spousal rollover is on), so this is the tax when the second spouse dies.": "Votre conjoint(e) hérite des comptes enregistrés sans impôt au premier décès (le transfert au conjoint est activé); voici donc l’impôt au décès du second conjoint.",
+        "The same plan if it ended at a different age": "Le même plan s’il se terminait à un autre âge", "Age": "Âge", "Savings": "Épargne",
+        "Tax at death treats registered accounts as income in the final year and counts half of the non-registered profit. Probate and estate fees are not included.": "L’impôt au décès traite les comptes enregistrés comme un revenu de la dernière année et compte la moitié du profit non enregistré. Les frais d’homologation et de succession ne sont pas inclus.",
+        "Ending the plan earlier means the same spending for fewer years.": "Terminer le plan plus tôt signifie les mêmes dépenses pendant moins d’années.",
+        "Retirement age": "Âge de retraite", "Plan until age": "Plan jusqu’à l’âge de", "Spending (after tax)": "Dépenses (après impôt)",
+        "Total income tax": "Impôt sur le revenu total", "Savings left at the end": "Épargne restante à la fin", "Saved on": "Enregistré le", "No results saved": "Aucun résultat enregistré",
+        "These are the results saved with each scenario, in future dollars when inflation is on, using the tax rules of the day it was saved. If you changed the tax rules since, open the scenario, press Show my plan and save it again.": "Ce sont les résultats enregistrés avec chaque scénario, en dollars futurs si l’inflation est activée, selon les règles fiscales du jour de l’enregistrement. Si vous avez modifié les règles fiscales depuis, ouvrez le scénario, appuyez sur Afficher mon plan et enregistrez-le de nouveau.",
+        "Retirement plan summary": "Sommaire du plan de retraite", "My plan": "Mon plan", "Your plan": "Votre plan", "What it means": "Ce que cela signifie",
+        "Retire at age": "Retraite à l’âge de", "Spending after tax": "Dépenses après impôt", "QPP starts at age": "La RRQ commence à l’âge de", "OAS starts at age": "La PSV commence à l’âge de",
+        "Return before / after retirement": "Rendement avant / après la retraite", "Inflation": "Inflation", "On": "Activée", "Off": "Désactivée",
+        "OAS paid back": "PSV remboursée", "Year by year": "Année par année", "Take-home": "Revenu net", "Income tax": "Impôt sur le revenu", "Savings at year end": "Épargne à la fin de l’année",
+        "Amounts are in today's dollars.": "Les montants sont en dollars d’aujourd’hui.", "Amounts are in future dollars.": "Les montants sont en dollars futurs.",
+        "This is an estimate based on the figures entered and the 2026 tax rules, not tax, legal or investment advice. Real returns, rules and your own situation will differ. Review the plan each year.": "Ceci est une estimation fondée sur les chiffres saisis et les règles fiscales de 2026, et non un conseil fiscal, juridique ou de placement. Les rendements réels, les règles et votre situation différeront. Révisez le plan chaque année.",
+        "Text size:": "Taille du texte :", "Large": "Grand", "Extra large": "Très grand", "Tap to make everything larger": "Touchez pour tout agrandir",
+        "Add a common event": "Ajouter un événement courant", "Choose an event...": "Choisir un événement...", "Add to my list": "Ajouter à ma liste",
+        "Replace the car": "Remplacer la voiture", "Home renovation or major repairs": "Rénovation ou grosses réparations de la maison",
+        "Moving or downsizing costs": "Coûts de déménagement ou de réduction de logement", "Help a child or grandchild": "Aider un enfant ou un petit-enfant",
+        "Long-term care (home help or residence)": "Soins de longue durée (aide à domicile ou résidence)", "Travel in the early retirement years": "Voyages dans les premières années de retraite",
+        "Health costs not covered by insurance": "Frais de santé non couverts par l’assurance",
+        "Fills the next empty row with an example amount and age that you can change.": "Remplit la prochaine rangée vide avec un montant et un âge d’exemple que vous pouvez modifier.",
+        "Pick an event first.": "Choisissez d’abord un événement.", "All 10 rows are in use. Clear one first.": "Les 10 rangées sont utilisées. Videz-en une d’abord."
+    });
+    P.push(
+        ["^QPP (\\d+) · OAS (\\d+)$", "RRQ $1 · PSV $2"], ["^QPP (\\d+) · OAS (\\d+) \\(your plan\\)$", "RRQ $1 · PSV $2 (votre plan)"],
+        ["^Short at (\\d+)$", "Insuffisant à $1 ans"],
+        ["^Extra RRSP/RRIF withdrawal of (\\$[\\d,]+) a year$", "Retrait supplémentaire de $1 par année du REER/FERR"],
+        ["^(\\$[\\d,]+) extra a year, and TFSA first$", "$1 de plus par année, et CELI d’abord"], ["^(\\$[\\d,]+) extra a year, and non-registered first$", "$1 de plus par année, et non enregistré d’abord"],
+        ["^Extra RRSP/RRIF withdrawals run from age (\\d+) to (\\d+)\\.$", "Les retraits supplémentaires du REER/FERR vont de l’âge de $1 à $2 ans."],
+        ["^What your family receives at age (\\d+)$", "Ce que reçoit votre famille à l’âge de $1"],
+        ["^If the plan ended at (\\d+)$", "Si le plan se terminait à $1 ans"],
+        ["^Your money runs short in (\\d) of the 3 tests: consider a lower spending target, a later retirement, or keeping a cash reserve for the first years\\.$", "Votre argent manque dans $1 des 3 tests : envisagez des dépenses cibles plus basses, une retraite plus tardive ou une réserve de liquidités pour les premières années."],
+        ["^Money runs short at age (\\d+)$", "L’argent manque à l’âge de $1"],
+        ["^Savings left at age (\\d+)$", "Épargne restante à l’âge de $1"], ["^Your first year \\(age (\\d+)\\)$", "Votre première année (âge $1)"],
+        ["^(\\$[\\d,]+) a (week|month|year)$", "$1 par $2"], ["^par week$", "par semaine"], ["^par month$", "par mois"], ["^par year$", "par année"],
+        ["^Added as (event|yearly cost) (\\d+)\\. The amount is an example in today’s dollars: change it and the age to fit you\\.$", "Ajouté (rangée $2). Le montant est un exemple en dollars d’aujourd’hui : modifiez-le, ainsi que l’âge, selon votre situation."]
+    );
     Object.assign(EXACT, {
         "Are you filling this out for you, or for you and a spouse?": "Remplissez-vous ceci pour vous seul(e), ou pour vous et un(e) conjoint(e) ?",
         "If you choose both, you fill in your own details first, then your spouse's separately. They are only combined on the results screen, in a household view. Only choose this if your spouse is willing to share their financial details with you, because you will both be able to see each other's figures.": "Si vous choisissez les deux, vous remplissez d’abord vos propres données, puis celles de votre conjoint(e) séparément. Elles ne sont combinées que sur l’écran des résultats, dans une vue du ménage. Ne choisissez cette option que si votre conjoint(e) accepte de partager ses données financières avec vous, car vous verrez tous deux les chiffres de l’autre.",
