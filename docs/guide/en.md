@@ -170,7 +170,7 @@ Under the heading you will see a **This run** box. The headline numbers on the p
 
 The "% of 300 simulated markets" line is the real odds. Tap **Re-run another scenario** to draw a new random set of markets and recalculate; the scenario number goes up each time. **Show my plan** starts again at scenario 1. If "same random markets every run" is ticked, scenario 1 repeats every time, while each re-run gives a different one.
 
-Under the big banner there is a **Judge the plan by** switch. **This run** (the default) decides "You are on track" from the single run shown. **All markets** decides it from the share of the 300 simulated markets that fund the plan: 90% or more is "You are on track", 70% to 89% is "Some risk", and under 70% is "Needs a change". The tax and savings numbers always come from the one run. The choice stays when you tap **Re-run another scenario**.
+Under the big banner there is a **Judge the plan by** switch. **This run** (the default) decides "You are on track" from the single run shown. **All markets** shows the share of the 300 simulated markets that fund the plan, with no verdict, tick or cross: how much risk is acceptable is your decision. As a guide, under 70% is high risk and 90% or more is comfortable. The tax and savings numbers always come from the one run. The choice stays when you tap **Re-run another scenario**.
 
 # Compare and stress-test your plan
 eyebrow: STEP 4
